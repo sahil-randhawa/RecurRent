@@ -1,2 +1,3 @@
-# recurrent
+# RecurRent
+
 RecurRent App
