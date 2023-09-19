@@ -1,11 +1,44 @@
 # RecurRent
 
-RecurRent Mobile App
+🚀 RecurRent Mobile App 📱
 
-# Recurrent App
+## 📝 Description
 
-Recurrent is a mobile application that allows users to rent out underutilized items and equipment for extra cash. The app can be used to rent out any type of goods, including furniture, biking equipment, hardware equipment, luggage bags, camping equipment, sports equipment, and more.
+RecurRent is a mobile application that allows users to rent out underutilized items and equipment for extra cash. The app can be used to rent out any type of goods, including furniture, biking equipment, hardware equipment, luggage bags, camping equipment, sports equipment, and more.
 
-## Usage
+## 📱 Usage
 
 The Recurrent app is easy to use. Simply list the items you want to rent out, set your rental price, and wait for renters to contact you. You can also browse items that other users have listed for rent and contact them to arrange a rental.
+
+## 🌟 Features
+
+- List items for rent
+- Set rental price
+- Browse items listed by other users
+- Contact other users to arrange rental
+
+## 📷 Screenshots
+
+to be updated
+
+<!-- ![Screenshot 1](/screenshots/screenshot1.png)
+![Screenshot 2](/screenshots/screenshot2.png) -->
+
+## 📚 Installation
+
+comming soon
+
+<!-- 1. Clone the repository
+2. Install dependencies using `npm install`
+3. Run the app using `npm start` -->
+
+## 🤝 Contributors
+
+Sahildeep Singh Randhawa
+Chitra Raval
+Shagun Thukral
+Diya Patel
+
+## 📝 License
+
+Private project.
