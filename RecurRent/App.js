@@ -1,52 +1,39 @@
+const Stack = createNativeStackNavigator();
+import * as React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { useFonts } from "expo-font";
+import SignUp from "./screens/signupScreen";
 
-import React from 'react';
-import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Platform } from 'react-native';
-import { Entypo } from '@expo/vector-icons';
-import { StatusBar } from 'expo-status-bar';
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { View, Text, Pressable, TouchableOpacity } from "react-native";
 
-export default function App() {
+const App = () => {
+  const [hideSplashScreen, setHideSplashScreen] = React.useState(true);
+  const [fontsLoaded, error] = useFonts({
+    "Poppins-Bold": require("./assets/fonts/Poppins-Bold.ttf"),
+    "Inter-Regular": require("./assets/fonts/Inter-Regular.ttf"),
+    "Inter-Medium": require("./assets/fonts/Inter-Medium.ttf"),
+    "Inter-SemiBold": require("./assets/fonts/Inter-SemiBold.ttf"),
+  });
+
+  if (!fontsLoaded && !error) {
+    return null;
+  }
+
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
-        <Entypo name="archive" size={96} color="#2196F3" />
-        <Text style={styles.contentText}>Welcome to RecurRent</Text>
-        <TouchableOpacity style={styles.centerButton}>
-          <Text style={styles.centerButtonText}>Let's Go</Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+    <>
+      <NavigationContainer>
+        {hideSplashScreen ? (
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen
+              name="SignUp"
+              component={SignUp}
+              options={{ headerShown: false }}
+            />
+          </Stack.Navigator>
+        ) : null}
+      </NavigationContainer>
+    </>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F5F5F5',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
-    backgroundColor: '#dbeafe',
-  },
-  content: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  contentText: {
-    fontSize: 24,
-    color: '#333',
-    fontFamily: 'Helvetica Neue',
-    marginTop: 20,
-  },
-  centerButton: {
-    backgroundColor: '#2196F3',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 20,
-    marginTop: 20,
-  },
-  centerButtonText: {
-    fontSize: 18,
-    color: 'white',
-    fontFamily: 'Helvetica Neue',
-  },
-});
+};
+export default App;
