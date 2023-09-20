@@ -9,19 +9,19 @@ import {
 } from "react-native";
 import { FontFamily, Padding, Border, Color, FontSize } from "../GlobalStyles";
 
-const SignUp = ({ navigation }) => {
+const Login = ({ navigation }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     return (
-        <View style={styles.signUp}>
+        <View style={styles.login}>
             <Image
-                style={styles.signUpChild}
+                style={styles.loginChild}
                 contentFit="cover"
                 source={require("../assets/star-8.png")}
             />
             <View style={[styles.holaWelcomeParent, styles.parentPosition]}>
-                <Text style={styles.holaWelcome}>Hola! Welcome</Text>
+                <Text style={styles.holaWelcome}>Welcome Back</Text>
                 <View style={styles.input}>
                     <Text style={[styles.title, styles.textTypo]}>Email</Text>
                     <View style={[styles.inputField, styles.inputLayout]}>
@@ -41,25 +41,17 @@ const SignUp = ({ navigation }) => {
                             style={[styles.text, styles.textLayout]}
                             value={password}
                             onChangeText={setPassword}
-                            placeholder="must be 8 characters"
+                            placeholder="your password"
                             secureTextEntry={true}
                         />
                     </View>
                     <Text style={styles.error}>Error</Text>
                 </View>
-                <View style={styles.input1}>
-                    <Text style={[styles.title, styles.textTypo]}>Confirm Password</Text>
-                    <View style={[styles.inputField1, styles.inputLayout]}>
-                        <TextInput
-                            style={[styles.text, styles.textLayout]}
-                            value={confirmPassword}
-                            onChangeText={setConfirmPassword}
-                            placeholder="re-enter password"
-                            secureTextEntry={true}
-                        />
-                    </View>
-                    <Text style={styles.error}>Error</Text>
-                </View>
+                {/* <View style={styles.fPassword}>
+                <Text style={styles.forgotPassword}>
+                  Forgot password?
+               </Text>
+                </View> */}
                 <TouchableOpacity
                     style={[
                         styles.buttonPrimary,
@@ -69,14 +61,14 @@ const SignUp = ({ navigation }) => {
                     <Text style={[
                         styles.button,
                         styles.logInTypo
-                    ]}>Create Account</Text>
+                    ]}>Login</Text>
                 </TouchableOpacity>
             </View>
             <View style={[styles.frameParent, styles.parentPosition]}>
                 <View>
                     <View style={styles.component2}>
                         <Text style={[styles.orRegisterWith, styles.alreadyHaveAnClr]}>
-                            Or Register with
+                            Or continue with
                         </Text>
                         <View style={[styles.component2Child, styles.component2Position]} />
                         <View style={[styles.component2Item, styles.component2Position]} />
@@ -98,9 +90,9 @@ const SignUp = ({ navigation }) => {
                     </TouchableOpacity>
                 </View>
                 <Text style={[styles.alreadyHaveAnClr, styles.titleLayout]}>
-                    <Text style={styles.alreadyHaveAnClr}>{`Already have an account? `}</Text>
-                    <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-                        <Text style={[styles.logIn, styles.logInTypo]}>Log in</Text>
+                    <Text style={styles.alreadyHaveAnClr}>{`Don't have an account? `}</Text>
+                    <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
+                        <Text style={[styles.logIn, styles.logInTypo]}>Create one</Text>
                     </TouchableOpacity>
                 </Text>
             </View>
@@ -162,11 +154,11 @@ const styles = StyleSheet.create({
         position: "absolute",
     },
     titleLayout: {
-        marginTop: 20,
+         marginTop: 20,
         lineHeight: 18,
         fontSize: FontSize.size_sm,
     },
-    signUpChild: {
+    loginChild: {
         top: 47,
         left: 320,
         width: 46,
@@ -258,6 +250,20 @@ const styles = StyleSheet.create({
     holaWelcomeParent: {
         top: 145,
     },
+    fPassword:{
+      display: 'inline-flex',
+      flexDirection: 'row-reverse',
+      justifyContent: 'flex-end'
+    },
+    forgotPassword: {
+      marginTop: 20,
+      color: '#000',
+      fontFamily: 'Inter',
+      fontSize: 14,
+      fontStyle: 'normal',
+      fontWeight: '400',
+      textAlign: 'right',
+    },
     orRegisterWith: {
         top: "0%",
         left: "34.84%",
@@ -315,7 +321,7 @@ const styles = StyleSheet.create({
         top: 638,
         alignItems: "center",
     },
-    signUp: {
+    login: {
         width: "100%",
         height: 852,
         overflow: "hidden",
@@ -324,4 +330,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default SignUp;
+export default Login;

@@ -2,6 +2,7 @@ const Stack = createNativeStackNavigator();
 import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { useFonts } from "expo-font";
+import Login from "./screens/loginScreen";
 import SignUp from "./screens/signupScreen";
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -24,12 +25,9 @@ const App = () => {
     <>
       <NavigationContainer>
         {hideSplashScreen ? (
-          <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen
-              name="SignUp"
-              component={SignUp}
-              options={{ headerShown: false }}
-            />
+          <Stack.Navigator initialRouteName="SignUp" screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="SignUp" component={SignUp} />
+            <Stack.Screen name="Login" component={Login} />
           </Stack.Navigator>
         ) : null}
       </NavigationContainer>
