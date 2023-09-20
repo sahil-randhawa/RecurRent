@@ -8,11 +8,54 @@ import {
     TouchableOpacity,
 } from "react-native";
 import { FontFamily, Padding, Border, Color, FontSize } from "../GlobalStyles";
-
-const SignUp = () => {
+import { auth,db } from '../firebaseConfig';
+import {  getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { doc, setDoc } from "firebase/firestore"; 
+const SignUp = ({navigation, route}) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+
+
+    const onLogInClicked = () =>{
+        navigation.navigate('LogIn')
+      }
+
+      const onCreateAccountClicked = async () =>{
+        if(password == confirmPassword){
+        const auth = getAuth();
+            createUserWithEmailAndPassword(auth,email, password)
+            .then((userCredential) => {
+                const user = userCredential.user;
+                const userToInsert = {
+                    typeUser:"user"
+                }
+                try {
+                    setDoc(doc(db, "userProfiles", user.uid), userToInsert);
+                    // db.collection("userProfiles").doc(user.uid).set(userToInsert)
+                } catch (err) {
+                    console.log(err)
+                }
+                console.log(`user uid ${user.uid}`)
+                console.log('User account created & signed in!');
+                navigation.navigate('Home');
+            })
+            .catch(error => {
+                if (error.code === 'auth/email-already-in-use') {
+                console.log('That email address is already in use!');
+                }
+
+                if (error.code === 'auth/invalid-email') {
+                console.log('That email address is invalid!');
+                }
+
+                console.error(error);
+            });
+        }
+        else{
+            alert("Password and Confirm Password should be match!")
+        }
+      }
     return (
         <View style={styles.signUp}>
             <Image
@@ -65,6 +108,7 @@ const SignUp = () => {
                         styles.buttonPrimary,
                         styles.buttonPrimaryFlexBox
                     ]}
+                    onPress={onCreateAccountClicked}
                 >
                     <Text style={[
                         styles.button,
@@ -101,7 +145,7 @@ const SignUp = () => {
                     <Text
                         style={styles.alreadyHaveAnClr}
                     >{`Already have an account? `}</Text>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={onLogInClicked}>
                         <Text style={[styles.logIn, styles.logInTypo]}>Log in</Text>
                     </TouchableOpacity>
                 </Text>
