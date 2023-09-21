@@ -1,8 +1,8 @@
 import * as React from "react";
 import { useState } from "react";
-import { 
-  Text, 
-  StyleSheet, 
+import {
+  Text,
+  StyleSheet,
   View,
   TextInput,
   TouchableOpacity
@@ -10,11 +10,11 @@ import {
 import CheckBox from 'react-native-check-box'
 import { Image } from "expo-image";
 import { FontSize, Padding, Color, Border, FontFamily } from "../GlobalStyles";
-import { auth,db } from '../firebaseConfig';
+import { auth, db } from '../firebaseConfig';
 import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { getDoc, doc } from "firebase/firestore";
 
-const LogIn = ({navigation, route}) => {
+const LogIn = ({ navigation, route }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [toggleCheckBox, setToggleCheckBox] = useState(false)
@@ -26,36 +26,36 @@ const LogIn = ({navigation, route}) => {
 
   const onLoginClicked = async () => {
     try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password)
-        if(userCredential === null ){
-            console.log("Error: userCredential is null!")
-            alert("Invalid Credential!")
-        }
-        else{
-            const docRef = doc(db, "userProfiles", auth.currentUser.uid)
-            const docSnap = await getDoc(docRef)
-            if (docSnap.exists()) {
-                const profileInfo = docSnap.data()
-                if(profileInfo.typeUser === "user"){
-                    navigation.navigate('Home');
-                }
-                else{
-                    console.log("Error: Type of user does not match!")
-                    alert("Invalid Credential!")
-                }
-            }
-            else{
-                console.log("Error: DocSanp Does not exist!")
-                alert("Invalid Credential!")
-            }
-
-        }
-        
-    } catch(err) {
-        console.log(err)
+      const userCredential = await signInWithEmailAndPassword(auth, email, password)
+      if (userCredential === null) {
+        console.log("Error: userCredential is null!")
         alert("Invalid Credential!")
+      }
+      else {
+        const docRef = doc(db, "userProfiles", auth.currentUser.uid)
+        const docSnap = await getDoc(docRef)
+        if (docSnap.exists()) {
+          const profileInfo = docSnap.data()
+          if (profileInfo.typeUser === "user") {
+            navigation.navigate('Home');
+          }
+          else {
+            console.log("Error: Type of user does not match!")
+            alert("Invalid Credential!")
+          }
+        }
+        else {
+          console.log("Error: DocSanp Does not exist!")
+          alert("Invalid Credential!")
+        }
+
+      }
+
+    } catch (err) {
+      console.log(err)
+      alert("Invalid Credential!")
     }
-}
+  }
 
   return (
     <View style={styles.logIn}>
@@ -65,11 +65,11 @@ const LogIn = ({navigation, route}) => {
           <Text style={[styles.title, styles.titleLayout]}>Email address</Text>
           <View style={[styles.inputField, styles.inputBorder]}>
             <TextInput
-                  style={[styles.text, styles.textLayout]}
-                  value={email}
-                  onChangeText={setEmail}
-                  placeholder="example@gmail.com"
-              />
+              style={[styles.text, styles.textLayout]}
+              value={email}
+              onChangeText={setEmail}
+              placeholder="example@gmail.com"
+            />
             {/* <Image
               style={[styles.icon, styles.iconLayout]}
               contentFit="cover"
@@ -81,13 +81,13 @@ const LogIn = ({navigation, route}) => {
         <View style={styles.input1}>
           <Text style={[styles.title, styles.titleLayout]}>Password</Text>
           <View style={[styles.inputField1, styles.inputBorder]}>
-          <TextInput
-                            style={[styles.text, styles.textLayout]}
-                            value={password}
-                            onChangeText={setPassword}
-                            placeholder="must be 8 characters"
-                            secureTextEntry={true}
-                        />
+            <TextInput
+              style={[styles.text, styles.textLayout]}
+              value={password}
+              onChangeText={setPassword}
+              placeholder="must be 8 characters"
+              secureTextEntry={true}
+            />
             {/* <Image
               style={styles.iconLayout}
               contentFit="cover"
@@ -104,7 +104,7 @@ const LogIn = ({navigation, route}) => {
       />
       <View style={[styles.instanceParent, styles.parentFlexBox]}>
         <View style={[styles.checkboxOnParent, styles.parentFlexBox]}>
-        {/* <CheckBox
+          {/* <CheckBox
                 style={{flex: 1, padding: 10}}
                 onClick={()=>{
                   this.setState({
@@ -162,9 +162,9 @@ const styles = StyleSheet.create({
     // left: 20,
     // position: "absolute",
     position: "absolute",
-        width: "100%",
-        flex: 1,
-        alignItems: "center",
+    width: "100%",
+    flex: 1,
+    alignItems: "center",
   },
   titleLayout: {
     lineHeight: 18,
@@ -324,7 +324,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     left: 35,
     position: "absolute",
- 
+
   },
   orWith: {
     top: "0%",
