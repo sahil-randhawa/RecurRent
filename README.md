@@ -26,7 +26,7 @@ to be updated
 
 ## 📚 Installation
 
-comming soon
+coming soon
 
 <!-- 1. Clone the repository
 2. Install dependencies using `npm install`
@@ -35,9 +35,9 @@ comming soon
 ## 🤝 Contributors
 
 Sahildeep Singh Randhawa
-Chitra Raval
-Shagun Thukral
-Diya Patel
+<br>Chitra Raval
+<br>Shagun Thukral
+<br>Diya Patel
 
 ## 📝 License
 
