@@ -6,19 +6,31 @@ import {
     View,
     TextInput,
     TouchableOpacity,
+    SafeAreaView,
+    Platform,
 } from "react-native";
 import { FontFamily, Padding, Border, Color, FontSize } from "../GlobalStyles";
+import { StatusBar } from "expo-status-bar";
 
-const Home = ({navigation, route}) => {
-    return(
-        <View style={[styles.holaWelcomeParent, styles.parentPosition]}>
-        <Text style={styles.holaWelcome}>Hola! Welcome</Text>
-        </View>
+const Home = ({ navigation, route }) => {
+    return (
+        <SafeAreaView style={styles.container}>
+            <View style={[styles.holaWelcomeParent, styles.parentPosition]}>
+                <Text style={styles.holaWelcome}>Hola! Welcome</Text>
+            </View>
+        </SafeAreaView>
     );
 }
 
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: Color.colorWhite,
+        alignItems: "center",
+        justifyContent: "center",
+        paddingTop: Platform.OS === "android" ? 25 : StatusBar.currentHeight,
+    },
     parentPosition: {
         // left: 20,
         position: "absolute",
