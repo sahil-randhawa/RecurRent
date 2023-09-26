@@ -2,20 +2,19 @@ const Stack = createNativeStackNavigator();
 import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import SignUp from "./screens/signupScreen";
-import OpenningScreen from "./screens/OpenningScreen";
-import LogIn from "./screens/LogInScreen";
-import Home from "./screens/HomeScreen";
+import SignUp from "./src/screens/signupScreen";
+import OpenningScreen from "./src/screens/OpenningScreen";
+import LogIn from "./src/screens/LogInScreen";
+import Home from "./src/screens/HomeScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { View, Text, Pressable, TouchableOpacity } from "react-native";
 
 const App = () => {
   const [hideSplashScreen, setHideSplashScreen] = React.useState(true);
   const [fontsLoaded, error] = useFonts({
-    "Poppins-Bold": require("./assets/fonts/Poppins-Bold.ttf"),
-    "Inter-Regular": require("./assets/fonts/Inter-Regular.ttf"),
-    "Inter-Medium": require("./assets/fonts/Inter-Medium.ttf"),
-    "Inter-SemiBold": require("./assets/fonts/Inter-SemiBold.ttf"),
+    "Montserrat-Bold": require("./assets/fonts/Montserrat-Bold.ttf"),
+    "Montserrat-Regular": require("./assets/fonts/Montserrat-Regular.ttf"),
+    "Manrope-Regular": require("./assets/fonts/Manrope-Regular.ttf"),
   });
 
   if (!fontsLoaded && !error) {
@@ -26,7 +25,7 @@ const App = () => {
     <>
       <NavigationContainer>
         {hideSplashScreen ? (
-          <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="OpenningScreen">
+          <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="HomeScreen">
             <Stack.Screen
               name="OpenningScreen"
               component={OpenningScreen}
