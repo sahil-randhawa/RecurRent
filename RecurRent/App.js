@@ -6,6 +6,7 @@ import SignUp from "./src/screens/signupScreen";
 import OpenningScreen from "./src/screens/OpenningScreen";
 import LogIn from "./src/screens/LogInScreen";
 import Home from "./src/screens/HomeScreen";
+import Splash from "./src/screens/Splash";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { View, Text, Pressable, TouchableOpacity } from "react-native";
 
@@ -25,7 +26,12 @@ const App = () => {
     <>
       <NavigationContainer>
         {hideSplashScreen ? (
-          <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="HomeScreen">
+          <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Splash">
+            <Stack.Screen
+              name="Splash"
+              component={Splash}
+              options={{ headerShown: false }}
+            />
             <Stack.Screen
               name="OpenningScreen"
               component={OpenningScreen}
