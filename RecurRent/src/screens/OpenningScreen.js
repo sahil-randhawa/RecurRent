@@ -32,7 +32,7 @@ const OpenningScreen = ({ navigation, route }) => {
       <Image
         style={styles.component4Icon}
         contentFit="cover"
-        source={require("../../assets/images/component-4.png")}
+        source={require("../../assets/images/logoStars.png")}
       />
     </View>
   );

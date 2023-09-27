@@ -14,8 +14,7 @@ export default function Splash({ navigation, route }) {
         <SafeAreaView style={style.container}>
             {/* logo image here */}
             <Image
-                // source={{uri : "https://ui-avatars.com/api/?name=EV&background=068FFF&color=FFF&bold=true&size=248&rounded=true"}}
-                source={require("../../assets/images/component-4.png")}
+                source={require("../../assets/images/logoStars.png")}
                 style={{
                     width: '80%',
                     height: 300,
