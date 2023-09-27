@@ -57,24 +57,26 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   recurrent: {
-    top: 0,
     // left: 110,
+    // textAlign: "left",
+    top: 0,
     letterSpacing: 0.8,
     lineHeight: 33,
     color: primaryColor,
-    // textAlign: "left",
+    fontSize: 24,
     textAlign: "center",
     position: "relative",
   },
   nowShareYour1: {
-    top: 20,
+    // top: 10,
     // left: 20,
+    // width: 319,
     lineHeight: 21,
     color: secondaryColor,
     textAlign: "center",
-    // width: 319,
     paddingHorizontal: '20%',
     position: "relative",
+    fontSize: 16,
   },
   text: {
     top: 471,
@@ -86,7 +88,7 @@ const styles = StyleSheet.create({
     // backgroundColor: "#15f5f5",
   },
   button: {
-    color: lightTheme.colors.onPrimaryContainer,
+    color: lightTheme.colors.onPrimary,
   },
   buttonPrimary1: {
     top: 642,
@@ -102,7 +104,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   component4Icon: {
-    top: '18%',
+    top: '20%',
     left: '20%',
     width: '60%',
     height: 228,
