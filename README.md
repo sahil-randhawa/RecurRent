@@ -19,8 +19,8 @@ The Recurrent app is easy to use. Simply list the items you want to rent out, se
 
 ## 📷 Screenshots
 
-to be updated
-
+to be updated <br>
+<img src="./img/Openning screen.png" alt="Openning Screen" width="240" />  <img src="./img/Log In.png" alt="Login Screen" width="240" />  <img src="./img/Sign Up.png" alt="Sign Up Screen" width="240" />
 <!-- ![Screenshot 1](/screenshots/screenshot1.png)
 ![Screenshot 2](/screenshots/screenshot2.png) -->
 
