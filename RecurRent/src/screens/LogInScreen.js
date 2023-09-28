@@ -19,7 +19,7 @@ import {
 	border,
 	lightTheme,
 	darkTheme,
-  baseFontSize,
+	baseFontSize,
 } from "../styles/GlobalStyles";
 import { auth, db } from "../../firebaseConfig";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
@@ -50,7 +50,10 @@ const LogIn = ({ navigation, route }) => {
 				if (docSnap.exists()) {
 					const profileInfo = docSnap.data();
 					if (profileInfo.typeUser === "user") {
+						console.log("Log in clicked!");
+						console.log("User: ", auth.currentUser.uid);
 						navigation.navigate("Home");
+						// navigation.navigate("OpenningScreen");
 					} else {
 						console.log("Error: Type of user does not match!");
 						alert("Invalid Credential!");
@@ -73,7 +76,7 @@ const LogIn = ({ navigation, route }) => {
 					Welcome Back!
 				</Text>
 				<View style={styles.input}>
-					<Text style={[typography.heading, styles.title, styles.titleLayout]}>Email address</Text>
+					<Text style={[styles.title, styles.titleLayout]}>Email address</Text>
 					<View style={[styles.inputField, styles.inputBorder]}>
 						<TextInput
 							style={[styles.text, styles.textLayout]}
@@ -91,7 +94,7 @@ const LogIn = ({ navigation, route }) => {
 				</View>
 				<View style={styles.input1}>
 					<Text style={[styles.title, styles.titleLayout]}>Password</Text>
-					<View style={[styles.inputField1, styles.inputBorder]}>
+					<View style={[styles.inputField, styles.inputBorder]}>
 						<TextInput
 							style={[styles.text, styles.textLayout]}
 							value={password}
@@ -162,8 +165,12 @@ const LogIn = ({ navigation, route }) => {
 						<Text style={styles.dontHaveAn}>Don’t have an account?</Text>
 						<Text style={styles.text2}>{` `}</Text>
 					</Text>
-					<TouchableOpacity style={styles.text2} onPress={onSignUpClicked}>
-						<Text style={typography.subheading}>Sign up</Text>
+					<TouchableOpacity
+						// style={styles.text2}
+						onPress={onSignUpClicked}>
+						<Text
+						// style={typography.subheading}
+						>Sign up</Text>
 					</TouchableOpacity>
 				</Text>
 			</View>
@@ -184,7 +191,7 @@ const styles = StyleSheet.create({
 		lineHeight: 18,
 	},
 	inputBorder: {
-		paddingVertical: spacing.p_lg,
+		// paddingVertical: spacing.p_lg,
 		borderWidth: 1,
 		borderColor: textColor,
 		borderStyle: "solid",
@@ -245,8 +252,10 @@ const styles = StyleSheet.create({
 	inputField: {
 		marginTop: 6,
 		alignItems: "center",
-		paddingHorizontal: spacing.padding,
-		paddingVertical: spacing.p_lg,
+		// paddingHorizontal: spacing.padding,
+		// paddingVertical: spacing.p_lg,
+		paddingHorizontal: 18,
+		paddingVertical: 18,
 		flexDirection: "row",
 		borderWidth: 1,
 		borderColor: lightTheme.colors.onPrimaryContainer,
