@@ -5,7 +5,7 @@ import { useFonts } from "expo-font";
 import SignUp from "./src/screens/signupScreen";
 import OpenningScreen from "./src/screens/OpenningScreen";
 import LogIn from "./src/screens/LogInScreen";
-import Home from "./src/screens/HomeScreen";
+import HomeScreen from "./src/screens/HomeScreen";
 import Splash from "./src/screens/Splash";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { View, Text, Pressable, TouchableOpacity } from "react-native";
@@ -49,7 +49,7 @@ const App = () => {
             />
             <Stack.Screen
               name="Home"
-              component={Home}
+              component={HomeScreen}
               options={{ headerShown: false }}
             />
           </Stack.Navigator>
