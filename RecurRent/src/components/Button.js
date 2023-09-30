@@ -17,6 +17,14 @@ export const secondaryBtnStyle = {
   paddingVertical: 10,
 };
 
+export const logoutBtnStyle = {
+  borderRadius: 10,
+  backgroundColor: 'transparent',
+  paddingVertical: 10,
+  borderWidth: 1,
+  borderColor: primaryColor,
+};
+
 const Btn = ({ title, onPress, mode, style, icon }) => {
   const buttonStyle =
     title.toLowerCase() === "primary" ? primaryBtnStyle : secondaryBtnStyle;
@@ -30,7 +38,7 @@ const Btn = ({ title, onPress, mode, style, icon }) => {
         labelStyle={{ fontSize: 16 }}
         contentStyle={{ width: "100%" }}
         textColor={mode === "contained" ? lightTheme.colors.onPrimary : primaryColor}
-		  icon={icon}
+        icon={icon}
       >
         {title}
       </Button>

@@ -1,14 +1,15 @@
-const Stack = createNativeStackNavigator();
 import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createStackNavigator } from '@react-navigation/stack';
 
 import OnBoardingScreen from "./src/screens/OnBoardingScreen";
 import LogInScreen from "./src/screens/LogInScreen";
 import HomeScreen from "./src/screens/HomeScreen";
 import SignUpScreen from "./src/screens/SignupScreen";
 import Splash from "./src/screens/Splash";
+
+const Stack = createStackNavigator();
 
 const App = () => {
 	const [hideSplashScreen, setHideSplashScreen] = React.useState(true);
