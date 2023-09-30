@@ -28,7 +28,7 @@ import { auth, db } from "../../firebaseConfig";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { getDoc, doc } from "firebase/firestore";
 
-const LogIn = ({ navigation, route }) => {
+const LogInScreen = ({ navigation, route }) => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [toggleCheckBox, setToggleCheckBox] = useState(false);
@@ -169,4 +169,4 @@ const LogIn = ({ navigation, route }) => {
 	);
 };
 
-export default LogIn;
+export default LogInScreen;

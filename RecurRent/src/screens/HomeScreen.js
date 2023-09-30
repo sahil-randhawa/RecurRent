@@ -25,7 +25,7 @@ import { StatusBar } from "expo-status-bar";
 import { auth, db } from "../../firebaseConfig";
 import { signOut } from "firebase/auth";
 
-const Home = ({ navigation, route }) => {
+const HomeScreen = ({ navigation, route }) => {
 	const onLogoutClicked = () => {
 		signOut(auth)
 			.then(() => {
@@ -56,4 +56,4 @@ const Home = ({ navigation, route }) => {
 	);
 };
 
-export default Home;
+export default HomeScreen;

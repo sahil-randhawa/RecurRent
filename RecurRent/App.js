@@ -5,9 +5,10 @@ import { useFonts } from "expo-font";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import OnBoardingScreen from "./src/screens/OnBoardingScreen";
-import LogIn from "./src/screens/LogInScreen";
-import Home from "./src/screens/HomeScreen";
-import SignUp from "./src/screens/SignUpScreen";
+import LogInScreen from "./src/screens/LogInScreen";
+import HomeScreen from "./src/screens/HomeScreen";
+import SignUpScreen from "./src/screens/SignupScreen";
+import Splash from "./src/screens/Splash";
 
 const App = () => {
 	const [hideSplashScreen, setHideSplashScreen] = React.useState(true);
@@ -27,10 +28,12 @@ const App = () => {
 		<>
 			<NavigationContainer>
 				{hideSplashScreen ? (
-					<Stack.Navigator
-						screenOptions={{ headerShown: false }}
-						initialRouteName="HomeScreen"
-					>
+					<Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Splash">
+						<Stack.Screen
+							name="Splash"
+							component={Splash}
+							options={{ headerShown: false }}
+						/>
 						<Stack.Screen
 							name="OnBoardingScreen"
 							component={OnBoardingScreen}
@@ -38,17 +41,17 @@ const App = () => {
 						/>
 						<Stack.Screen
 							name="SignUp"
-							component={SignUp}
+							component={SignUpScreen}
 							options={{ headerShown: false }}
 						/>
 						<Stack.Screen
 							name="LogIn"
-							component={LogIn}
+							component={LogInScreen}
 							options={{ headerShown: false }}
 						/>
 						<Stack.Screen
 							name="Home"
-							component={Home}
+							component={HomeScreen}
 							options={{ headerShown: false }}
 						/>
 					</Stack.Navigator>

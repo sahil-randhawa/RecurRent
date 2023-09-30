@@ -23,7 +23,7 @@ import { Button } from "react-native-paper";
 export default function Splash({ navigation, route }) {
 	useEffect(() => {
 		const timeout = setTimeout(() => {
-			navigation.navigate("OpenningScreen");
+			navigation.navigate("OnBoardingScreen");
 		}, 1500);
 		return () => clearTimeout(timeout);
 	});
@@ -55,7 +55,7 @@ export default function Splash({ navigation, route }) {
 			<ActivityIndicator color={primaryColor} animating={true} size="large" />
 
 			<Button
-				onPress={() => navigation.navigate("OpenningScreen")}
+				onPress={() => navigation.navigate("OnBoardingScreen")}
 				style={{
 					marginTop: 20,
 					// backgroundColor: primaryColor,

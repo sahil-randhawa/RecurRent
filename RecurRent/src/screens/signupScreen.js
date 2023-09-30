@@ -16,7 +16,7 @@ import { auth, db } from "expo/AppEntry";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 
-const SignUp = ({ navigation, route }) => {
+const SignUpScreen = ({ navigation, route }) => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
@@ -173,4 +173,4 @@ const SignUp = ({ navigation, route }) => {
 	);
 };
 
-export default SignUp;
+export default SignUpScreen;
