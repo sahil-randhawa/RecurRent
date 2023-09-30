@@ -2,60 +2,62 @@ const Stack = createNativeStackNavigator();
 import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import SignUp from "./src/screens/signupScreen";
-import OpenningScreen from "./src/screens/OpenningScreen";
-import LogIn from "./src/screens/LogInScreen";
-import HomeScreen from "./src/screens/HomeScreen";
-import Splash from "./src/screens/Splash";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { View, Text, Pressable, TouchableOpacity } from "react-native";
+
+import OnBoardingScreen from "./src/screens/OnBoardingScreen";
+import LogInScreen from "./src/screens/LogInScreen";
+import HomeScreen from "./src/screens/HomeScreen";
+import SignUpScreen from "./src/screens/SignupScreen";
+import Splash from "./src/screens/Splash";
 
 const App = () => {
-  const [hideSplashScreen, setHideSplashScreen] = React.useState(true);
-  const [fontsLoaded, error] = useFonts({
-    "Montserrat-Bold": require("./assets/fonts/Montserrat-Bold.ttf"),
-    "Montserrat-Regular": require("./assets/fonts/Montserrat-Regular.ttf"),
-    "Manrope-Regular": require("./assets/fonts/Manrope-Regular.ttf"),
-  });
+	const [hideSplashScreen, setHideSplashScreen] = React.useState(true);
+	const [fontsLoaded, error] = useFonts({
+		"Montserrat-Black": require("./assets/fonts/Montserrat-Black.ttf"),
+		"Montserrat-Bold": require("./assets/fonts/Montserrat-Bold.ttf"),
+		"Montserrat-SemiBold": require("./assets/fonts/Montserrat-SemiBold.ttf"),
+		"Montserrat-Regular": require("./assets/fonts/Montserrat-Regular.ttf"),
+		"Manrope-Regular": require("./assets/fonts/Manrope-Regular.ttf"),
+	});
 
-  if (!fontsLoaded && !error) {
-    return null;
-  }
+	if (!fontsLoaded && !error) {
+		return null;
+	}
 
-  return (
-    <>
-      <NavigationContainer>
-        {hideSplashScreen ? (
-          <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Splash">
-            <Stack.Screen
-              name="Splash"
-              component={Splash}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="OpenningScreen"
-              component={OpenningScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="SignUp"
-              component={SignUp}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="LogIn"
-              component={LogIn}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="Home"
-              component={HomeScreen}
-              options={{ headerShown: false }}
-            />
-          </Stack.Navigator>
-        ) : null}
-      </NavigationContainer>
-    </>
-  );
+	return (
+		<>
+			<NavigationContainer>
+				{hideSplashScreen ? (
+					<Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Splash">
+						<Stack.Screen
+							name="Splash"
+							component={Splash}
+							options={{ headerShown: false }}
+						/>
+						<Stack.Screen
+							name="OnBoardingScreen"
+							component={OnBoardingScreen}
+							options={{ headerShown: false }}
+						/>
+						<Stack.Screen
+							name="SignUp"
+							component={SignUpScreen}
+							options={{ headerShown: false }}
+						/>
+						<Stack.Screen
+							name="LogIn"
+							component={LogInScreen}
+							options={{ headerShown: false }}
+						/>
+						<Stack.Screen
+							name="Home"
+							component={HomeScreen}
+							options={{ headerShown: false }}
+						/>
+					</Stack.Navigator>
+				) : null}
+			</NavigationContainer>
+		</>
+	);
 };
 export default App;

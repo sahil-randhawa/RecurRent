@@ -2,6 +2,7 @@ import { StyleSheet, Platform } from "react-native";
 import { MD3LightTheme } from "react-native-paper";
 import { MD3DarkTheme } from "react-native-paper";
 
+
 // ---------------  Colors  ---------------
 const primaryColor = "#5B81FA";
 const secondaryColor = "#2B308A";
@@ -12,11 +13,17 @@ const backgroundColor = "#F2F5FF";
 const baseFontSize = Platform.OS === "ios" ? 16 : 18;
 
 const typography = StyleSheet.create({
+	title: {
+		fontSize: baseFontSize + 12,
+		fontFamily: "Montserrat-Bold",
+		color: textColor,
+		marginBottom: 16,
+	},
 	heading: {
 		fontSize: baseFontSize + 8,
 		fontFamily: "Montserrat-Bold",
 		color: textColor,
-		marginBottom: 16,
+		marginBottom: 14,
 	},
 	subheading: {
 		fontSize: baseFontSize + 4,
@@ -39,6 +46,14 @@ const typography = StyleSheet.create({
 
 // ---------------  Spacing  ---------------
 const spacing = StyleSheet.create({
+
+	container: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+		paddingHorizontal: 20,
+		backgroundColor: backgroundColor,
+	},
 	margin: { margin: 16 },
 	padding: { padding: 16 },
 	p_26xl: { padding: 45 },
@@ -190,7 +205,6 @@ export {
 	secondaryColor,
 	textColor,
 	backgroundColor,
-   baseFontSize,
 	typography,
 	spacing,
 	border,
