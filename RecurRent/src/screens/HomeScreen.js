@@ -84,5 +84,7 @@ const HomeScreen = ({ navigation, route }) => {
 		</>
 	);
 };
-
+const styles = StyleSheet.create({
+	
+})
 export default HomeScreen;
