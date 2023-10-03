@@ -6,7 +6,7 @@ import { MD3DarkTheme } from "react-native-paper";
 // ---------------  Colors  ---------------
 const primaryColor = "#5B81FA";  // color name: blue-500
 const secondaryColor = "#2B308A"; // color name: blue-700
-const tertiaryColor = "#9CA3AF"; // color name: gray-300
+const tertiaryColor = "#8F9199"; // color name: gray-300
 const textColor = "#1F1F1F"; // color name: gray-900
 const backgroundColor = "#F2F5FF"; // color name: gray-100
 
