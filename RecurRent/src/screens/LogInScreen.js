@@ -66,7 +66,7 @@ const LogInScreen = ({ navigation, route }) => {
 			}
 		} catch (err) {
 			console.log(err);
-			alert("Invalid Credential!");
+			alert("Login failed!\n" + err.message);
 		}
 	};
 
@@ -140,9 +140,7 @@ const LogInScreen = ({ navigation, route }) => {
 					<View style={{ flexDirection: "row", marginTop: 10 }}>
 						<Btn
 							title="Continue with Google"
-							// onPress={onSignUpClicked}
-							// temporary redirect to create new listing
-							onPress={() => { navigation.navigate("CreateNewListing"); }}
+							onPress={onSignUpClicked}
 							mode="outlined"
 							icon={() => (
 								<Icon

@@ -20,13 +20,13 @@ import * as Location from "expo-location";
 
 const CreateNewListing = ({ navigation, route }) => {
 
-    const [name, setName] = useState("")
-    const [description, setDescription] = useState("")
-    const [price, setPrice] = useState("")
-    const [pickupLocation, setPickupLocation] = useState("")
-    const [duration, setDuration] = useState("")
-    const [category, setCategory] = useState("")
-    const [image, setImage] = useState("")
+    const [name, setName] = useState("StudyTable")
+    const [description, setDescription] = useState("Good condition study table from IKEA. Color: Black.")
+    const [price, setPrice] = useState("30")
+    const [pickUpAddress, setpickUpAddress] = useState("1 Younge Street, Toronto, Canada")
+    const [duration, setDuration] = useState("1 month")
+    const [category, setCategory] = useState("furniture")
+    const [image, setImage] = useState("table")
 
     const [coordinates, setCoordinates] = useState({ lat: 0, lng: 0 });
 
@@ -53,14 +53,14 @@ const CreateNewListing = ({ navigation, route }) => {
     };
 
     const createButtonHandler = async () => {
-        if (pickupLocation === "") {
+        if (pickUpAddress == "") {
             alert("Please enter a pickup location");
             return;
         }
-        const geoCodedLocation = await Location.geocodeAsync(pickUpLocation);
+        const geoCodedLocation = await Location.geocodeAsync(pickUpAddress);
         const location = geoCodedLocation[0];
         if (location === undefined) {
-            alert("Invalid Location, Please provide a valid address!");
+            alert("Location not found, Please provide a valid address!");
             return;
         }
         setCoordinates({ lat: location.latitude, lng: location.longitude });
@@ -75,19 +75,20 @@ const CreateNewListing = ({ navigation, route }) => {
                 name: name,
                 description: description,
                 price: price,
-                pickupLocation: pickupLocation,
+                pickUpAddress: pickUpAddress,
                 duration: duration,
                 category: category,
-                image: image,
+                productPhoto: 'https://source.unsplash.com/600x500/?' + name,
                 coordinates: coordinates,
                 owner: auth.currentUser.email,
+                status: "Available",
             };
 
             console.log("Listing to be saved: ", listingToBeSaved);
 
             try {
                 const docRef = await addDoc(
-                    collection(db, "listings"),
+                    collection(db, "Products"),
                     listingToBeSaved
                 );
                 console.log("New Listing Document written with ID: ", docRef.id);
@@ -139,8 +140,8 @@ const CreateNewListing = ({ navigation, route }) => {
                         <Text style={formStyles.label}>Pickup Location</Text>
                         <TextInput
                             style={formStyles.input}
-                            onChangeText={(text) => setPickupLocation(text)}
-                            value={pickupLocation}
+                            onChangeText={(text) => setpickUpAddress(text)}
+                            value={pickUpAddress}
                         />
                     </View>
                     <View style={formStyles.formRow}>

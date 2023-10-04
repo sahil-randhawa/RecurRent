@@ -26,7 +26,7 @@ export default function Splash({ navigation, route }) {
 			navigation.navigate("OnBoardingScreen");
 		}, 1500);
 		return () => clearTimeout(timeout);
-	});
+	}, []);
 	return (
 		<SafeAreaView style={style.container}>
 			{/* logo image here */}

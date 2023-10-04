@@ -40,7 +40,7 @@ const MainTab = ({ navigation, route }) => {
             const querySnapshot = await getDocs(q);
             const resultsFromFirestore = []
             querySnapshot.forEach((doc) => {
-                //console.log(doc.id, " => ", doc.data());
+                console.log(doc.id, " => ", doc.data());
 
                 const itemToAdd = {
                     id: doc.id,
@@ -97,6 +97,17 @@ const MainTab = ({ navigation, route }) => {
                 // }}
                 />
                 {/* create item listing button */}
+                <TouchableOpacity
+                    style={{
+                        marginVertical: 10,
+                    }}
+                    onPress={getProductListings}
+                >
+                    <Text style={{
+                        fontSize: 20,
+                        color: primaryColor,
+                    }}>Refresh</Text>
+                </TouchableOpacity>
                 <Btn
                     title="Create New Listing"
                     onPress={() => {
