@@ -45,7 +45,7 @@ const ProductCard = ({ coverUri, title, duration, buttonLabel, onPress }) => {
 				/>
 
 				<Card.Content>
-					<Text style={{ fontSize: 16, marginBottom: 20, }}>Duration: {duration}</Text>
+					<Text style={{ fontSize: 14, marginBottom: 20, }}>Duration: {duration}</Text>
 				</Card.Content>
 
 				<Card.Actions>
@@ -64,7 +64,7 @@ const ProductCard = ({ coverUri, title, duration, buttonLabel, onPress }) => {
 const styles = {
 	card: {
 		width: 300,
-		height: 450,
+		height: 400,
 		marginTop: 20,
 		marginRight: 10,
 		borderRadius: 10,
@@ -81,7 +81,7 @@ const styles = {
 		marginRight: 10,
 	},
 	title: {
-		fontSize: 20,
+		fontSize: 18,
 		paddingTop: 20,
 	},
 
