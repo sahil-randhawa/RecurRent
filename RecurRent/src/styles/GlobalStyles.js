@@ -201,6 +201,36 @@ const darkTheme = {
 	},
 };
 
+// ---------------  formStyles  ---------------
+const formStyles = StyleSheet.create({
+	formContainer: {
+		flex: 1,
+		paddingVertical: 20,
+		width: "100%",
+	},
+	formRow: {
+		flexDirection: "row",
+		marginBottom: 20,
+		justifyContent: "space-between",
+		gap: 10,
+	},
+	label: {
+		fontSize: 18,
+		// backgroundColor: "cyan",
+		flex: 1,
+		fontWeight: "bold",
+	},
+	input: {
+		backgroundColor: "white",
+		padding: 10,
+		fontSize: 18,
+		borderRadius: 10,
+		width: "60%",
+	},
+});
+
+// ---------------  Export  ---------------
+
 export {
 	primaryColor,
 	secondaryColor,
@@ -212,4 +242,5 @@ export {
 	border,
 	lightTheme,
 	darkTheme,
+	formStyles,
 };

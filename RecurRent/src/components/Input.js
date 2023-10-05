@@ -7,9 +7,9 @@ const Input = ({
 	label,
 	value,
 	onChangeText,
-   placeholder,
+	placeholder,
 	secureTextEntry = false,
-   style,
+	style,
 }) => {
 	return (
 		<>
@@ -17,10 +17,10 @@ const Input = ({
 				mode={mode || "outlined"}
 				label={label}
 				value={value}
-            placeholder={placeholder}
+				placeholder={placeholder}
 				onChangeText={onChangeText}
 				secureTextEntry={secureTextEntry}
-            style={[inputStyle, style]}
+				style={[inputStyle, style]}
 				outlineColor={primaryColor}
 				activeOutlineColor={lightTheme.colors.onPrimaryContainer}
 			/>
@@ -30,6 +30,6 @@ const Input = ({
 
 const inputStyle = {
 	marginTop: 20,
-}
+};
 
 export default Input;

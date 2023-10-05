@@ -53,6 +53,7 @@ const LogInScreen = ({ navigation, route }) => {
 				if (docSnap.exists()) {
 					const profileInfo = docSnap.data();
 					if (profileInfo.typeUser === "user") {
+						console.log("Login Success: " + auth.currentUser.email);
 						navigation.navigate("Home");
 					} else {
 						console.log("Error: Type of user does not match!");
@@ -65,7 +66,7 @@ const LogInScreen = ({ navigation, route }) => {
 			}
 		} catch (err) {
 			console.log(err);
-			alert("Invalid Credential!");
+			alert("Login failed!\n" + err.message);
 		}
 	};
 
