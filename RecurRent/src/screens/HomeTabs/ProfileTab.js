@@ -30,11 +30,12 @@ const ProfileTab = ({ navigation, route }) => {
             querySnapshot.forEach((doc) => {
                 setUser(doc.data());
             });
-            console.log({ user });
+            
             setIsLoading(false);
         } catch (error) {
             console.log(error);
         }
+        console.log({ user });
     };
 
 
@@ -70,13 +71,13 @@ const ProfileTab = ({ navigation, route }) => {
                             fontWeight: "bold",
                             marginVertical: 20,
                         }}>
-                            {/* {user.name} */}
-                            User Name
+                            {user.name}
+                            
                         </Text>
                         <Text style={{
                             fontSize: 16,
                         }}>
-                            Email
+                            {user.email}
                         </Text>
                     </View>
                     <View style={{
