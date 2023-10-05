@@ -47,11 +47,11 @@ const CreateNewListing = ({ navigation, route }) => {
 			console.log("Permission to access location granted");
 		}
 
-		// let location = await Location.getCurrentPositionAsync({});
-		// setCoordinates({
-		//     lat: location.coords.latitude,
-		//     lng: location.coords.longitude,
-		// });
+		let location = await Location.getCurrentPositionAsync({});
+		setCoordinates({
+			lat: location.coords.latitude,
+			lng: location.coords.longitude,
+		});
 	};
 
 	const createButtonHandler = async () => {
@@ -84,6 +84,7 @@ const CreateNewListing = ({ navigation, route }) => {
 				coordinates: coordinates,
 				owner: auth.currentUser.email,
 				status: "Available",
+				userID: auth.currentUser.uid,
 			};
 
 			console.log("Listing to be saved: ", listingToBeSaved);
