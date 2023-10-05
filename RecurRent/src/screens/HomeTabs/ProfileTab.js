@@ -20,7 +20,7 @@ const ProfileTab = ({ navigation, route }) => {
 
     useEffect(() => {
         fetchFromDB();
-    }, []);
+    },[]);
 
     const fetchFromDB = async () => {
         console.log("fetching from db: " + auth.currentUser.email);
@@ -70,8 +70,8 @@ const ProfileTab = ({ navigation, route }) => {
                             fontWeight: "bold",
                             marginVertical: 20,
                         }}>
-                            {/* {user.name} */}
-                            User Name
+                            {user.name}
+                            {/* User Name */}
                         </Text>
                         <Text style={{
                             fontSize: 16,

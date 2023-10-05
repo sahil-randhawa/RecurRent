@@ -24,14 +24,17 @@ import Btn, { primaryBtnStyle } from "../../components/Button";
 import { StatusBar } from "expo-status-bar";
 import { auth, db } from '../../../firebaseConfig';
 import { signOut } from 'firebase/auth';
-import { collection, getDocs, query, where} from "firebase/firestore";
+import { collection, getDocs, query, where,doc, getDoc } from "firebase/firestore";
 import { Card, Title, Paragraph,Button } from 'react-native-paper';
 
-const MainTab = () => {
 
-    useEffect( () => {getProductListings()})
+const MainTab = ({ navigation, route }) => {
+
+    useEffect( () => {getProductListings()},[])
 
 	const [productsListings, setProductsListings] = useState([])
+    const [ownerDetails, setOwnerDetails] = useState({});
+    
     const getProductListings = async () => {
 		try {
 			const q = query(collection(db, "Products"), where("status", "==", "Available"));
@@ -58,9 +61,53 @@ const MainTab = () => {
 		} 
 	  }
 
-      const moreDetailsClicked = (selectedProduct) =>{
-        alert(`Product : ${selectedProduct.item.name}`)
+      const moreDetailsClicked = async(selectedProductData) =>{
+        // alert(`Product : ${selectedProductData.item.name}`)
+        try {
+           
+            const ownerID = selectedProductData.item.userID
+            console.log(ownerID)
+            const docRef = doc(db, "userProfiles",ownerID);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                console.log("Document data:", docSnap.data());
+            // const data = docSnap.data();
+            //     // const documentId = ownerID; // Get the document ID
+
+              
+                const combinedData = {
+                    selectedProduct: selectedProductData,
+                    ownerData: docSnap.data(),
+                  };
+                  console.log("combine", combinedData)
+                navigation.navigate("ProductDetails",{combinedData:combinedData})
+                
+            } else {
+            // docSnap.data() will be undefined in this case
+            console.log("No such document!");
+            // setOwnerDetails(null)
+            const combinedData = {
+                selectedProduct: selectedProductData,
+                ownerData: {},
+              };
+              console.log("combine", combinedData)
+            navigation.navigate("ProductDetails",{combinedData:combinedData})
+            }
+        } catch (error) {
+            console.log(error);
+        }
+
+        // console.log("final" , ownerDetails)
+        // const combinedData = {
+        //     selectedProduct: selectedProductData,
+        //     ownerData: ownerDetails,
+        //   };
+        //   console.log("combine", combinedData)
+        // navigation.navigate("ProductDetails",{combinedData:combinedData})
       }
+
+      
     return (
         <>
             <View style={[
@@ -82,7 +129,7 @@ const MainTab = () => {
                             <Paragraph>Duration : {rowData.item.duration}</Paragraph>
                         </Card.Content>
                         <Card.Actions> 
-                            <Button style={styles.moreDetailsButton} onPress={()=>moreDetailsClicked(rowData)}>
+                            <Button style={styles.moreDetailsButton} onPress={()=>{moreDetailsClicked(rowData)}}>
                                 <Text>More Details</Text>
                             </Button>
                         </Card.Actions> 
