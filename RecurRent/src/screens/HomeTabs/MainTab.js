@@ -99,7 +99,7 @@ const MainTab = ({ navigation, route }) => {
 									duration={rowData.item.duration}
 									buttonLabel={"More Details"}
 									// if onPress function is added it pops up too much of alert messages.
-									onPress={{}}
+									onPressAction={() => alert("Details button pressed")}
 								/>
 							);
 						}}

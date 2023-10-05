@@ -10,7 +10,7 @@ import {
 import Icon from "react-native-vector-icons/Ionicons";
 import Btn, { secondaryBtnStyle } from "./Button";
 
-const ProductCard = ({ coverUri, title, duration, buttonLabel, onPress }) => {
+const ProductCard = ({ coverUri, title, duration, buttonLabel, onPressAction }) => {
 	const [isHeartFilled, setIsHeartFilled] = useState(false);
 
 	const toggleHeart = () => {
@@ -51,7 +51,7 @@ const ProductCard = ({ coverUri, title, duration, buttonLabel, onPress }) => {
 				<Card.Actions>
 					<Btn
 						title={buttonLabel}
-						onPress={onPress}
+						onPress={onPressAction}
 						mode="outlined"
 						style={[secondaryBtnStyle, styles.button]}
 					/>
@@ -72,7 +72,7 @@ const styles = {
 		padding: 10,
 	},
 	cover: {
-		height: "60%", 
+		height: "60%",
 	},
 
 	heartIcon: {
