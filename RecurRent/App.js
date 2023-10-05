@@ -8,8 +8,10 @@ import LogInScreen from "./src/screens/LogInScreen";
 import HomeScreen from "./src/screens/HomeScreen";
 import SignUpScreen from "./src/screens/SignupScreen";
 import Splash from "./src/screens/Splash";
+import ProductDetailsScreen from "./src/screens/ProductDetailsScreen";
 import CreateNewListing from "./src/screens/CreateNewListing";
 import { TouchableOpacity, Text } from "react-native";
+
 
 const Stack = createStackNavigator();
 
@@ -56,6 +58,11 @@ const App = () => {
 							name="Home"
 							component={HomeScreen}
 							options={{ headerShown: false }}
+						/>
+						<Stack.Screen
+							name="ProductDetails"
+							component={ProductDetailsScreen}
+							options={{ headerShown: true }}
 						/>
 						<Stack.Screen
 							name="CreateNewListing"

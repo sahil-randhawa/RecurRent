@@ -28,7 +28,7 @@ import Btn, {
 import { StatusBar } from "expo-status-bar";
 import { auth, db } from "../../../firebaseConfig";
 import { signOut } from "firebase/auth";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, getDocs, query, where, doc, getDoc } from "firebase/firestore";
 import Search from "../../components/SearchBar";
 import ProductCard from "../../components/Card";
 
@@ -37,7 +37,9 @@ const MainTab = ({ navigation, route }) => {
 		getProductListings();
 	}, []);
 
-	const [productsListings, setProductsListings] = useState([]);
+	const [productsListings, setProductsListings] = useState([])
+	const [ownerDetails, setOwnerDetails] = useState({});
+
 	const getProductListings = async () => {
 		try {
 			const q = query(
@@ -61,13 +63,55 @@ const MainTab = ({ navigation, route }) => {
 
 			setProductsListings(resultsFromFirestore);
 		} catch (err) {
-			console.log(err);
+			console.log(err)
 		}
-	};
+	}
 
-	const moreDetailsClicked = (selectedProduct) => {
-		alert(`Product : ${selectedProduct.item.name}`);
-	};
+	const moreDetailsClicked = async (selectedProductData) => {
+		// alert(`Product : ${selectedProductData.item.name}`)
+		try {
+
+			const ownerID = selectedProductData.item.userID
+			console.log(ownerID)
+			const docRef = doc(db, "userProfiles", ownerID);
+			const docSnap = await getDoc(docRef);
+
+			if (docSnap.exists()) {
+				console.log("Document data:", docSnap.data());
+				// const data = docSnap.data();
+				//     // const documentId = ownerID; // Get the document ID
+
+
+				const combinedData = {
+					selectedProduct: selectedProductData,
+					ownerData: docSnap.data(),
+				};
+				console.log("combine", combinedData)
+				navigation.navigate("ProductDetails", { combinedData: combinedData })
+
+			} else {
+				// docSnap.data() will be undefined in this case
+				console.log("No such document!");
+				// setOwnerDetails(null)
+				const combinedData = {
+					selectedProduct: selectedProductData,
+					ownerData: {},
+				};
+				console.log("combine", combinedData)
+				navigation.navigate("ProductDetails", { combinedData: combinedData })
+			}
+		} catch (error) {
+			console.log(error);
+		}
+
+		// console.log("final" , ownerDetails)
+		// const combinedData = {
+		//     selectedProduct: selectedProductData,
+		//     ownerData: ownerDetails,
+		//   };
+		//   console.log("combine", combinedData)
+		// navigation.navigate("ProductDetails",{combinedData:combinedData})
+	}
 
 	// Search Button
 	const [searchQuery, setSearchQuery] = useState("");
@@ -99,7 +143,7 @@ const MainTab = ({ navigation, route }) => {
 									duration={rowData.item.duration}
 									buttonLabel={"More Details"}
 									// if onPress function is added it pops up too much of alert messages.
-									onPressAction={() => alert("Details button pressed")}
+									onPressAction={() => { moreDetailsClicked(rowData) }}
 								/>
 							);
 						}}
