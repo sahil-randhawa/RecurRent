@@ -19,6 +19,7 @@ import {
 	border,
 	lightTheme,
 	darkTheme,
+	tertiaryColor,
 } from "../styles/GlobalStyles";
 import Btn, { primaryBtnStyle } from "../components/Button";
 import { StatusBar } from "expo-status-bar";
@@ -28,39 +29,47 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import MainTab from "./HomeTabs/MainTab";
 import ProfileTab from "./HomeTabs/ProfileTab";
-import Icon from "react-native-vector-icons/FontAwesome";
+import Icon from "react-native-vector-icons/Ionicons";
 
 const Tab = createBottomTabNavigator();
 
 const HomeScreen = ({ navigation, route }) => {
 	return (
 		<>
-			<View style={{
-				flex: 1,
-				paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-				backgroundColor: "white",
-			}}>
+			<View
+				style={{
+					flex: 1,
+					paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+					backgroundColor: lightTheme.colors.onPrimary,
+				}}
+			>
 				<Tab.Navigator
 					screenOptions={({ route }) => ({
 						tabBarIcon: ({ focused, color, size }) => {
 							let iconName;
 
 							if (route.name === "Main") {
-								iconName = focused ? "home" : "home";
+								iconName = focused ? "home" : "home-outline";
 							} else if (route.name === "Profile") {
-								iconName = focused ? "user" : "user-o";
+								iconName = focused ? "person" : "person-outline";
 							}
-							// You can return any component that you like here!
 							return (
 								<Icon
 									name={iconName}
-									size={size}
+									size={28}
 									color={color}
+									style={{ paddingTop: 8 }}
 								/>
 							);
 						},
-						tabBarActiveTintColor: "tomato",
-						tabBarInactiveTintColor: "gray",
+						tabBarLabelStyle: {
+							fontSize: 12,
+						},
+						tabBarStyle: {
+							height: 85,
+						},
+						tabBarActiveTintColor: primaryColor,
+						tabBarInactiveTintColor: tertiaryColor,
 					})}
 				>
 					<Tab.Screen
@@ -84,7 +93,5 @@ const HomeScreen = ({ navigation, route }) => {
 		</>
 	);
 };
-const styles = StyleSheet.create({
-	
-})
+const styles = StyleSheet.create({});
 export default HomeScreen;
