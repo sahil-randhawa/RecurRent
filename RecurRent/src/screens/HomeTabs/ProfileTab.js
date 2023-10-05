@@ -35,24 +35,6 @@ const ProfileTab = ({ navigation, route }) => {
 		fetchFromDB();
 	}, []);
 
-	const fetchFromDB = async () => {
-		console.log("fetching from db: " + auth.currentUser.email);
-		try {
-			const q = query(
-				collection(db, "userProfiles"),
-				where("email", "==", auth.currentUser.email)
-			);
-			const querySnapshot = await getDocs(q);
-			querySnapshot.forEach((doc) => {
-				setUser(doc.data());
-			});
-			console.log({ user });
-			setIsLoading(false);
-		} catch (error) {
-			console.log(error);
-		}
-	};
-
 	const onLogoutClicked = () => {
 		signOut(auth)
 			.then(() => {
@@ -74,6 +56,23 @@ const ProfileTab = ({ navigation, route }) => {
 		{ key: "wishlist", title: "Wishlist", iconName: "heart-outline" },
 		{ key: "settings", title: "Settings", iconName: "settings-outline" },
 	];
+
+
+    const fetchFromDB = async () => {
+        console.log("fetching from db: " + auth.currentUser.email);
+        try {
+            const q = query(collection(db, "userProfiles"), where("email", "==", auth.currentUser.email));
+            const querySnapshot = await getDocs(q);
+            querySnapshot.forEach((doc) => {
+                setUser(doc.data());
+            });
+            
+            setIsLoading(false);
+        } catch (error) {
+            console.log(error);
+        }
+        console.log({ user });
+    };
 
 	return (
 		// Profile Screen
@@ -160,3 +159,4 @@ const styles = StyleSheet.create({
 });
 
 export default ProfileTab;
+
