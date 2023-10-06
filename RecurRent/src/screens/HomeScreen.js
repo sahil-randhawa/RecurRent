@@ -33,6 +33,15 @@ import Icon from "react-native-vector-icons/Ionicons";
 
 const Tab = createBottomTabNavigator();
 
+// Style for navigation header
+const NavigationHeader = ({ title }) => {
+	return (
+		<View style={{ paddingLeft: 10 }}>
+			<Text style={typography.navHeading}>{title}</Text>
+		</View>
+	);
+};
+
 const HomeScreen = ({ navigation, route }) => {
 	return (
 		<>
@@ -76,16 +85,26 @@ const HomeScreen = ({ navigation, route }) => {
 						name="Main"
 						component={MainTab}
 						options={{
-							headerTitle: "RecurRent Home",
-							headerTitleAlign: "center",
+							headerTitle: () => <NavigationHeader title="Home" />,
+							headerTitleAlign: "left",
+							headerStyle: {
+								height: 100,
+								backgroundColor: lightTheme.colors.primaryContainer,
+								shadowColor: lightTheme.colors.shadow,
+							},
 						}}
 					/>
 					<Tab.Screen
 						name="Profile"
 						component={ProfileTab}
 						options={{
-							headerTitle: "Profile",
-							headerTitleAlign: "center",
+							headerTitle: () => <NavigationHeader title="Profile" />,
+							headerTitleAlign: "left",
+							headerStyle: {
+								height: 100,
+								backgroundColor: lightTheme.colors.primaryContainer,
+								shadowColor: lightTheme.colors.shadow,
+							},
 						}}
 					/>
 				</Tab.Navigator>
