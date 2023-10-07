@@ -90,7 +90,7 @@ const HomeScreen = ({ navigation, route }) => {
 						component={MainTab}
 						options={{
 							headerTitle: () => <NavigationHeader title="RecurRent" />,
-							headerTitleAlign: "left",
+							headerTitleAlign: "center",
 							headerStyle: {
 								// backgroundColor: lightTheme.colors.primaryContainer,
 								shadowColor: lightTheme.colors.shadow,
@@ -102,7 +102,7 @@ const HomeScreen = ({ navigation, route }) => {
 						component={ProfileTab}
 						options={{
 							headerTitle: () => <NavigationHeader title="Profile" />,
-							headerTitleAlign: "left",
+							headerTitleAlign: "center",
 							headerStyle: {
 								// backgroundColor: lightTheme.colors.primaryContainer,
 								shadowColor: lightTheme.colors.shadow,
