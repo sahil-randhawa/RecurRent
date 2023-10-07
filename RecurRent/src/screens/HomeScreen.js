@@ -36,8 +36,12 @@ const Tab = createBottomTabNavigator();
 // Style for navigation header
 const NavigationHeader = ({ title }) => {
 	return (
-		<View style={{ paddingLeft: 10 }}>
-			<Text style={typography.navHeading}>{title}</Text>
+		<View style={{
+			paddingLeft: 10,
+		}}>
+			<Text style={[
+				typography.navHeading
+			]}>{title}</Text>
 		</View>
 	);
 };
@@ -85,11 +89,10 @@ const HomeScreen = ({ navigation, route }) => {
 						name="Main"
 						component={MainTab}
 						options={{
-							headerTitle: () => <NavigationHeader title="Home" />,
+							headerTitle: () => <NavigationHeader title="RecurRent" />,
 							headerTitleAlign: "left",
 							headerStyle: {
-								height: 100,
-								backgroundColor: lightTheme.colors.primaryContainer,
+								// backgroundColor: lightTheme.colors.primaryContainer,
 								shadowColor: lightTheme.colors.shadow,
 							},
 						}}
@@ -101,8 +104,7 @@ const HomeScreen = ({ navigation, route }) => {
 							headerTitle: () => <NavigationHeader title="Profile" />,
 							headerTitleAlign: "left",
 							headerStyle: {
-								height: 100,
-								backgroundColor: lightTheme.colors.primaryContainer,
+								// backgroundColor: lightTheme.colors.primaryContainer,
 								shadowColor: lightTheme.colors.shadow,
 							},
 						}}

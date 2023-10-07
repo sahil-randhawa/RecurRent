@@ -21,10 +21,11 @@ const typography = StyleSheet.create({
 		marginBottom: 16,
 	},
 	navHeading: {
-		fontSize: baseFontSize + 2,
-		fontFamily: "Montserrat-Medium",
-		color: textColor,
-		marginBottom: 14,
+		fontSize: baseFontSize + 6,
+		fontFamily: "Montserrat-Bold",
+		color: primaryColor,
+		// fontWeight: "bold",
+		marginBottom: 4,
 	},
 	heading: {
 		fontSize: baseFontSize + 8,
