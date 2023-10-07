@@ -48,7 +48,8 @@ const SignUpScreen = ({ navigation, route }) => {
 						typeUser: "user",
 						email: email,
 						name: userName,
-						mobileNumber: mobileNumber
+						mobileNumber: mobileNumber,
+						favlist: []
 					  };
 				
 					  console.log("user to insert", userToInsert);
