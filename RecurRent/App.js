@@ -21,6 +21,7 @@ const App = () => {
 		"Montserrat-Black": require("./assets/fonts/Montserrat-Black.ttf"),
 		"Montserrat-Bold": require("./assets/fonts/Montserrat-Bold.ttf"),
 		"Montserrat-SemiBold": require("./assets/fonts/Montserrat-SemiBold.ttf"),
+		"Montserrat-Medium": require("./assets/fonts/Montserrat-Medium.ttf"),
 		"Montserrat-Regular": require("./assets/fonts/Montserrat-Regular.ttf"),
 		"Manrope-Regular": require("./assets/fonts/Manrope-Regular.ttf"),
 	});
