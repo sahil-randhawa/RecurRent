@@ -28,7 +28,7 @@ import Btn, {
 import { StatusBar } from "expo-status-bar";
 import { auth, db } from "../../../firebaseConfig";
 import { signOut } from "firebase/auth";
-import { collection, getDocs, query, where, doc, getDoc } from "firebase/firestore";
+import { collection, getDocs, query, where, doc, getDoc, documentId } from "firebase/firestore";
 import Search from "../../components/SearchBar";
 import ProductCard from "../../components/Card";
 
@@ -141,6 +141,7 @@ const MainTab = ({ navigation, route }) => {
 									coverUri={rowData.item["productPhoto"]}
 									title={rowData.item.name}
 									duration={rowData.item.duration}
+									productId={rowData.item.id}
 									buttonLabel={"More Details"}
 									// if onPress function is added it pops up too much of alert messages.
 									onPressAction={() => { moreDetailsClicked(rowData) }}
