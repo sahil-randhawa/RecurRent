@@ -29,8 +29,8 @@ import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { getDoc, doc } from "firebase/firestore";
 
 const LogInScreen = ({ navigation, route }) => {
-	const [email, setEmail] = useState("peter@gmail.com");
-	const [password, setPassword] = useState("peter123");
+	const [email, setEmail] = useState("james@gmail.com");
+	const [password, setPassword] = useState("james123");
 	const [toggleCheckBox, setToggleCheckBox] = useState(false);
 
 	const onSignUpClicked = () => {
