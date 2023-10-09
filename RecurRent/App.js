@@ -10,7 +10,9 @@ import SignUpScreen from "./src/screens/SignupScreen";
 import Splash from "./src/screens/Splash";
 import ProductDetailsScreen from "./src/screens/ProductDetailsScreen";
 import CreateNewListing from "./src/screens/CreateNewListing";
+import Wishlist from "./src/screens/Wishlist";
 import { TouchableOpacity, Text } from "react-native";
+import { typography } from "./src/styles/GlobalStyles";
 
 
 const Stack = createStackNavigator();
@@ -34,7 +36,9 @@ const App = () => {
 		<>
 			<NavigationContainer>
 				{hideSplashScreen ? (
-					<Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Splash">
+					<Stack.Navigator
+						screenOptions={{ headerShown: false }}
+						initialRouteName="Splash">
 						<Stack.Screen
 							name="Splash"
 							component={Splash}
@@ -69,6 +73,16 @@ const App = () => {
 							name="CreateNewListing"
 							component={CreateNewListing}
 							options={{ headerShown: true, title: "Create New Listing" }}
+						/>
+						<Stack.Screen
+							name="Wishlist"
+							component={Wishlist}
+							options={{
+								headerShown: true,
+								title: "Wishlist",
+								headerTitleStyle: typography.navHeading,
+								headerBackTitle: "Profile",
+							}}
 						/>
 					</Stack.Navigator>
 				) : null}

@@ -7,6 +7,7 @@ import {
 	ScrollView,
 	FlatList,
 	StyleSheet,
+	TouchableOpacity,
 } from "react-native";
 import { Avatar, List, Divider } from "react-native-paper";
 import {
@@ -105,12 +106,33 @@ const ProfileTab = ({ navigation, route }) => {
 					<FlatList
 						data={data}
 						renderItem={({ item }) => (
-							<List.Item
-								title={item.title}
-								left={() => (
-									<Icon name={item.iconName} size={24} color={primaryColor} />
-								)}
-							/>
+							<TouchableOpacity
+								onPress={() => {
+									if (item.key === "settings") {
+										// navigation.navigate("SettingsScreen")
+										alert("Navigating to Settings Screen: \n Under Construction");
+									} else if (item.key === "orders") {
+										// navigation.navigate("OrdersScreen")
+										alert("Navigating to Orders Screen: \n Under Construction");
+									} else if (item.key === "reviews") {
+										// navigation.navigate("ReviewsScreen")
+										alert("Navigating to Reviews Screen: \n Under Construction");
+									} else if (item.key === "wishlist") {
+										navigation.navigate("Wishlist")
+										// alert("Navigating to Wishlist Screen: \n Under Construction");
+									} else if (item.key === "messages") {
+										// navigation.navigate("MessagesScreen")
+										alert("Navigating to Messages Screen: \n Under Construction");
+									}
+								}}
+							>
+								<List.Item
+									title={item.title}
+									left={() => (
+										<Icon name={item.iconName} size={24} color={primaryColor} />
+									)}
+								/>
+							</TouchableOpacity>
 						)}
 						keyExtractor={(item) => item.key}
 						contentContainerStyle={styles.flatListContainer}
