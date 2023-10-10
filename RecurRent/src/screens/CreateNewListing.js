@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, FlatList, TextInput } from "react-native";
+import { View, Text, FlatList, TextInput, ScrollView } from "react-native";
+import { Picker } from "@react-native-picker/picker";
 import {
 	primaryColor,
 	secondaryColor,
@@ -26,7 +27,7 @@ const CreateNewListing = ({ navigation, route }) => {
 	const [pickUpAddress, setpickUpAddress] = useState(
 		"1 Younge Street, Toronto, Canada"
 	);
-	const [duration, setDuration] = useState("1 month");
+	const [duration, setDuration] = useState("");
 	const [category, setCategory] = useState("furniture");
 	const [image, setImage] = useState("table");
 
@@ -57,6 +58,9 @@ const CreateNewListing = ({ navigation, route }) => {
 	const createButtonHandler = async () => {
 		if (pickUpAddress == "") {
 			alert("Please enter a pickup location");
+			return;
+		} else if (duration == "") {
+			alert("Please select a duration to rent");
 			return;
 		}
 		const geoCodedLocation = await Location.geocodeAsync(pickUpAddress);
@@ -108,7 +112,10 @@ const CreateNewListing = ({ navigation, route }) => {
 
 	return (
 		<>
-			<View style={[spacing.container]}>
+			<ScrollView style={{
+				backgroundColor: backgroundColor,
+				paddingHorizontal: 20,
+			}}>
 				<View style={formStyles.formContainer}>
 					<View style={formStyles.formRow}>
 						<Text style={formStyles.label}>Name</Text>
@@ -144,11 +151,17 @@ const CreateNewListing = ({ navigation, route }) => {
 					</View>
 					<View style={formStyles.formRow}>
 						<Text style={formStyles.label}>Duration</Text>
-						<TextInput
+						<Picker
+							selectedValue={duration}
 							style={formStyles.input}
-							onChangeText={(text) => setDuration(text)}
-							value={duration}
-						/>
+							onValueChange={(itemValue, itemIndex) => setDuration(itemValue)}
+						>
+							<Picker.Item label="Select" value="" />
+							<Picker.Item label="1 week" value="1 week" />
+							<Picker.Item label="2 weeks" value="2 weeks" />
+							<Picker.Item label="1 month" value="1 month" />
+							<Picker.Item label="2 months" value="2 months" />
+						</Picker>
 					</View>
 					<View style={formStyles.formRow}>
 						<Text style={formStyles.label}>Category</Text>
@@ -178,7 +191,7 @@ const CreateNewListing = ({ navigation, route }) => {
 						]}
 					/>
 				</View>
-			</View>
+			</ScrollView>
 		</>
 	);
 };

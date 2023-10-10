@@ -24,7 +24,7 @@ import {
 } from "../styles/GlobalStyles";
 import Btn, { primaryBtnStyle } from "../components/Button";
 import { auth, db } from "../../firebaseConfig";
-import { collection, addDoc, getDocs, query, where,runTransaction, doc } from "firebase/firestore";
+import { collection, addDoc, getDocs, query, where, runTransaction, doc } from "firebase/firestore";
 const ProductDetailsScreen = ({ navigation, route }) => {
 	//Route Data
 	const [selectedProduct, setSelectedProduct] = useState(
@@ -35,77 +35,76 @@ const ProductDetailsScreen = ({ navigation, route }) => {
 		route.params.combinedData.ownerData
 	);
 
-	const requestForBookingClicked = async () =>{
+	const requestForBookingClicked = async () => {
 		// alert("REquest for booking clicked")
 
 		const firstCondition = where("rentterID", "==", auth.currentUser.uid);
 		const secondCondition = where("productID", "==", selectedProduct.item.id);
 		const thirdCondition = where("ownerID", "==", selectedProduct.item.userID);
-
-		const q = query(collection(db, "Bookings"), firstCondition, secondCondition,thirdCondition);
-
+		const q = query(collection(db, "Bookings"), firstCondition, secondCondition, thirdCondition);
 		getDocs(q)
-		.then(async (querySnapshot) => {
-			const count = querySnapshot.size;
-			if(count > 0){
-				alert("You alredy Requested for this listing!!")
-				return
-			}
-			else{
-				try {
-			
-					const bookingRequestToInsert = {
-					  productID: selectedProduct.item.id,
-					  renterID : auth.currentUser.uid,
-					  ownerID : selectedProduct.item.userID,
-					  bookingStatus : "Requested",
-					};
-			  
-					console.log("Booking Request to insert", bookingRequestToInsert);
-					const docRef = await addDoc(collection(db, "Bookings"), bookingRequestToInsert);
-					const idDocRef = doc(db, "Products", selectedProduct.item.id);
-					console.log("update id",idDocRef)
+			.then(async (querySnapshot) => {
+				const count = querySnapshot.size;
+				if (count > 0) {
+					alert("You alredy Requested for this listing!!")
+					return
+				}
+				else {
 					try {
-						const newStatus = await runTransaction(db, async (transaction) => {
-							const idDoc = await transaction.get(idDocRef);
-							if (!idDoc.exists()) {
-							throw "Document does not exist!";
-							}
-						   else{
-							transaction.update(idDocRef, { status: "Requested for Booking" });
-						   }
-						});
-				
-						console.log("Status Updated to Requested");
+						const bookingRequestToInsert = {
+							productID: selectedProduct.item.id,
+							renterID: auth.currentUser.uid,
+							ownerID: selectedProduct.item.userID,
+							duration: selectedProduct.item.duration,
+							bookingStatus: "Requested",
+						};
+						// check if there is already a booking request with same productid, ownerid, renterid
+						const q = query(collection(db, "Bookings"), where("productID", "==", selectedProduct.item.id), where("ownerID", "==", selectedProduct.item.userID), where("renterID", "==", auth.currentUser.uid));
+						const querySnapshot = await getDocs(q);
+						if (!querySnapshot.empty) {
+							alert("You alredy Requested for this Product!\n Requested duration: " + querySnapshot.docs[0].data().duration);
+							return;
+						}
+						console.log("Booking Request to insert", bookingRequestToInsert);
+						const docRef = await addDoc(collection(db, "Bookings"), bookingRequestToInsert);
+						const idDocRef = doc(db, "Products", selectedProduct.item.id);
+						console.log("update id", idDocRef)
+						try {
+							const newStatus = await runTransaction(db, async (transaction) => {
+								const idDoc = await transaction.get(idDocRef);
+								if (!idDoc.exists()) {
+									throw "Document does not exist!";
+								}
+								else {
+									transaction.update(idDocRef, { status: "Requested for Booking" });
+								}
+							});
+							console.log("Status Updated to Requested");
 						} catch (error) {
 							console.log("Error in updation: ", error);
 							alert(`Error : ${error}`);
 						}
-					console.log("Booking Request sent successfully with ID: ", docRef.id);
-					alert("Booking Request sent successfully!");
-			  
-					
-				  } catch (error) {
-					console.log("Error: ", error);
-					alert(`Error : ${error}`);
-				  }
-			}
-		})
-		.catch((error) => {
-			console.error('Error getting documents: ', error);
-		});
-
-		
-	} 
+						console.log("Booking Request sent successfully with ID: ", docRef.id);
+						alert("Booking Request sent successfully!");
+					} catch (error) {
+						console.log("Error: ", error);
+						alert(`Error : ${error}`);
+					}
+				}
+			})
+			.catch((error) => {
+				console.error('Error getting documents: ', error);
+			});
+	}
 
 	return (
 		<>
 			<ScrollView>
 				<View style={[spacing.container, { justifyContent: "space-evenly" }]}>
-					<View style={{paddingVertical: 10,}}>
+					<View style={{ paddingVertical: 10, }}>
 						<Image
 							source={{ uri: selectedProduct.item["productPhoto"] }}
-							style={{ width: 300, height: 300,  }}
+							style={{ width: 300, height: 300, }}
 						/>
 					</View>
 					<View>
@@ -207,7 +206,6 @@ const ProductDetailsScreen = ({ navigation, route }) => {
 								{ownerDetails.name}
 							</Text>
 						</Text>
-
 						<Text
 							style={[
 								typography.body,
@@ -224,7 +222,6 @@ const ProductDetailsScreen = ({ navigation, route }) => {
 								{ownerDetails.email}
 							</Text>
 						</Text>
-
 						<Text
 							style={[
 								typography.body,
@@ -250,9 +247,8 @@ const ProductDetailsScreen = ({ navigation, route }) => {
 							primaryBtnStyle,
 							{
 								textAlign: "center",
-								margin : 30,
+								margin: 30,
 							},
-							
 						]}
 					/>
 				</View>
