@@ -9,12 +9,12 @@ import {
 	textColor,
 	typography,
 	spacing,
-	lightTheme,
+	lightTheme, cd
 } from "../styles/GlobalStyles";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { auth, db } from "../../firebaseConfig";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc,getDocs,query, where,collection } from "firebase/firestore";
+import { doc, setDoc, getDocs, query, where, collection } from "firebase/firestore";
 
 const SignUpScreen = ({ navigation, route }) => {
 	const [email, setEmail] = useState("");
@@ -27,58 +27,58 @@ const SignUpScreen = ({ navigation, route }) => {
 		navigation.navigate("LogIn");
 	};
 
-	
-	
+
+
 	const onCreateAccountClicked = async () => {
 
-		
-        try {
-            const q = query(collection(db, "userProfiles"), where("email", "==", email));
-            const querySnapshot = await getDocs(q);
-            if (!querySnapshot.empty) {
+
+		try {
+			const q = query(collection(db, "userProfiles"), where("email", "==", email));
+			const querySnapshot = await getDocs(q);
+			if (!querySnapshot.empty) {
 				alert("This email address is alredy exsits!")
-			}else{
-				
+			} else {
+
 				if (password === confirmPassword) {
 					try {
-					  const auth = getAuth();
-					  const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-					  const user = userCredential.user;
-					  const userToInsert = {
-						typeUser: "user",
-						email: email,
-						name: userName,
-						mobileNumber: mobileNumber,
-						favlist: []
-					  };
-				
-					  console.log("user to insert", userToInsert);
-				
-					  await setDoc(doc(db, "userProfiles", user.uid), userToInsert);
-				
-					  console.log(`user uid ${user.uid}`);
-					  console.log("User account created & signed in!");
-					  navigation.navigate("Home");
-					} catch (error) {
-					  if (error.code === "auth/email-already-in-use") {
-						console.log("That email address is already in use!");
-					  } else if (error.code === "auth/invalid-email") {
-						console.log("That email address is invalid!");
-					  } else {
-						console.error(error);
-					  }
-					}
-				  } else {
-					alert("Password and Confirm Password should match!");
-				  }
-			}
-        } catch (error) {
-            console.log(error);
-        }
+						const auth = getAuth();
+						const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+						const user = userCredential.user;
+						const userToInsert = {
+							typeUser: "user",
+							email: email,
+							name: userName,
+							mobileNumber: mobileNumber,
+							favlist: []
+						};
 
-		
-	  };
-	  
+						console.log("user to insert", userToInsert);
+
+						await setDoc(doc(db, "userProfiles", user.uid), userToInsert);
+
+						console.log(`user uid ${user.uid}`);
+						console.log("User account created & signed in!");
+						navigation.navigate("Home");
+					} catch (error) {
+						if (error.code === "auth/email-already-in-use") {
+							console.log("That email address is already in use!");
+						} else if (error.code === "auth/invalid-email") {
+							console.log("That email address is invalid!");
+						} else {
+							console.error(error);
+						}
+					}
+				} else {
+					alert("Password and Confirm Password should match!");
+				}
+			}
+		} catch (error) {
+			console.log(error);
+		}
+
+
+	};
+
 	return (
 		<>
 			<View
