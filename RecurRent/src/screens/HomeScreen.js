@@ -29,23 +29,9 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import MainTab from "./HomeTabs/MainTab";
 import ProfileTab from "./HomeTabs/ProfileTab";
-import MapTab from "./HomeTabs/MapTab";
 import Icon from "react-native-vector-icons/Ionicons";
 
 const Tab = createBottomTabNavigator();
-
-// Style for navigation header
-const NavigationHeader = ({ title }) => {
-	return (
-		<View style={{
-			paddingLeft: 10,
-		}}>
-			<Text style={[
-				typography.navHeading
-			]}>{title}</Text>
-		</View>
-	);
-};
 
 const HomeScreen = ({ navigation, route }) => {
 	return (
@@ -66,8 +52,6 @@ const HomeScreen = ({ navigation, route }) => {
 								iconName = focused ? "home" : "home-outline";
 							} else if (route.name === "Profile") {
 								iconName = focused ? "person" : "person-outline";
-							} else if (route.name === "Explore") {
-								iconName = focused ? "map" : "map-outline";
 							}
 							return (
 								<Icon
@@ -92,36 +76,16 @@ const HomeScreen = ({ navigation, route }) => {
 						name="Main"
 						component={MainTab}
 						options={{
-							headerTitle: () => <NavigationHeader title="RecurRent" />,
+							headerTitle: "RecurRent Home",
 							headerTitleAlign: "center",
-							headerStyle: {
-								// backgroundColor: lightTheme.colors.primaryContainer,
-								shadowColor: lightTheme.colors.shadow,
-							},
-						}}
-					/>
-					<Tab.Screen
-						name="Explore"
-						component={MapTab}
-						options={{
-							headerTitle: () => <NavigationHeader title="Explore" />,
-							headerTitleAlign: "center",
-							headerStyle: {
-								// backgroundColor: lightTheme.colors.primaryContainer,
-								shadowColor: lightTheme.colors.shadow,
-							},
 						}}
 					/>
 					<Tab.Screen
 						name="Profile"
 						component={ProfileTab}
 						options={{
-							headerTitle: () => <NavigationHeader title="Profile" />,
+							headerTitle: "Profile",
 							headerTitleAlign: "center",
-							headerStyle: {
-								// backgroundColor: lightTheme.colors.primaryContainer,
-								shadowColor: lightTheme.colors.shadow,
-							},
 						}}
 					/>
 				</Tab.Navigator>

@@ -26,6 +26,7 @@ const App = () => {
 		"Montserrat-Medium": require("./assets/fonts/Montserrat-Medium.ttf"),
 		"Montserrat-Regular": require("./assets/fonts/Montserrat-Regular.ttf"),
 		"Manrope-Regular": require("./assets/fonts/Manrope-Regular.ttf"),
+		"Manrope-Medium": require("./assets/fonts/Manrope-Medium.ttf"),
 	});
 
 	if (!fontsLoaded && !error) {
