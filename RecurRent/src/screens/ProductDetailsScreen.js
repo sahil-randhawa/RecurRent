@@ -22,7 +22,9 @@ import {
 	lightTheme,
 	darkTheme,
 } from "../styles/GlobalStyles";
-
+import Btn, { primaryBtnStyle } from "../components/Button";
+import { auth, db } from "../../firebaseConfig";
+import { collection, addDoc, getDocs, query, where, runTransaction, doc } from "firebase/firestore";
 const ProductDetailsScreen = ({ navigation, route }) => {
 	//Route Data
 	const [selectedProduct, setSelectedProduct] = useState(
@@ -33,40 +35,76 @@ const ProductDetailsScreen = ({ navigation, route }) => {
 		route.params.combinedData.ownerData
 	);
 
-	// useEffect( () => {findOwner()},[])
-	// const findOwner = async() => {
-	//     try {
+	const requestForBookingClicked = async () => {
+		// alert("REquest for booking clicked")
 
-	//         const ownerID = selectedProduct.item.userID
-	//         console.log(ownerID)
-	//         const docRef = doc(db, "userProfiles",ownerID);
-	//         const docSnap = await getDoc(docRef);
-
-	//         if (docSnap.exists()) {
-	//         console.log("Document data details:", docSnap.data());
-	//         const data = docSnap.data();
-	//             const documentId = ownerID; // Get the document ID
-
-	//             setOwnerDetails({ ...data, documentId });
-	//             console.log("Document data owner details:", ownerDetails);
-
-	//         } else {
-	//         // docSnap.data() will be undefined in this case
-	//         console.log("No such document!");
-	//         }
-	//     } catch (error) {
-	//         console.log(error);
-	//     }
-	// }
+		const firstCondition = where("rentterID", "==", auth.currentUser.uid);
+		const secondCondition = where("productID", "==", selectedProduct.item.id);
+		const thirdCondition = where("ownerID", "==", selectedProduct.item.userID);
+		const q = query(collection(db, "Bookings"), firstCondition, secondCondition, thirdCondition);
+		getDocs(q)
+			.then(async (querySnapshot) => {
+				const count = querySnapshot.size;
+				if (count > 0) {
+					alert("You alredy Requested for this listing!!")
+					return
+				}
+				else {
+					try {
+						const bookingRequestToInsert = {
+							productID: selectedProduct.item.id,
+							renterID: auth.currentUser.uid,
+							ownerID: selectedProduct.item.userID,
+							duration: selectedProduct.item.duration,
+							bookingStatus: "Requested",
+						};
+						// check if there is already a booking request with same productid, ownerid, renterid
+						const q = query(collection(db, "Bookings"), where("productID", "==", selectedProduct.item.id), where("ownerID", "==", selectedProduct.item.userID), where("renterID", "==", auth.currentUser.uid));
+						const querySnapshot = await getDocs(q);
+						if (!querySnapshot.empty) {
+							alert("You alredy Requested for this Product!\n Requested duration: " + querySnapshot.docs[0].data().duration);
+							return;
+						}
+						console.log("Booking Request to insert", bookingRequestToInsert);
+						const docRef = await addDoc(collection(db, "Bookings"), bookingRequestToInsert);
+						const idDocRef = doc(db, "Products", selectedProduct.item.id);
+						console.log("update id", idDocRef)
+						try {
+							const newStatus = await runTransaction(db, async (transaction) => {
+								const idDoc = await transaction.get(idDocRef);
+								if (!idDoc.exists()) {
+									throw "Document does not exist!";
+								}
+								else {
+									transaction.update(idDocRef, { status: "Requested for Booking" });
+								}
+							});
+							console.log("Status Updated to Requested");
+						} catch (error) {
+							console.log("Error in updation: ", error);
+							alert(`Error : ${error}`);
+						}
+						console.log("Booking Request sent successfully with ID: ", docRef.id);
+						alert("Booking Request sent successfully!");
+					} catch (error) {
+						console.log("Error: ", error);
+						alert(`Error : ${error}`);
+					}
+				}
+			})
+			.catch((error) => {
+				console.error('Error getting documents: ', error);
+			});
+	}
 
 	return (
 		<>
 			<ScrollView>
 				<View style={[spacing.container, { justifyContent: "space-evenly" }]}>
-					<View style={{paddingVertical: 10,}}>
+					<View style={{ paddingVertical: 10, }}>
 						<Image
 							source={{ uri: selectedProduct.item["productPhoto"] }}
-							style={{ width: 300, height: 300,  }}
+							style={{ width: 300, height: 300, }}
 						/>
 					</View>
 					<View>
@@ -128,7 +166,22 @@ const ProductDetailsScreen = ({ navigation, route }) => {
 								{selectedProduct.item.status}
 							</Text>
 						</Text>
-
+						<Text
+							style={[
+								typography.body,
+								{ marginBottom: 10, color: primaryColor },
+							]}
+						>
+							Pickup Address :
+							<Text
+								style={[
+									typography.body,
+									{ marginBottom: 10, color: textColor },
+								]}
+							>
+								{selectedProduct.item.pickUpAddress}
+							</Text>
+						</Text>
 						<Text
 							style={[
 								typography.heading,
@@ -153,7 +206,6 @@ const ProductDetailsScreen = ({ navigation, route }) => {
 								{ownerDetails.name}
 							</Text>
 						</Text>
-
 						<Text
 							style={[
 								typography.body,
@@ -170,7 +222,6 @@ const ProductDetailsScreen = ({ navigation, route }) => {
 								{ownerDetails.email}
 							</Text>
 						</Text>
-
 						<Text
 							style={[
 								typography.body,
@@ -184,10 +235,22 @@ const ProductDetailsScreen = ({ navigation, route }) => {
 									{ marginBottom: 10, color: textColor },
 								]}
 							>
-								null
+								{ownerDetails.mobileNumber}
 							</Text>
 						</Text>
 					</View>
+					<Btn
+						title="Request For Booking"
+						onPress={requestForBookingClicked}
+						mode="contained"
+						style={[
+							primaryBtnStyle,
+							{
+								textAlign: "center",
+								margin: 30,
+							},
+						]}
+					/>
 				</View>
 			</ScrollView>
 		</>
