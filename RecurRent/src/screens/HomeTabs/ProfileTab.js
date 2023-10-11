@@ -175,6 +175,7 @@ const styles = StyleSheet.create({
 		paddingVertical: 20,
 	},
 	textContainer: {
+		fontSize: 20,
 		paddingLeft: 10,
 	},
 });

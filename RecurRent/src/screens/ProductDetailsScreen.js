@@ -91,7 +91,7 @@ const ProductDetailsScreen = ({ navigation, route }) => {
 						if (!querySnapshot.empty) {
 							alert(
 								"You already requested for this Product!\n Requested duration: " +
-									querySnapshot.docs[0].data().duration
+								querySnapshot.docs[0].data().duration
 							);
 							return;
 						}
@@ -163,13 +163,20 @@ const ProductDetailsScreen = ({ navigation, route }) => {
 		<>
 			<ScrollView>
 				<View style={styles.mainContainer}>
-					<View style={styles.imgContainer}>
+					<View style={{
+						width: "100%",
+					}}>
 						<Image
 							source={{ uri: selectedProduct.item["productPhoto"] }}
-							style={{ width: 400, height: 300 }}
+							style={{
+								height: 300,
+								resizeMode: "cover",
+							}}
 						/>
 					</View>
-					<View>
+					<View style={{
+						width: "100%",
+					}}>
 						<View style={styles.productDetails}>
 							<Text style={[typography.heading, { color: textColor }]}>
 								{selectedProduct.item.name}
@@ -244,7 +251,7 @@ const ProductDetailsScreen = ({ navigation, route }) => {
 
 
 
-                            {/* DON'T DELETE THIS */}
+							{/* DON'T DELETE THIS */}
 
 							{/* <View>
 								<View style={styles.productInfo}>
@@ -383,12 +390,13 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: "space-evenly",
 		alignItems: "center",
-		paddingHorizontal: 15,
+		// paddingHorizontal: 20,
 		backgroundColor: backgroundColor,
 	},
 
 	productDetails: {
 		paddingVertical: 15,
+		paddingHorizontal: 20,
 	},
 
 	productInfo: {
@@ -399,6 +407,7 @@ const styles = StyleSheet.create({
 
 	ownerDetails: {
 		paddingTop: 15,
+		paddingHorizontal: 20,
 	},
 
 	ownerTab: {
