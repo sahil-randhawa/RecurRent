@@ -26,10 +26,10 @@ const Wishlist = () => {
     }, []);
 
     useEffect(() => {
-		if (user.favlist) {
-		  getFavList();
-		}
-	  }, [user]);
+        if (user.favlist) {
+            getFavList();
+        }
+    }, [user]);
 
     const fetchFromDB = async () => {
         try {
@@ -40,41 +40,41 @@ const Wishlist = () => {
             });
         } catch (error) {
             console.log(error);
-        } 
+        }
     };
 
     const getFavList = async () => {
-		const resultsFromFirestore = [];
-                await Promise.all(
-                    user.favlist.map(async (value) => {
-                        try {
-                            const docRef = doc(db, 'Products', value);
-                            const docSnap = await getDoc(docRef);
+        const resultsFromFirestore = [];
+        await Promise.all(
+            user.favlist.map(async (value) => {
+                try {
+                    const docRef = doc(db, 'Products', value);
+                    const docSnap = await getDoc(docRef);
 
-                            if (docSnap.exists()) {
-                                const data = docSnap.data();
-                                console.log('Document data:', data);
-                                resultsFromFirestore.push(data);
-                            } else {
-                                console.log('Document does not exist.');
-                            }
-                        } catch (error) {
-                            console.error('Error fetching document:', error);
-                        }
-                    })
-                );
-                setWishList(resultsFromFirestore);
-                console.log("WishList data:", wishList);
-                
-                try { }
-                finally {
-                    setLoading(false);
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        console.log('Document data:', data);
+                        resultsFromFirestore.push(data);
+                    } else {
+                        console.log('Document does not exist.');
+                    }
+                } catch (error) {
+                    console.error('Error fetching document:', error);
                 }
-	}
+            })
+        );
+        setWishList(resultsFromFirestore);
+        console.log("WishList data:", wishList);
+
+        try { }
+        finally {
+            setLoading(false);
+        }
+    }
 
     const handlePress = (item) => {
         // Handle press on the item, e.g., navigate to details or perform an action
-        console.log(`Pressed item: ${item}`);
+        console.log(`Pressed item:` + JSON.stringify(item, null, "\t"));
     };
 
     return (
@@ -84,18 +84,20 @@ const Wishlist = () => {
             ) : wishList.length === 0 ? (
                 <Text style={{ textAlign: "center", alignSelf: "center" }}>Currently, your wishlist is empty.{'\n'}Keep Browsing!</Text>
             ) : (
-                <FlatList
-                    data={wishList}
-                    renderItem={({ item }) => (
-                        <TouchableOpacity style={styles.itemContainer} onPress={() => handlePress(item)}>
-                            <View style={styles.itemContent}>
-                                <Text style={styles.itemText}>{item.name}</Text>
-                            </View>
-                            <Icon name="chevron-right" size={24} color={textColor.primary} style={styles.arrowIcon} />
-                        </TouchableOpacity>
-                    )}
-                    keyExtractor={(item) => item.name}
-                />
+                <View>
+                    <FlatList
+                        data={wishList}
+                        renderItem={({ item }) => (
+                            <TouchableOpacity style={styles.itemContainer} onPress={() => handlePress(item)}>
+                                <View style={styles.itemContent}>
+                                    <Text style={styles.itemText}>{item.name}</Text>
+                                </View>
+                                <Icon name="chevron-right" size={24} color={textColor.primary} style={styles.arrowIcon} />
+                            </TouchableOpacity>
+                        )}
+                        keyExtractor={(item) => item.name}
+                    />
+                </View>
             )}
         </View>
     );
