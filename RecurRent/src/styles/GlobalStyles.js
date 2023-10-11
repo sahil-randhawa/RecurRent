@@ -24,7 +24,6 @@ const typography = StyleSheet.create({
 		fontSize: baseFontSize + 6,
 		fontFamily: "Montserrat-Bold",
 		color: primaryColor,
-		// fontWeight: "bold",
 		marginBottom: 4,
 	},
 	heading: {
@@ -35,9 +34,15 @@ const typography = StyleSheet.create({
 	},
 	subheading: {
 		fontSize: baseFontSize + 4,
-		fontFamily: "Montserrat-Regular",
+		fontFamily: "Montserrat-Bold",
 		color: textColor,
 		marginBottom: 12,
+	},
+	bodyHeading: {
+		fontSize: baseFontSize,
+		fontFamily: "Manrope-Medium",
+		color: textColor,
+		lineHeight: 24,
 	},
 	body: {
 		fontSize: baseFontSize,
