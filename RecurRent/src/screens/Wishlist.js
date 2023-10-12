@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, ActivityIndicator } from "react-native";
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, ActivityIndicator, Image } from "react-native";
 import {
     primaryColor,
     secondaryColor,
+    tertiaryColor,
     textColor,
     backgroundColor,
     typography,
@@ -50,13 +51,13 @@ const Wishlist = () => {
                 try {
                     const docRef = doc(db, 'Products', value);
                     const docSnap = await getDoc(docRef);
-    
+
                     if (docSnap.exists()) {
                         const data = docSnap.data();
                         const documentId = docSnap.id; // Get the document ID
                         const itemWithId = { ...data, id: documentId }; // Include the ID in the item object
-                        console.log('Document data:', itemWithId);
-    
+                        console.log('Document data :\n', JSON.stringify(itemWithId, null, 4));
+
                         resultsFromFirestore.push(itemWithId);
                     } else {
                         console.log('Document does not exist.');
@@ -68,7 +69,7 @@ const Wishlist = () => {
         );
         setWishList(resultsFromFirestore);
         console.log("WishList data:", wishList);
-    
+
         try {
             // Do any additional tasks here
         } finally {
@@ -84,16 +85,16 @@ const Wishlist = () => {
     const handleRemove = async (item) => {
         try {
             const docRef = doc(db, "userProfiles", auth.currentUser.uid);
-        
+
             await updateDoc(docRef, {
-              favlist: arrayRemove(item.id), 
+                favlist: arrayRemove(item.id),
             });
-        
+
             console.log('String removed from array in Firebase.');
             fetchFromDB()
-          } catch (error) {
+        } catch (error) {
             console.error('Error removing string from array in Firebase:', error);
-          }
+        }
     };
 
     return (
@@ -103,24 +104,63 @@ const Wishlist = () => {
             ) : wishList.length === 0 ? (
                 <Text style={{ textAlign: "center", alignSelf: "center" }}>Currently, your wishlist is empty.{'\n'}Keep Browsing!</Text>
             ) : (
-                <View>
+                <View style={{
+                    width: '100%',
+                    flex: 1,
+                }}>
                     <FlatList
                         data={wishList}
                         renderItem={({ item }) => (
-                            <TouchableOpacity style={styles.itemContainer} onPress={() => handlePress(item)}>
-                                <View style={styles.itemContent}>
-                                    <Text style={styles.itemText}>{item.name}</Text>
+                            <View style={styles.rowContainer}>
+                                <View style={styles.itemContainer}>
+                                    {/* <TouchableOpacity style={styles.itemContainer} onPress={() => handlePress(item)}> */}
+                                    <View style={styles.itemContent}>
+                                        <Text style={styles.itemText}>{item.name}</Text>
+                                    </View>
+                                    <TouchableOpacity
+                                        onPress={() => handleRemove(item)}>
+                                        <AntDesign name="close" size={24} color={tertiaryColor} style={styles.removeIcon} />
+                                    </TouchableOpacity>
+                                    {/* </TouchableOpacity> */}
                                 </View>
-                                <TouchableOpacity onPress={() => handleRemove(item)}>
-                                    <AntDesign name="close" size={24} color={textColor.primary} style={styles.removeIcon} />
-                                </TouchableOpacity>
-                            </TouchableOpacity>
+                                <View style={
+                                    [styles.itemContainer,
+                                    {
+                                        justifyContent: "flex-start",
+                                        gap: 10,
+                                        alignItems: "flex-start",
+                                    }]
+                                }>
+                                    <Image source={{ uri: item.productPhoto }} style={{ width: 100, height: 100 }} />
+                                    <View style={{
+                                        width: '65%',
+                                        height: '100%',
+                                        justifyContent: "space-between",
+                                        gap: 5,
+                                        flexDirection: "column",
+                                        borderColor: secondaryColor,
+                                    }}>
+                                        <View style={{
+                                            gap: 5,
+                                        }}>
+                                            <Text>{item.pickUpAddress}</Text>
+                                            <Text style={{ color: item.status === 'Available' ? 'green' : item.status === 'Unavailable' ? 'red' : 'grey' }}>{item.status}</Text>
+                                        </View>
+                                        <Text style={{
+                                            fontStyle: "italic",
+                                            // fontSize: 12,
+                                            color: secondaryColor,
+                                        }}>C${item.price}</Text>
+                                    </View>
+                                </View>
+                            </View>
                         )}
                         keyExtractor={(item) => item.name}
                     />
                 </View>
-            )}
-        </View>
+            )
+            }
+        </View >
     );
 };
 
@@ -131,16 +171,24 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         marginBottom: 10,
     },
+
     itemContainer: {
-        width: 380,
-        //this should be changed so that it automatically fits the screen
+        flex: 1,
+        width: '100%',
         flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
+        justifyContent: "space-between",
+    },
+    rowContainer: {
+        flex: 1,
+        width: '100%',
+        flexDirection: "column",
+        gap: 10,
+        alignItems: "flex-start",
+        // justifyContent: "space-around",
         padding: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: lightTheme.colors.border,
-        backgroundColor: lightTheme.colors.primaryContainer,
+        backgroundColor: 'white',
+        marginTop: 10,
+        borderRadius: 10,
     },
     itemContent: {
         flex: 1,
@@ -150,6 +198,7 @@ const styles = StyleSheet.create({
     itemText: {
         fontSize: 16,
         color: textColor.primary,
+        fontWeight: "600",
     },
     arrowIcon: {
         marginLeft: 10,
