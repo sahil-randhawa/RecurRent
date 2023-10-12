@@ -37,6 +37,13 @@ import {
 } from "firebase/firestore";
 
 const ProductDetailsScreen = ({ navigation, route }) => {
+
+	useEffect(() => {
+		console.log("Product Details Screen:");
+		console.log("selectedProduct: ", selectedProduct);
+		console.log("ownerDetails: ", ownerDetails);
+	}, []);
+
 	//Route Data
 	const [selectedProduct, setSelectedProduct] = useState(
 		route.params.combinedData.selectedProduct
@@ -380,6 +387,9 @@ const ProductDetailsScreen = ({ navigation, route }) => {
 						]}
 					/>
 				</View>
+				{/* <View>
+					<Text>Details page: {selectedProduct.name}</Text>
+				</View> */}
 			</ScrollView>
 		</>
 	);
