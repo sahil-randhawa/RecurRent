@@ -12,9 +12,9 @@ import {
     darkTheme,
     formStyles,
 } from "../styles/GlobalStyles";
-import Icon from 'react-native-vector-icons/Entypo';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import { auth, db } from "../../firebaseConfig";
-import { collection, getDocs, query, where, doc, getDoc } from "firebase/firestore";
+import { collection, getDocs, query, where, doc, getDoc, updateDoc, arrayRemove } from "firebase/firestore";
 
 const Wishlist = () => {
     const [user, setUser] = useState({});
@@ -50,11 +50,14 @@ const Wishlist = () => {
                 try {
                     const docRef = doc(db, 'Products', value);
                     const docSnap = await getDoc(docRef);
-
+    
                     if (docSnap.exists()) {
                         const data = docSnap.data();
-                        console.log('Document data:', data);
-                        resultsFromFirestore.push(data);
+                        const documentId = docSnap.id; // Get the document ID
+                        const itemWithId = { ...data, id: documentId }; // Include the ID in the item object
+                        console.log('Document data:', itemWithId);
+    
+                        resultsFromFirestore.push(itemWithId);
                     } else {
                         console.log('Document does not exist.');
                     }
@@ -65,16 +68,32 @@ const Wishlist = () => {
         );
         setWishList(resultsFromFirestore);
         console.log("WishList data:", wishList);
-
-        try { }
-        finally {
+    
+        try {
+            // Do any additional tasks here
+        } finally {
             setLoading(false);
         }
-    }
+    };
 
     const handlePress = (item) => {
         // Handle press on the item, e.g., navigate to details or perform an action
         console.log(`Pressed item:` + JSON.stringify(item, null, "\t"));
+    };
+
+    const handleRemove = async (item) => {
+        try {
+            const docRef = doc(db, "userProfiles", auth.currentUser.uid);
+        
+            await updateDoc(docRef, {
+              favlist: arrayRemove(item.id), 
+            });
+        
+            console.log('String removed from array in Firebase.');
+            fetchFromDB()
+          } catch (error) {
+            console.error('Error removing string from array in Firebase:', error);
+          }
     };
 
     return (
@@ -92,7 +111,9 @@ const Wishlist = () => {
                                 <View style={styles.itemContent}>
                                     <Text style={styles.itemText}>{item.name}</Text>
                                 </View>
-                                <Icon name="chevron-right" size={24} color={textColor.primary} style={styles.arrowIcon} />
+                                <TouchableOpacity onPress={() => handleRemove(item)}>
+                                    <AntDesign name="close" size={24} color={textColor.primary} style={styles.removeIcon} />
+                                </TouchableOpacity>
                             </TouchableOpacity>
                         )}
                         keyExtractor={(item) => item.name}
