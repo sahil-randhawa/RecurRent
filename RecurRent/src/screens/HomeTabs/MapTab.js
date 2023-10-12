@@ -66,10 +66,10 @@ const MapTab = ({ navigation, route }) => {
                 collection(db, "Products"),
                 where("status", "==", "Available"),
                 where("coordinates.lat", ">=", 1),
-                where("coordinates.lat", ">=", deviceLocation.lat - 0.1),
-                where("coordinates.lat", "<=", deviceLocation.lat + 0.1),
-                where("coordinates.lng", ">=", deviceLocation.lng - 0.1),
-                where("coordinates.lng", "<=", deviceLocation.lng + 0.1)
+                // where("coordinates.lat", ">=", deviceLocation.lat - 0.1),
+                // where("coordinates.lat", "<=", deviceLocation.lat + 0.1),
+                // where("coordinates.lng", ">=", deviceLocation.lng - 0.1),
+                // where("coordinates.lng", "<=", deviceLocation.lng + 0.1)
             );
             const querySnapshot = await getDocs(q);
             const resultsFromFirestore = [];
@@ -115,6 +115,8 @@ const MapTab = ({ navigation, route }) => {
                 lat: location.coords.latitude,
                 lng: location.coords.longitude,
             });
+            // deviceLocation
+            console.log("device location:", JSON.stringify(deviceLocation, null, "\t"));
             // getting product listings
             console.log("getting product listings:");
             getProductListings();
