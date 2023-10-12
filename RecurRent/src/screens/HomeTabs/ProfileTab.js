@@ -47,11 +47,7 @@ const ProfileTab = ({ navigation, route }) => {
 	};
 
 	const data = [
-		{
-			key: "messages",
-			title: "Messages",
-			iconName: "chatbox-ellipses-outline",
-		},
+		{ key: "messages", title: "Messages", iconName: "chatbox-ellipses-outline" },
 		{ key: "orders", title: "Your Orders", iconName: "reader-outline" },
 		{ key: "reviews", title: "Your Reviews", iconName: "star-outline" },
 		{ key: "wishlist", title: "Wishlist", iconName: "heart-outline" },

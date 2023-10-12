@@ -49,7 +49,7 @@ import * as Location from "expo-location";
 
 const MapTab = ({ navigation, route }) => {
     const [deviceLocation, setDeviceLocation] = useState(null);
-    const [selectedMarker, setSelectedMarker] = useState(null);
+    // const [selectedMarker, setSelectedMarker] = useState(null);
     const [productListings, setProductListings] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const isAndroid = Platform.OS == 'android';
@@ -66,10 +66,10 @@ const MapTab = ({ navigation, route }) => {
                 collection(db, "Products"),
                 where("status", "==", "Available"),
                 where("coordinates.lat", ">=", 1),
-                // where("coordinates.lat", ">=", deviceLocation.lat - 0.1),
-                // where("coordinates.lat", "<=", deviceLocation.lat + 0.1),
-                // where("coordinates.lng", ">=", deviceLocation.lng - 0.1),
-                // where("coordinates.lng", "<=", deviceLocation.lng + 0.1)
+                where("coordinates.lat", ">=", deviceLocation.lat - 0.1),
+                where("coordinates.lat", "<=", deviceLocation.lat + 0.1),
+                where("coordinates.lng", ">=", deviceLocation.lng - 0.1),
+                where("coordinates.lng", "<=", deviceLocation.lng + 0.1)
             );
             const querySnapshot = await getDocs(q);
             const resultsFromFirestore = [];
@@ -127,7 +127,7 @@ const MapTab = ({ navigation, route }) => {
         // alert(`Product : ${selectedProductData.item.name}`)
         try {
 
-            const ownerID = selectedProductData.userID
+            const ownerID = selectedProductData.item.userID
             console.log(`Product owner ID:` + ownerID)
             const docRef = doc(db, "userProfiles", ownerID);
             const docSnap = await getDoc(docRef);
@@ -142,7 +142,7 @@ const MapTab = ({ navigation, route }) => {
                     selectedProduct: selectedProductData,
                     ownerData: docSnap.data(),
                 };
-                console.log("combine", combinedData)
+                console.log("combine", JSON.stringify(combinedData, null, "\t"))
                 navigation.navigate("ProductDetails", { combinedData: combinedData })
 
             } else {
@@ -153,7 +153,7 @@ const MapTab = ({ navigation, route }) => {
                     selectedProduct: selectedProductData,
                     ownerData: {},
                 };
-                console.log("combine", combinedData)
+                console.log("combine", JSON.stringify(combinedData, null, "\t"))
                 navigation.navigate("ProductDetails", { combinedData: combinedData })
             }
         } catch (error) {
@@ -171,9 +171,10 @@ const MapTab = ({ navigation, route }) => {
 
     // Function to handle marker press to select the specific marker to use for later purposes
     const handleMarkerPress = (marker) => {
-        setSelectedMarker(marker);
-        console.log("this marker is pressed:\n", marker);
-        // moreDetailsClicked(marker);
+        // setSelectedMarker(marker);
+        const selectedProductData = { "item": marker };
+        console.log("this marker is pressed:\n", JSON.stringify(selectedProductData, null, "\t"));
+        moreDetailsClicked(selectedProductData);
     };
 
     return (
