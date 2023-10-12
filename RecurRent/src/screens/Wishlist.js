@@ -17,7 +17,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import { auth, db } from "../../firebaseConfig";
 import { collection, getDocs, query, where, doc, getDoc, updateDoc, arrayRemove } from "firebase/firestore";
 
-const Wishlist = () => {
+const Wishlist = ({ navigation }) => {
     const [user, setUser] = useState({});
     const [wishList, setWishList] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -68,21 +68,51 @@ const Wishlist = () => {
             })
         );
         setWishList(resultsFromFirestore);
-        console.log("WishList data:", wishList);
 
-        try {
-            // Do any additional tasks here
-        } finally {
+        try { }
+        finally {
             setLoading(false);
         }
     };
 
-    const handlePress = (item) => {
-        // Handle press on the item, e.g., navigate to details or perform an action
-        console.log(`Pressed item:` + JSON.stringify(item, null, "\t"));
+    const handlePress = async (item) => {
+        //Navigate to ProductDetailsScreen
+        try {
+            const ownerID = item.userID
+            console.log(ownerID)
+            const selectedProductData = {
+                item: item
+            };
+            const docRef = doc(db, "userProfiles", ownerID);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                console.log("Document data:", docSnap.data());
+
+                const combinedData = {
+                    selectedProduct: selectedProductData,
+                    ownerData: docSnap.data(),
+                };
+                console.log("combine", combinedData)
+                navigation.navigate("ProductDetails", { combinedData: combinedData })
+
+            } else {
+                // docSnap.data() will be undefined in this case
+                console.log("No such document!");
+                const combinedData = {
+                    selectedProduct: selectedProductData,
+                    ownerData: {},
+                };
+                console.log("combine", combinedData)
+                navigation.navigate("ProductDetails", { combinedData: combinedData })
+            }
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     const handleRemove = async (item) => {
+        //Remove the product from favlist array in Firebase
         try {
             const docRef = doc(db, "userProfiles", auth.currentUser.uid);
 
