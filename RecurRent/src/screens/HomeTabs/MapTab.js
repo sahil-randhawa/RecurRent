@@ -82,12 +82,8 @@ const MapTab = ({ navigation, route }) => {
                 };
                 resultsFromFirestore.push(itemToAdd);
             });
-
-            // console.log("What is in our final array")
-            // console.log(resultsFromFirestore)
-
             setProductListings(resultsFromFirestore);
-            console.log("Product listings: " + productListings.length);
+            console.log("Product listings: " + productListings.length); // TODO: issue -> not printing on first load ??
             productListings.forEach((listing) => {
                 console.log(JSON.stringify(listing, null, "\t"));
             });
