@@ -30,6 +30,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import MainTab from "./HomeTabs/MainTab";
 import ProfileTab from "./HomeTabs/ProfileTab";
 import MapTab from "./HomeTabs/MapTab";
+import BookingRequestTab from "./HomeTabs/BookingRequestTab";
 import Icon from "react-native-vector-icons/Ionicons";
 
 const Tab = createBottomTabNavigator();
@@ -68,6 +69,8 @@ const HomeScreen = ({ navigation, route }) => {
 								iconName = focused ? "person" : "person-outline";
 							} else if (route.name === "Explore") {
 								iconName = focused ? "map" : "map-outline";
+							} else if (route.name === "Requests") {
+								iconName = focused ? "list-circle-sharp" : "list-circle-sharp";
 							}
 							return (
 								<Icon
@@ -112,6 +115,20 @@ const HomeScreen = ({ navigation, route }) => {
 							},
 						}}
 					/>
+
+					<Tab.Screen
+						name="Requests"
+						component={BookingRequestTab}
+						options={{
+							headerTitle: () => <NavigationHeader title="Booking Requests" />,
+							headerTitleAlign: "center",
+							headerStyle: {
+								// backgroundColor: lightTheme.colors.primaryContainer,
+								shadowColor: lightTheme.colors.shadow,
+							},
+						}}
+					/>
+
 					<Tab.Screen
 						name="Profile"
 						component={ProfileTab}
