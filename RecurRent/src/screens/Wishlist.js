@@ -141,49 +141,49 @@ const Wishlist = ({ navigation }) => {
                     <FlatList
                         data={wishList}
                         renderItem={({ item }) => (
-                            <View style={styles.rowContainer}>
-                                <View style={styles.itemContainer}>
-                                    {/* <TouchableOpacity style={styles.itemContainer} onPress={() => handlePress(item)}> */}
-                                    <View style={styles.itemContent}>
-                                        <Text style={styles.itemText}>{item.name}</Text>
-                                    </View>
-                                    <TouchableOpacity
-                                        onPress={() => handleRemove(item)}>
-                                        <AntDesign name="close" size={24} color={tertiaryColor} style={styles.removeIcon} />
-                                    </TouchableOpacity>
-                                    {/* </TouchableOpacity> */}
-                                </View>
-                                <View style={
-                                    [styles.itemContainer,
-                                    {
-                                        justifyContent: "flex-start",
-                                        gap: 10,
-                                        alignItems: "flex-start",
-                                    }]
-                                }>
-                                    <Image source={{ uri: item.productPhoto }} style={{ width: 100, height: 100 }} />
-                                    <View style={{
-                                        width: '65%',
-                                        height: '100%',
-                                        justifyContent: "space-between",
-                                        gap: 5,
-                                        flexDirection: "column",
-                                        borderColor: secondaryColor,
-                                    }}>
-                                        <View style={{
-                                            gap: 5,
-                                        }}>
-                                            <Text>{item.pickUpAddress}</Text>
-                                            <Text style={{ color: item.status === 'Available' ? 'green' : item.status === 'Unavailable' ? 'red' : 'grey' }}>{item.status}</Text>
+                            <TouchableOpacity style={styles.itemContainer} onPress={() => handlePress(item)}>
+                                <View style={styles.rowContainer}>
+                                    <View style={styles.itemContainer}>
+                                        <View style={styles.itemContent}>
+                                            <Text style={styles.itemText}>{item.name}</Text>
                                         </View>
-                                        <Text style={{
-                                            fontStyle: "italic",
-                                            // fontSize: 12,
-                                            color: secondaryColor,
-                                        }}>C${item.price}</Text>
+                                        <TouchableOpacity
+                                            onPress={() => handleRemove(item)}>
+                                            <AntDesign name="close" size={24} color={tertiaryColor} style={styles.removeIcon} />
+                                        </TouchableOpacity>
+                                    </View>
+                                    <View style={
+                                        [styles.itemContainer,
+                                        {
+                                            justifyContent: "flex-start",
+                                            gap: 10,
+                                            alignItems: "flex-start",
+                                        }]
+                                    }>
+                                        <Image source={{ uri: item.productPhoto }} style={{ width: 100, height: 100 }} />
+                                        <View style={{
+                                            width: '65%',
+                                            height: '100%',
+                                            justifyContent: "space-between",
+                                            gap: 5,
+                                            flexDirection: "column",
+                                            borderColor: secondaryColor,
+                                        }}>
+                                            <View style={{
+                                                gap: 5,
+                                            }}>
+                                                <Text>{item.pickUpAddress}</Text>
+                                                <Text style={{ color: item.status === 'Available' ? 'green' : item.status === 'Unavailable' ? 'red' : 'grey' }}>{item.status}</Text>
+                                            </View>
+                                            <Text style={{
+                                                fontStyle: "italic",
+                                                // fontSize: 12,
+                                                color: secondaryColor,
+                                            }}>C${item.price}</Text>
+                                        </View>
                                     </View>
                                 </View>
-                            </View>
+                            </TouchableOpacity>
                         )}
                         keyExtractor={(item) => item.name}
                     />
