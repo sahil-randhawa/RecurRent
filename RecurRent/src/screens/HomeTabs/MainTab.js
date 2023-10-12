@@ -44,7 +44,7 @@ const MainTab = ({ navigation, route }) => {
 		try {
 			const q = query(
 				collection(db, "Products"),
-				where("status", "==", "Available")
+				// where("status", "==", "Available")
 			);
 			const querySnapshot = await getDocs(q);
 			const resultsFromFirestore = [];
