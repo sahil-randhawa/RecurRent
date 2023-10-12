@@ -52,11 +52,9 @@ const ProductCard = ({ coverUri, title, duration, productId, buttonLabel, onPres
 		// Check if the product is already in the user's favList
 		if (user.favlist.includes(String(productId))) {
 			// Remove the product from the user's favList
-			console.log("Remove");
 			removeProductFromArray("userProfiles", auth.currentUser.uid, productId)
 		  } else {
 			// Add the product to the user's favList
-			console.log("Add");
 			addProductToArray("userProfiles", auth.currentUser.uid, productId)
 		  }
 	};
