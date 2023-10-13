@@ -44,7 +44,7 @@ const MainTab = ({ navigation, route }) => {
 		try {
 			const q = query(
 				collection(db, "Products"),
-				where("status", "==", "Available")
+				// where("status", "==", "Available")
 			);
 			const querySnapshot = await getDocs(q);
 			const resultsFromFirestore = [];
@@ -124,7 +124,7 @@ const MainTab = ({ navigation, route }) => {
 	};
 	return (
 		<>
-			<ScrollView style={{ paddingVertical: 10 }}>
+			<ScrollView style={{ paddingVertical: 10, backgroundColor: backgroundColor }}>
 				<View style={[spacing.container, { justifyContent: "space-evenly" }]}>
 					<Search
 						placeholder={"Search here"}
@@ -148,7 +148,9 @@ const MainTab = ({ navigation, route }) => {
 								/>
 							);
 						}}
-						contentContainerStyle={{ paddingVertical: 10 }}
+						contentContainerStyle={{
+							padding: 5
+						}}
 					/>
 
 					{/* create item listing button */}

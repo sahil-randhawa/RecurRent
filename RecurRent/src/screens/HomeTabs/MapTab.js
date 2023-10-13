@@ -64,7 +64,7 @@ const MapTab = ({ navigation, route }) => {
         try {
             const q = query(
                 collection(db, "Products"),
-                where("status", "==", "Available"),
+                // where("status", "==", "Available"),
                 where("coordinates.lat", ">=", 1),
                 // where("coordinates.lat", ">=", deviceLocation.lat - 0.1),
                 // where("coordinates.lat", "<=", deviceLocation.lat + 0.1),
@@ -82,11 +82,11 @@ const MapTab = ({ navigation, route }) => {
                 };
                 resultsFromFirestore.push(itemToAdd);
             });
-
-            // console.log("What is in our final array")
-            // console.log(resultsFromFirestore)
-
             setProductListings(resultsFromFirestore);
+            console.log("Product listings: " + productListings.length); // TODO: issue -> not printing on first load ??
+            productListings.forEach((listing) => {
+                console.log(JSON.stringify(listing, null, "\t"));
+            });
             setIsLoading(false);
         } catch (err) {
             console.log(err)
@@ -228,6 +228,8 @@ const MapTab = ({ navigation, route }) => {
                                             backgroundColor: primaryColor,
                                             padding: 5,
                                             borderRadius: 5,
+                                            borderColor: "white",
+                                            borderWidth: 0.2,
                                         }}>
                                             <Text style={{
                                                 fontWeight: "bold",

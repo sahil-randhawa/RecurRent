@@ -154,6 +154,10 @@ const ProductDetailsScreen = ({ navigation, route }) => {
 			icon: "information-circle-outline",
 			color: lightTheme.colors.info,
 		},
+		"Requested for Booking": {
+			icon: "information-circle-outline",
+			color: lightTheme.colors.info,
+		},
 		"Not Available": {
 			icon: "close-circle-outline",
 			color: lightTheme.colors.error,
@@ -208,8 +212,7 @@ const ProductDetailsScreen = ({ navigation, route }) => {
 									<Text
 										style={[typography.bodyHeading, { color: primaryColor }]}
 									>
-										Duration :
-										<Text style={[typography.body, { color: textColor }]}>
+										Duration : <Text style={[typography.body, { color: textColor }]}>
 											{selectedProduct.item.duration}
 										</Text>
 									</Text>
@@ -227,9 +230,8 @@ const ProductDetailsScreen = ({ navigation, route }) => {
 									<Text
 										style={[typography.bodyHeading, { color: primaryColor }]}
 									>
-										Price :
-										<Text style={[typography.body, { color: textColor }]}>
-											${selectedProduct.item.price}
+										Price : <Text style={[typography.body, { color: textColor }]}>
+											C${selectedProduct.item.price}
 										</Text>
 									</Text>
 								</View>
@@ -248,8 +250,7 @@ const ProductDetailsScreen = ({ navigation, route }) => {
 									<Text
 										style={[typography.bodyHeading, { color: primaryColor }]}
 									>
-										Status :
-										<Text style={[typography.body, { color: textColor }]}>
+										Status : <Text style={[typography.body, { color: textColor }]}>
 											{selectedProduct.item.status}
 										</Text>
 									</Text>
@@ -290,8 +291,7 @@ const ProductDetailsScreen = ({ navigation, route }) => {
 									<Text
 										style={[typography.bodyHeading, { color: primaryColor }]}
 									>
-										Pickup Address :
-										<Text style={[typography.body, { color: textColor }]}>
+										Pickup Address : <Text style={[typography.body, { color: textColor }]}>
 											{selectedProduct.item.pickUpAddress}
 										</Text>
 									</Text>
