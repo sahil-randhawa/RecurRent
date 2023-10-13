@@ -11,6 +11,7 @@ import {
     ScrollView,
     Image,
     Pressable,
+    ActivityIndicator,
 } from "react-native";
 import {
     primaryColor,
@@ -42,7 +43,7 @@ const BookingRequestTab = ({ navigation, route }) => {
     const [ownerRequestsListings, setOwnerRequestsListings] = useState([])
     // const [ownerInfo, setOwnerInfo] = useState()
     // const [renterInfo, setRenterInfo] = useState()
-
+    const [loading, setLoading] = useState(true);
     const getRequestedProductListings = async () => {
         console.log("user id", auth.currentUser.uid)
         try {
@@ -59,29 +60,7 @@ const BookingRequestTab = ({ navigation, route }) => {
                 console.log(currentDoc.productID)
                 const documentRef = doc(db, 'Products', currentDoc.productID);
                 const documentRefRenter = doc(db, 'userProfiles', currentDoc.renterID);
-                // getDoc(documentRef)
-                // .then((docSnapshot) => {
-                //     if (docSnapshot.exists()) {
-                //     const documentData = docSnapshot.data();
-                //     console.log("Requested product", documentData)
-                //     const itemToAdd = {
-                //         nameRenter:"Chitra",
-                //         id: docc.id,
-                //         ...docSnapshot.data()
-                //     };
-                //     console.log("Item to Add",itemToAdd)
-                //     resultsFromFirestore.push(itemToAdd);
-
-                //     } else {
-                //     console.log('Document does not exist');
-                //     }
-                // })
-                // .catch((error) => {
-                //     console.error('Error getting document:', error);
-                // });
-
-
-
+          
                 getDoc(documentRefRenter)
                     .then((docSnapshotrenter) => {
                         if (docSnapshotrenter.exists()) {
@@ -125,9 +104,14 @@ const BookingRequestTab = ({ navigation, route }) => {
 
             console.log("requets for owner", resultsFromFirestore)
             setOwnerRequestsListings(resultsFromFirestore);
-            setRenterInfo(renter)
+           
+           
         } catch (err) {
             console.log(err)
+        }
+        try { }
+        finally {
+            setLoading(false);
         }
     }
 
@@ -135,10 +119,14 @@ const BookingRequestTab = ({ navigation, route }) => {
 
 
     return (
-        <>
-            <ScrollView style={{ padding: 10 }}>
-                {/* <View style={[spacing.container, { justifyContent: "space-evenly" }]}> */}
-
+        <View style={spacing.container}>
+        {loading ? (
+            <ActivityIndicator size="large" color={primaryColor} />
+        ) : (
+            <View style={{
+                width: '100%',
+                flex: 1,
+            }}>
                 <FlatList
                     data={ownerRequestsListings}
                     renderItem={(rowData) => {
@@ -186,9 +174,10 @@ const BookingRequestTab = ({ navigation, route }) => {
                     }}
                     contentContainerStyle={{ paddingVertical: 10 }}
                 />
-                {/* </View> */}
-            </ScrollView>
-        </>
+             </View>
+            )
+            }
+        </View >
     );
 };
 
