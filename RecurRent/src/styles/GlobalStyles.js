@@ -2,9 +2,8 @@ import { StyleSheet, Platform } from "react-native";
 import { MD3LightTheme } from "react-native-paper";
 import { MD3DarkTheme } from "react-native-paper";
 
-
 // ---------------  Colors  ---------------
-const primaryColor = "#5B81FA";  // color name: blue-500
+const primaryColor = "#5B81FA"; // color name: blue-500
 const secondaryColor = "#2B308A"; // color name: blue-700
 const tertiaryColor = "#9CA3AF"; // color name: gray-300
 const textColor = "#1F1F1F"; // color name: gray-900
@@ -24,6 +23,7 @@ const typography = StyleSheet.create({
 		fontSize: baseFontSize + 6,
 		fontFamily: "Montserrat-Bold",
 		color: primaryColor,
+		// fontWeight: "bold",
 		marginBottom: 4,
 	},
 	heading: {
@@ -34,7 +34,7 @@ const typography = StyleSheet.create({
 	},
 	subheading: {
 		fontSize: baseFontSize + 4,
-		fontFamily: "Montserrat-Bold",
+		fontFamily: "Montserrat-Regular",
 		color: textColor,
 		marginBottom: 12,
 	},
@@ -59,11 +59,10 @@ const typography = StyleSheet.create({
 
 // ---------------  Spacing  ---------------
 const spacing = StyleSheet.create({
-
 	container: {
 		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
+		justifyContent: "center",
+		alignItems: "center",
 		paddingHorizontal: 20,
 		backgroundColor: backgroundColor,
 	},
@@ -213,31 +212,20 @@ const darkTheme = {
 	},
 };
 
-// ---------------  formStyles  ---------------
+// ---------------  Form Styles  ---------------
 const formStyles = StyleSheet.create({
-	formContainer: {
-		flex: 1,
-		paddingVertical: 20,
-		width: "100%",
-	},
-	formRow: {
-		flexDirection: "row",
+	fieldContainer: {
 		marginBottom: 20,
-		justifyContent: "space-between",
-		gap: 10,
 	},
 	label: {
-		fontSize: 18,
-		// backgroundColor: "cyan",
+		fontSize: 16,
 		flex: 1,
 		fontWeight: "bold",
+		color: textColor,
 	},
 	input: {
-		backgroundColor: "white",
-		padding: 10,
-		fontSize: 18,
-		borderRadius: 10,
-		width: "60%",
+		marginTop: 5,
+		height: 40,
 	},
 });
 

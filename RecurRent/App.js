@@ -11,7 +11,6 @@ import Splash from "./src/screens/Splash";
 import ProductDetailsScreen from "./src/screens/ProductDetailsScreen";
 import CreateNewListing from "./src/screens/CreateNewListing";
 import Wishlist from "./src/screens/Wishlist";
-import { TouchableOpacity, Text } from "react-native";
 import { typography } from "./src/styles/GlobalStyles";
 
 
