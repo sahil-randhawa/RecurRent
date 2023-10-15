@@ -160,33 +160,36 @@ const Wishlist = ({ navigation }) => {
 						color={primaryColor}
 					/>
 				) : wishList.length === 0 ? (
-					<Text style={styles.emptyText}>
-						Currently, your wishlist is empty.{'\n'}Keep Browsing!
+					<Text style={[typography.bodyHeading, { textAlign: 'center' }]}>
+						View all your favorite items here by{'\n'}adding to your Wishlist!
 					</Text>
 				) : (
 					<View style={styles.container}>
 						<SwipeListView
 							data={wishList}
-							renderItem={({ item }) => (
-								<WishlistCard
-									item={item}
-									handlePress={handlePress}
-									handleRemove={handleRemove}
-								/>
+							renderItem={({ item, index }) => (
+								<View style={index === wishList.length - 1 && styles.lastItem}>
+									<WishlistCard
+										item={item}
+										handlePress={handlePress}
+										handleRemove={handleRemove}
+									/>
+								</View>
 							)}
 							renderHiddenItem={({ item }) => (
 								<View style={styles.rowBack}>
 									<Icon
 										name="trash-outline"
-										color="white"
+										color="red"
 										size={24}
 										onPress={() => handleRemove(item)}
 									/>
 								</View>
 							)}
-							leftOpenValue={75}
-							disableLeftSwipe={true}
 							rightOpenValue={-75}
+							leftOpenValue={0}
+							disableLeftSwipe={false}
+							disableRightSwipe={false}
 						/>
 					</View>
 				)}
@@ -201,16 +204,16 @@ const styles = StyleSheet.create({
 		flex: 1,
 		flexDirection: 'column',
 		justifyContent: 'flex-start',
+		paddingBottom: 30,
 	},
-	emptyText: {
-		textAlign: 'center',
-		alignSelf: 'center',
+	lastItem: {
+		marginBottom: 20,
 	},
 	rowBack: {
 		flex: 1,
 		alignItems: 'flex-end',
 		justifyContent: 'center',
-		padding: 10,
+		padding: 20,
 	},
 });
 
