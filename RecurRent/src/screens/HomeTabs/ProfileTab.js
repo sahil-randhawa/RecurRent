@@ -74,7 +74,7 @@ const ProfileTab = ({ navigation, route }) => {
 		{
 			key: "account-settings",
 			title: "Account Settings",
-			description: "Contact information, addresses, passwords",
+			description: "Contact information, address, passwords",
 			iconName: "person-circle-outline",
 			navigateTo: "AccountSettings",
 		},

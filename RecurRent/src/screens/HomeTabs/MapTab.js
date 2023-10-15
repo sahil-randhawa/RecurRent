@@ -41,7 +41,7 @@ import {
     getDoc,
 } from "firebase/firestore";
 import Search from "../../components/SearchBar";
-import ProductCard from "../../components/Card";
+import ProductCard from "../../components/ProductCard";
 // library for mapview and marker
 import MapView, { Marker } from "react-native-maps";
 // TODO: Import location library

@@ -42,7 +42,7 @@ import {
 	getDocFromCache,
 } from "firebase/firestore";
 import Search from "../../components/SearchBar";
-import ProductCard from "../../components/Card";
+import ProductCard from "../../components/ProductCard";
 
 const BookingRequestTab = ({ navigation, route }) => {
 	useEffect(() => {

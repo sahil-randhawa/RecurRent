@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
 	View,
 	Text,
@@ -7,7 +7,7 @@ import {
 	StyleSheet,
 	ActivityIndicator,
 	Image,
-} from "react-native";
+} from 'react-native';
 import {
 	primaryColor,
 	secondaryColor,
@@ -20,9 +20,11 @@ import {
 	lightTheme,
 	darkTheme,
 	formStyles,
-} from "../../styles/GlobalStyles";
-import AntDesign from "react-native-vector-icons/AntDesign";
-import { auth, db } from "../../../firebaseConfig";
+} from '../../styles/GlobalStyles';
+import WishlistCard from '../../components/WishlistCard';
+import { SwipeListView } from 'react-native-swipe-list-view';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { auth, db } from '../../../firebaseConfig';
 import {
 	collection,
 	getDocs,
@@ -32,7 +34,7 @@ import {
 	getDoc,
 	updateDoc,
 	arrayRemove,
-} from "firebase/firestore";
+} from 'firebase/firestore';
 
 const Wishlist = ({ navigation }) => {
 	const [user, setUser] = useState({});
@@ -52,8 +54,8 @@ const Wishlist = ({ navigation }) => {
 	const fetchFromDB = async () => {
 		try {
 			const q = query(
-				collection(db, "userProfiles"),
-				where("email", "==", auth.currentUser.email)
+				collection(db, 'userProfiles'),
+				where('email', '==', auth.currentUser.email)
 			);
 			const querySnapshot = await getDocs(q);
 			querySnapshot.forEach((doc) => {
@@ -69,7 +71,7 @@ const Wishlist = ({ navigation }) => {
 		await Promise.all(
 			user.favlist.map(async (value) => {
 				try {
-					const docRef = doc(db, "Products", value);
+					const docRef = doc(db, 'Products', value);
 					const docSnap = await getDoc(docRef);
 
 					if (docSnap.exists()) {
@@ -77,16 +79,16 @@ const Wishlist = ({ navigation }) => {
 						const documentId = docSnap.id; // Get the document ID
 						const itemWithId = { ...data, id: documentId }; // Include the ID in the item object
 						console.log(
-							"Document data :\n",
+							'Document data :\n',
 							JSON.stringify(itemWithId, null, 4)
 						);
 
 						resultsFromFirestore.push(itemWithId);
 					} else {
-						console.log("Document does not exist.");
+						console.log('Document does not exist.');
 					}
 				} catch (error) {
-					console.error("Error fetching document:", error);
+					console.error('Error fetching document:', error);
 				}
 			})
 		);
@@ -106,27 +108,27 @@ const Wishlist = ({ navigation }) => {
 			const selectedProductData = {
 				item: item,
 			};
-			const docRef = doc(db, "userProfiles", ownerID);
+			const docRef = doc(db, 'userProfiles', ownerID);
 			const docSnap = await getDoc(docRef);
 
 			if (docSnap.exists()) {
-				console.log("Document data:", docSnap.data());
+				console.log('Document data:', docSnap.data());
 
 				const combinedData = {
 					selectedProduct: selectedProductData,
 					ownerData: docSnap.data(),
 				};
-				console.log("combine", combinedData);
-				navigation.navigate("ProductDetails", { combinedData: combinedData });
+				console.log('combine', combinedData);
+				navigation.navigate('ProductDetails', { combinedData: combinedData });
 			} else {
 				// docSnap.data() will be undefined in this case
-				console.log("No such document!");
+				console.log('No such document!');
 				const combinedData = {
 					selectedProduct: selectedProductData,
 					ownerData: {},
 				};
-				console.log("combine", combinedData);
-				navigation.navigate("ProductDetails", { combinedData: combinedData });
+				console.log('combine', combinedData);
+				navigation.navigate('ProductDetails', { combinedData: combinedData });
 			}
 		} catch (error) {
 			console.log(error);
@@ -136,157 +138,79 @@ const Wishlist = ({ navigation }) => {
 	const handleRemove = async (item) => {
 		//Remove the product from favlist array in Firebase
 		try {
-			const docRef = doc(db, "userProfiles", auth.currentUser.uid);
+			const docRef = doc(db, 'userProfiles', auth.currentUser.uid);
 
 			await updateDoc(docRef, {
 				favlist: arrayRemove(item.id),
 			});
 
-			console.log("String removed from array in Firebase.");
+			console.log('String removed from array in Firebase.');
 			fetchFromDB();
 		} catch (error) {
-			console.error("Error removing string from array in Firebase:", error);
+			console.error('Error removing string from array in Firebase:', error);
 		}
 	};
 
 	return (
-		<View style={spacing.container}>
-			{loading ? (
-				<ActivityIndicator size="large" color={primaryColor} />
-			) : wishList.length === 0 ? (
-				<Text style={{ textAlign: "center", alignSelf: "center" }}>
-					Currently, your wishlist is empty.{"\n"}Keep Browsing!
-				</Text>
-			) : (
-				<View
-					style={{
-						width: "100%",
-						flex: 1,
-					}}
-				>
-					<FlatList
-						data={wishList}
-						renderItem={({ item }) => (
-							<TouchableOpacity
-								style={styles.itemContainer}
-								onPress={() => handlePress(item)}
-							>
-								<View style={styles.rowContainer}>
-									<View style={styles.itemContainer}>
-										<View style={styles.itemContent}>
-											<Text style={styles.itemText}>{item.name}</Text>
-										</View>
-										<TouchableOpacity onPress={() => handleRemove(item)}>
-											<AntDesign
-												name="close"
-												size={24}
-												color={tertiaryColor}
-												style={styles.removeIcon}
-											/>
-										</TouchableOpacity>
-									</View>
-									<View
-										style={[
-											styles.itemContainer,
-											{
-												justifyContent: "flex-start",
-												gap: 10,
-												alignItems: "flex-start",
-											},
-										]}
-									>
-										<Image
-											source={{ uri: item.productPhoto }}
-											style={{ width: 100, height: 100 }}
-										/>
-										<View
-											style={{
-												width: "65%",
-												height: "100%",
-												justifyContent: "space-between",
-												gap: 5,
-												flexDirection: "column",
-												borderColor: secondaryColor,
-											}}
-										>
-											<View
-												style={{
-													gap: 5,
-												}}
-											>
-												<Text>{item.pickUpAddress}</Text>
-												<Text
-													style={{
-														color:
-															item.status === "Available"
-																? "green"
-																: item.status === "Unavailable"
-																? "red"
-																: "grey",
-													}}
-												>
-													{item.status}
-												</Text>
-											</View>
-											<Text
-												style={{
-													fontStyle: "italic",
-													// fontSize: 12,
-													color: secondaryColor,
-												}}
-											>
-												C${item.price}
-											</Text>
-										</View>
-									</View>
-								</View>
-							</TouchableOpacity>
-						)}
-						keyExtractor={(item) => item.name}
+		<>
+			<View style={spacing.container}>
+				{loading ? (
+					<ActivityIndicator
+						size="large"
+						color={primaryColor}
 					/>
-				</View>
-			)}
-		</View>
+				) : wishList.length === 0 ? (
+					<Text style={styles.emptyText}>
+						Currently, your wishlist is empty.{'\n'}Keep Browsing!
+					</Text>
+				) : (
+					<View style={styles.container}>
+						<SwipeListView
+							data={wishList}
+							renderItem={({ item }) => (
+								<WishlistCard
+									item={item}
+									handlePress={handlePress}
+									handleRemove={handleRemove}
+								/>
+							)}
+							renderHiddenItem={({ item }) => (
+								<View style={styles.rowBack}>
+									<Icon
+										name="trash-outline"
+										color="white"
+										size={24}
+										onPress={() => handleRemove(item)}
+									/>
+								</View>
+							)}
+							leftOpenValue={75}
+							disableLeftSwipe={true}
+							rightOpenValue={-75}
+						/>
+					</View>
+				)}
+			</View>
+		</>
 	);
 };
 
 const styles = StyleSheet.create({
-	title: {
-		fontSize: 20,
-		fontWeight: "bold",
-		marginBottom: 10,
-	},
-
-	itemContainer: {
+	container: {
+		width: '100%',
 		flex: 1,
-		width: "100%",
-		flexDirection: "row",
-		justifyContent: "space-between",
+		flexDirection: 'column',
+		justifyContent: 'flex-start',
 	},
-	rowContainer: {
+	emptyText: {
+		textAlign: 'center',
+		alignSelf: 'center',
+	},
+	rowBack: {
 		flex: 1,
-		width: "100%",
-		flexDirection: "column",
-		gap: 10,
-		alignItems: "flex-start",
-		// justifyContent: "space-around",
+		alignItems: 'flex-end',
+		justifyContent: 'center',
 		padding: 10,
-		backgroundColor: "white",
-		marginTop: 10,
-		borderRadius: 10,
-	},
-	itemContent: {
-		flex: 1,
-		flexDirection: "row",
-		alignItems: "center",
-	},
-	itemText: {
-		fontSize: 16,
-		color: textColor.primary,
-		fontWeight: "600",
-	},
-	arrowIcon: {
-		marginLeft: 10,
 	},
 });
 
