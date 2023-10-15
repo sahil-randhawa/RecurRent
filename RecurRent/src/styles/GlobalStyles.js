@@ -51,7 +51,7 @@ const typography = StyleSheet.create({
 		lineHeight: 24,
 	},
 	caption: {
-		fontSize: baseFontSize - 2,
+		fontSize: baseFontSize - 4,
 		fontFamily: "Manrope-Regular",
 		color: textColor,
 	},

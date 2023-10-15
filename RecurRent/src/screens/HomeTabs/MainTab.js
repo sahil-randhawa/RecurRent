@@ -28,7 +28,15 @@ import Btn, {
 import { StatusBar } from "expo-status-bar";
 import { auth, db } from "../../../firebaseConfig";
 import { signOut } from "firebase/auth";
-import { collection, getDocs, query, where, doc, getDoc, documentId } from "firebase/firestore";
+import {
+	collection,
+	getDocs,
+	query,
+	where,
+	doc,
+	getDoc,
+	documentId,
+} from "firebase/firestore";
 import Search from "../../components/SearchBar";
 import ProductCard from "../../components/Card";
 
@@ -37,13 +45,13 @@ const MainTab = ({ navigation, route }) => {
 		getProductListings();
 	}, []);
 
-	const [productsListings, setProductsListings] = useState([])
+	const [productsListings, setProductsListings] = useState([]);
 	const [ownerDetails, setOwnerDetails] = useState({});
 
 	const getProductListings = async () => {
 		try {
 			const q = query(
-				collection(db, "Products"),
+				collection(db, "Products")
 				// where("status", "==", "Available")
 			);
 			const querySnapshot = await getDocs(q);
@@ -63,16 +71,15 @@ const MainTab = ({ navigation, route }) => {
 
 			setProductsListings(resultsFromFirestore);
 		} catch (err) {
-			console.log(err)
+			console.log(err);
 		}
-	}
+	};
 
 	const moreDetailsClicked = async (selectedProductData) => {
 		// alert(`Product : ${selectedProductData.item.name}`)
 		try {
-
-			const ownerID = selectedProductData.item.userID
-			console.log(ownerID)
+			const ownerID = selectedProductData.item.userID;
+			console.log(ownerID);
 			const docRef = doc(db, "userProfiles", ownerID);
 			const docSnap = await getDoc(docRef);
 
@@ -81,14 +88,12 @@ const MainTab = ({ navigation, route }) => {
 				// const data = docSnap.data();
 				//     // const documentId = ownerID; // Get the document ID
 
-
 				const combinedData = {
 					selectedProduct: selectedProductData,
 					ownerData: docSnap.data(),
 				};
-				console.log("combine", combinedData)
-				navigation.navigate("ProductDetails", { combinedData: combinedData })
-
+				console.log("combine", combinedData);
+				navigation.navigate("ProductDetails", { combinedData: combinedData });
 			} else {
 				// docSnap.data() will be undefined in this case
 				console.log("No such document!");
@@ -97,8 +102,8 @@ const MainTab = ({ navigation, route }) => {
 					selectedProduct: selectedProductData,
 					ownerData: {},
 				};
-				console.log("combine", combinedData)
-				navigation.navigate("ProductDetails", { combinedData: combinedData })
+				console.log("combine", combinedData);
+				navigation.navigate("ProductDetails", { combinedData: combinedData });
 			}
 		} catch (error) {
 			console.log(error);
@@ -111,7 +116,7 @@ const MainTab = ({ navigation, route }) => {
 		//   };
 		//   console.log("combine", combinedData)
 		// navigation.navigate("ProductDetails",{combinedData:combinedData})
-	}
+	};
 
 	// Search Button
 	const [searchQuery, setSearchQuery] = useState("");
@@ -124,7 +129,9 @@ const MainTab = ({ navigation, route }) => {
 	};
 	return (
 		<>
-			<ScrollView style={{ paddingVertical: 10, backgroundColor: backgroundColor }}>
+			<ScrollView
+				style={{ paddingVertical: 10, backgroundColor: backgroundColor }}
+			>
 				<View style={[spacing.container, { justifyContent: "space-evenly" }]}>
 					<Search
 						placeholder={"Search here"}
@@ -144,12 +151,14 @@ const MainTab = ({ navigation, route }) => {
 									productId={rowData.item.id}
 									buttonLabel={"More Details"}
 									// if onPress function is added it pops up too much of alert messages.
-									onPressAction={() => { moreDetailsClicked(rowData) }}
+									onPressAction={() => {
+										moreDetailsClicked(rowData);
+									}}
 								/>
 							);
 						}}
 						contentContainerStyle={{
-							padding: 5
+							padding: 5,
 						}}
 					/>
 

@@ -70,7 +70,7 @@ const HomeScreen = ({ navigation, route }) => {
 							} else if (route.name === "Explore") {
 								iconName = focused ? "map" : "map-outline";
 							} else if (route.name === "Requests") {
-								iconName = focused ? "list-circle-sharp" : "list-circle-sharp";
+								iconName = focused ? "list" : "list-outline";
 							}
 							return (
 								<Icon

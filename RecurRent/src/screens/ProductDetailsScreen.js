@@ -37,7 +37,6 @@ import {
 } from "firebase/firestore";
 
 const ProductDetailsScreen = ({ navigation, route }) => {
-
 	useEffect(() => {
 		console.log("Product Details Screen:");
 		console.log("selectedProduct: ", selectedProduct);
@@ -98,7 +97,7 @@ const ProductDetailsScreen = ({ navigation, route }) => {
 						if (!querySnapshot.empty) {
 							alert(
 								"You already requested for this Product!\n Requested duration: " +
-								querySnapshot.docs[0].data().duration
+									querySnapshot.docs[0].data().duration
 							);
 							return;
 						}
@@ -174,9 +173,11 @@ const ProductDetailsScreen = ({ navigation, route }) => {
 		<>
 			<ScrollView>
 				<View style={styles.mainContainer}>
-					<View style={{
-						width: "100%",
-					}}>
+					<View
+						style={{
+							width: "100%",
+						}}
+					>
 						<Image
 							source={{ uri: selectedProduct.item["productPhoto"] }}
 							style={{
@@ -185,9 +186,11 @@ const ProductDetailsScreen = ({ navigation, route }) => {
 							}}
 						/>
 					</View>
-					<View style={{
-						width: "100%",
-					}}>
+					<View
+						style={{
+							width: "100%",
+						}}
+					>
 						<View style={styles.productDetails}>
 							<Text style={[typography.heading, { color: textColor }]}>
 								{selectedProduct.item.name}
@@ -195,13 +198,15 @@ const ProductDetailsScreen = ({ navigation, route }) => {
 							<Text
 								style={[
 									typography.body,
-									{ marginBottom: 10, color: textColor },
+									{ marginBottom: 15, color: textColor },
 								]}
 							>
 								{selectedProduct.item.description}
 							</Text>
 
-							<View>
+							<Divider />
+
+							<View style={{ marginTop: 15 }}>
 								<View style={styles.productInfo}>
 									<Icon
 										name="time-outline"
@@ -212,7 +217,8 @@ const ProductDetailsScreen = ({ navigation, route }) => {
 									<Text
 										style={[typography.bodyHeading, { color: primaryColor }]}
 									>
-										Duration : <Text style={[typography.body, { color: textColor }]}>
+										Duration :{" "}
+										<Text style={[typography.body, { color: textColor }]}>
 											{selectedProduct.item.duration}
 										</Text>
 									</Text>
@@ -230,7 +236,8 @@ const ProductDetailsScreen = ({ navigation, route }) => {
 									<Text
 										style={[typography.bodyHeading, { color: primaryColor }]}
 									>
-										Price : <Text style={[typography.body, { color: textColor }]}>
+										Price :{" "}
+										<Text style={[typography.body, { color: textColor }]}>
 											C${selectedProduct.item.price}
 										</Text>
 									</Text>
@@ -250,14 +257,13 @@ const ProductDetailsScreen = ({ navigation, route }) => {
 									<Text
 										style={[typography.bodyHeading, { color: primaryColor }]}
 									>
-										Status : <Text style={[typography.body, { color: textColor }]}>
+										Status :{" "}
+										<Text style={[typography.body, { color: textColor }]}>
 											{selectedProduct.item.status}
 										</Text>
 									</Text>
 								</View>
 							</View>
-
-
 
 							{/* DON'T DELETE THIS */}
 
@@ -291,7 +297,8 @@ const ProductDetailsScreen = ({ navigation, route }) => {
 									<Text
 										style={[typography.bodyHeading, { color: primaryColor }]}
 									>
-										Pickup Address : <Text style={[typography.body, { color: textColor }]}>
+										Pickup Address :{" "}
+										<Text style={[typography.body, { color: textColor }]}>
 											{selectedProduct.item.pickUpAddress}
 										</Text>
 									</Text>
@@ -299,7 +306,13 @@ const ProductDetailsScreen = ({ navigation, route }) => {
 							</View>
 						</View>
 
-						<Divider />
+						<Divider
+							bold="true"
+							style={{
+								borderWidth: 1.5,
+								borderColor: lightTheme.colors.primaryContainer,
+							}}
+						/>
 
 						<View
 							style={[styles.ownerDetails, { justifyContent: "flex-start" }]}
@@ -413,6 +426,7 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		alignItems: "center",
 		marginBottom: 8,
+		marginRight: 20,
 	},
 
 	ownerDetails: {
