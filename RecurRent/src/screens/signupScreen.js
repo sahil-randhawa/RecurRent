@@ -9,12 +9,20 @@ import {
 	textColor,
 	typography,
 	spacing,
-	lightTheme, cd
+	lightTheme,
+	cd,
 } from "../styles/GlobalStyles";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { auth, db } from "../../firebaseConfig";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc, getDocs, query, where, collection } from "firebase/firestore";
+import {
+	doc,
+	setDoc,
+	getDocs,
+	query,
+	where,
+	collection,
+} from "firebase/firestore";
 
 const SignUpScreen = ({ navigation, route }) => {
 	const [email, setEmail] = useState("");
@@ -27,29 +35,31 @@ const SignUpScreen = ({ navigation, route }) => {
 		navigation.navigate("LogIn");
 	};
 
-
-
 	const onCreateAccountClicked = async () => {
-
-
 		try {
-			const q = query(collection(db, "userProfiles"), where("email", "==", email));
+			const q = query(
+				collection(db, "userProfiles"),
+				where("email", "==", email)
+			);
 			const querySnapshot = await getDocs(q);
 			if (!querySnapshot.empty) {
-				alert("This email address is alredy exsits!")
+				alert("This email address is alredy exsits!");
 			} else {
-
 				if (password === confirmPassword) {
 					try {
 						const auth = getAuth();
-						const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+						const userCredential = await createUserWithEmailAndPassword(
+							auth,
+							email,
+							password
+						);
 						const user = userCredential.user;
 						const userToInsert = {
 							typeUser: "user",
 							email: email,
 							name: userName,
 							mobileNumber: mobileNumber,
-							favlist: []
+							favlist: [],
 						};
 
 						console.log("user to insert", userToInsert);
@@ -75,8 +85,6 @@ const SignUpScreen = ({ navigation, route }) => {
 		} catch (error) {
 			console.log(error);
 		}
-
-
 	};
 
 	return (
@@ -94,12 +102,8 @@ const SignUpScreen = ({ navigation, route }) => {
 					/>
 				</View>
 
-				<View style={styles.formContainer}>
-					<Text
-						style={[typography.title, { marginBottom: 30, color: textColor }]}
-					>
-						Hola! Welcome
-					</Text>
+				<View style={[styles.formContainer, { paddingTop: 50 }]}>
+					<Text style={typography.title}>Hola! Welcome</Text>
 					<View style={styles.inputContainer}>
 						<View>
 							<Input
@@ -149,7 +153,7 @@ const SignUpScreen = ({ navigation, route }) => {
 							<Text style={styles.error}>Error</Text>
 						</View>
 					</View>
-					<View style={{ marginBottom: 15, flexDirection: "row" }}>
+					<View style={{ marginBottom: 10, flexDirection: "row" }}>
 						<Btn
 							title="Create Account"
 							onPress={onCreateAccountClicked}
@@ -192,7 +196,7 @@ const SignUpScreen = ({ navigation, route }) => {
 						Already have an account?
 					</Text>
 					<TouchableOpacity onPress={onLogInClicked}>
-						<Text style={[typography.body, { color: primaryColor }]}>
+						<Text style={[typography.bodyHeading, { color: primaryColor }]}>
 							Log In
 						</Text>
 					</TouchableOpacity>

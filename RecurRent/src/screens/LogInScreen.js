@@ -119,7 +119,7 @@ const LogInScreen = ({ navigation, route }) => {
 						]}
 					>
 						<Btn
-							title="Log In"
+							title="Sign In"
 							onPress={onLoginClicked}
 							mode="contained"
 							style={[
@@ -155,12 +155,12 @@ const LogInScreen = ({ navigation, route }) => {
 					</View>
 				</View>
 
-				<View style={{ flexDirection: "row" }}>
+				<View style={{ flexDirection: "row", marginTop: 20, }}>
 					<Text style={[typography.body, { marginRight: 10 }]}>
 						Don't have an account?
 					</Text>
 					<TouchableOpacity onPress={onSignUpClicked}>
-						<Text style={[typography.body, { color: primaryColor }]}>
+						<Text style={[typography.bodyHeading, { color: primaryColor }]}>
 							Create Account
 						</Text>
 					</TouchableOpacity>

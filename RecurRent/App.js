@@ -10,7 +10,11 @@ import SignUpScreen from "./src/screens/SignupScreen";
 import Splash from "./src/screens/Splash";
 import ProductDetailsScreen from "./src/screens/ProductDetailsScreen";
 import CreateNewListing from "./src/screens/CreateNewListing";
-import Wishlist from "./src/screens/Wishlist";
+import Messages from "./src/screens/ProfileTabs/Messages";
+import Wishlist from "./src/screens/ProfileTabs/Wishlist";
+import Listings from "./src/screens/ProfileTabs/Listings";
+import AccountSettings from "./src/screens/ProfileTabs/AccountSettings";
+import Settings from "./src/screens/ProfileTabs/Settings";
 import { typography } from "./src/styles/GlobalStyles";
 
 
@@ -75,11 +79,51 @@ const App = () => {
 							options={{ headerShown: true, title: "Create New Listing" }}
 						/>
 						<Stack.Screen
+							name="Messages"
+							component={Messages}
+							options={{
+								headerShown: true,
+								title: "Messages",
+								headerTitleStyle: typography.navHeading,
+								headerBackTitle: "Profile",
+							}}
+						/>
+						<Stack.Screen
 							name="Wishlist"
 							component={Wishlist}
 							options={{
 								headerShown: true,
 								title: "Wishlist",
+								headerTitleStyle: typography.navHeading,
+								headerBackTitle: "Profile",
+							}}
+						/>
+						<Stack.Screen
+							name="Listings"
+							component={Listings}
+							options={{
+								headerShown: true,
+								title: "Your Listings",
+								headerTitleStyle: typography.navHeading,
+								headerBackTitle: "Profile",
+							}}
+						/>
+						<Stack.Screen
+							name="AccountSettings"
+							component={AccountSettings}
+							options={{
+								headerShown: true,
+								title: "Account Settings",
+								headerTitleStyle: typography.navHeading,
+								headerBackTitle: "Profile",
+							}}
+						/>
+						<Stack.Screen
+							name="Settings"
+							component={Settings}
+							options={{
+								headerShown: true,
+								title: "Settings",
 								headerTitleStyle: typography.navHeading,
 								headerBackTitle: "Profile",
 							}}

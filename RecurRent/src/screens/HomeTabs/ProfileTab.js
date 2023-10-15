@@ -16,6 +16,8 @@ import {
 	tertiaryColor,
 	textColor,
 	typography,
+	secondaryColor,
+	lightTheme,
 } from "../../styles/GlobalStyles";
 import Btn, {
 	primaryBtnStyle,
@@ -47,18 +49,64 @@ const ProfileTab = ({ navigation, route }) => {
 	};
 
 	const data = [
-		{ key: "messages", title: "Messages", iconName: "chatbox-ellipses-outline" },
-		{ key: "orders", title: "Your Orders", iconName: "reader-outline" },
-		{ key: "reviews", title: "Your Reviews", iconName: "star-outline" },
-		{ key: "wishlist", title: "Wishlist", iconName: "heart-outline" },
-		{ key: "settings", title: "Settings", iconName: "settings-outline" },
+		{
+			key: "messages",
+			title: "Messages",
+			description: "View and manage your messages",
+			iconName: "chatbox-ellipses-outline",
+			navigateTo: "Messages",
+		},
+		{
+			key: "wishlist",
+			title: "Wishlist",
+			description: "View saved listings",
+			iconName: "heart-outline",
+			navigateTo: "Wishlist",
+		},
+		{
+			key: "listings",
+			title: "Your Listings",
+			description: "View or create your listings",
+			iconName: "reader-outline",
+			navigateTo: "Listings",
+		},
+
+		{
+			key: "account-settings",
+			title: "Account Settings",
+			description: "Contact information, addresses, passwords",
+			iconName: "person-circle-outline",
+			navigateTo: "AccountSettings",
+		},
+		{
+			key: "settings",
+			title: "Settings",
+			description: "View app settings",
+			iconName: "settings-outline",
+			navigateTo: "Settings",
+		},
 	];
 
+	const listData = [
+		{
+			title: "Notification",
+			items: [
+				{
+					name: "Messages",
+					icon: "chatbox-ellipses-outline",
+					navigateTo: "Messages",
+				},
+			],
+		},
+	];
 
 	const fetchFromDB = async () => {
 		console.log("fetching from db: " + auth.currentUser.email);
 		try {
-			const q = query(collection(db, "userProfiles"), where("email", "==", auth.currentUser.email));
+			const q = query(
+				collection(db, "userProfiles"),
+				where("email", "==", auth.currentUser.email)
+			);
 			const querySnapshot = await getDocs(q);
 			querySnapshot.forEach((doc) => {
 				setUser(doc.data());
@@ -83,56 +131,60 @@ const ProfileTab = ({ navigation, route }) => {
 					size="large"
 				/>
 			) : (
-				<View style={[spacing.container, styles.viewContainer]}>
+				<View style={styles.viewContainer}>
 					<View style={styles.header}>
 						<View>
 							<Avatar.Image
-								size={70}
+								size={60}
 								source={{ uri: "https://i.pravatar.cc/300" }}
 							/>
 						</View>
 						<View style={styles.textContainer}>
-							<Text style={[typography.heading, { marginBottom: 0 }]}>
+							<Text
+								style={[
+									typography.bodyHeading,
+									{ color: textColor, marginBottom: 0 },
+								]}
+							>
 								{user.name}
 							</Text>
-							<Text style={typography.caption}>{user.email}</Text>
+							{/* <Text style={typography.caption}>{user.email}</Text> */}
 						</View>
 					</View>
-					<Divider />
-					<FlatList
-						data={data}
-						renderItem={({ item }) => (
-							<TouchableOpacity
-								onPress={() => {
-									if (item.key === "settings") {
-										// navigation.navigate("SettingsScreen")
-										alert("Navigating to Settings Screen: \n Under Construction");
-									} else if (item.key === "orders") {
-										// navigation.navigate("OrdersScreen")
-										alert("Navigating to Orders Screen: \n Under Construction");
-									} else if (item.key === "reviews") {
-										// navigation.navigate("ReviewsScreen")
-										alert("Navigating to Reviews Screen: \n Under Construction");
-									} else if (item.key === "wishlist") {
-										navigation.navigate("Wishlist")
-										// alert("Navigating to Wishlist Screen: \n Under Construction");
-									} else if (item.key === "messages") {
-										// navigation.navigate("MessagesScreen")
-										alert("Navigating to Messages Screen: \n Under Construction");
-									}
-								}}
-							>
+
+					<View style={styles.listContainer}>
+						<FlatList
+							data={data}
+							renderItem={({ item, index }) => (
 								<List.Item
 									title={item.title}
+									description={item.description}
+									descriptionStyle={[typography.caption, {
+										color: lightTheme.colors.onPrimaryContainer,
+										marginTop: 5,
+									}]}
 									left={() => (
 										<Icon name={item.iconName} size={24} color={primaryColor} />
 									)}
+									right={() => (
+										<Icon
+											name="chevron-forward-outline"
+											size={24}
+											color={primaryColor}
+										/>
+									)}
+									onPress={() => {
+										navigation.navigate(item.navigateTo);
+										// Navigate to the respective page when an item is pressed
+									}}
+									style={styles.listItem}
 								/>
-							</TouchableOpacity>
-						)}
-						keyExtractor={(item) => item.key}
-						contentContainerStyle={styles.flatListContainer}
-					/>
+							)}
+							keyExtractor={(item) => item.key}
+							contentContainerStyle={styles.flatListContainer}
+						/>
+					</View>
+
 					<View
 						style={{
 							marginBottom: 15,
@@ -140,17 +192,12 @@ const ProfileTab = ({ navigation, route }) => {
 						}}
 					>
 						<Btn
-							title="Log Out"
+							title="Sign Out"
 							onPress={onLogoutClicked}
-							mode="outlined"
+							mode="contained"
 							style={[
-								secondaryBtnStyle,
-								{
-									flex: 1,
-									textAlign: "center",
-									border: 2,
-									borderColor: tertiaryColor,
-								},
+								primaryBtnStyle,
+								{ flex: 1, textAlign: "center", marginTop: 10 },
 							]}
 						/>
 					</View>
@@ -163,6 +210,7 @@ const ProfileTab = ({ navigation, route }) => {
 const styles = StyleSheet.create({
 	viewContainer: {
 		flex: 1,
+		justifyContent: "flex-start",
 		alignItems: "flex-start",
 	},
 	header: {
@@ -172,9 +220,21 @@ const styles = StyleSheet.create({
 	},
 	textContainer: {
 		fontSize: 20,
-		paddingLeft: 10,
+		paddingLeft: 15,
+	},
+	flatListContainer: {
+    justifyContent: 'center',
+	},
+	listContainer: {
+		flex: 1,
+		flexDirection: "row",
+		justifyContent: "space-evenly",
+	},
+	listItem: {
+		marginVertical: 2,
+		borderBottomWidth: 1,
+		borderBottomColor: lightTheme.colors.primaryContainer,
 	},
 });
 
 export default ProfileTab;
-
