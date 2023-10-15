@@ -180,7 +180,7 @@ const Wishlist = ({ navigation }) => {
 								<View style={styles.rowBack}>
 									<Icon
 										name="trash-outline"
-										color="red"
+										color={lightTheme.colors.error}
 										size={24}
 										onPress={() => handleRemove(item)}
 									/>
