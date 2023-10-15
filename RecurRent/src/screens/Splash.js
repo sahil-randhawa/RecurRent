@@ -16,7 +16,7 @@ import {
 	spacing,
 	border,
 	lightTheme,
-	darkTheme,
+darkTheme,
 } from "../styles/GlobalStyles";
 import { Button } from "react-native-paper";
 

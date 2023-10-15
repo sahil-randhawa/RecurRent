@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, FlatList, TextInput, ScrollView } from "react-native";
-import { Picker } from "@react-native-picker/picker";
+import {
+	View,
+	Text,
+	FlatList,
+	TextInput,
+	ScrollView,
+	StyleSheet,
+} from "react-native";
+import RNPickerSelect from "react-native-picker-select";
 import {
 	primaryColor,
 	secondaryColor,
@@ -13,6 +20,7 @@ import {
 	darkTheme,
 	formStyles,
 } from "../styles/GlobalStyles";
+import Input from "../components/Input";
 import Btn, { primaryBtnStyle } from "../components/Button";
 import { auth, db } from "../../firebaseConfig";
 import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
@@ -28,7 +36,7 @@ const CreateNewListing = ({ navigation, route }) => {
 		"1 Younge Street, Toronto, Canada"
 	);
 	const [duration, setDuration] = useState("");
-	const [category, setCategory] = useState("furniture");
+	const [category, setCategory] = useState("");
 	const [image, setImage] = useState("table");
 
 	const [coordinates, setCoordinates] = useState({ lat: 0, lng: 0 });
@@ -112,48 +120,147 @@ const CreateNewListing = ({ navigation, route }) => {
 
 	return (
 		<>
-			<ScrollView style={{
-				backgroundColor: backgroundColor,
-				paddingHorizontal: 20,
-			}}>
-				<View style={formStyles.formContainer}>
-					<View style={formStyles.formRow}>
-						<Text style={formStyles.label}>Name</Text>
-						<TextInput
+			<ScrollView>
+				<View style={styles.container}>
+					<View style={formStyles.fieldContainer}>
+						<Text style={formStyles.label}>Product Name</Text>
+						<Input
+							placeholder="eg. Fan"
+							onChangeText={(text) => setName(text)}
+							value={name}
+							style={formStyles.input}
+						/>
+
+						{/* <TextInput
 							style={formStyles.input}
 							onChangeText={(text) => setName(text)}
 							value={name}
-						/>
+						/> */}
 					</View>
-					<View style={formStyles.formRow}>
+
+					<View style={formStyles.fieldContainer}>
 						<Text style={formStyles.label}>Description</Text>
-						<TextInput
+						<Input
+							placeholder="eg. Good quality fan."
+							onChangeText={(text) => setDescription(text)}
+							value={description}
+							style={formStyles.input}
+						/>
+
+						{/* <TextInput
 							style={formStyles.input}
 							onChangeText={(text) => setDescription(text)}
 							value={description}
-						/>
+						/> */}
 					</View>
-					<View style={formStyles.formRow}>
-						<Text style={formStyles.label}>Price</Text>
-						<TextInput
+
+					<View style={formStyles.fieldContainer}>
+						<Text style={formStyles.label}>Price ($)</Text>
+						<Input
+							placeholder="eg. 20."
+							onChangeText={(text) => setPrice(text)}
+							value={price}
+							style={formStyles.input}
+						/>
+
+						{/* <TextInput
 							style={formStyles.input}
 							onChangeText={(text) => setPrice(text)}
 							value={price}
-						/>
+						/> */}
 					</View>
-					<View style={formStyles.formRow}>
+
+					<View style={formStyles.fieldContainer}>
 						<Text style={formStyles.label}>Pickup Location</Text>
-						<TextInput
+						<Input
+							placeholder="eg. 160 Kendal Ave."
+							onChangeText={(text) => setpickUpAddress(text)}
+							value={pickUpAddress}
+							style={formStyles.input}
+						/>
+
+						{/* <TextInput
 							style={formStyles.input}
 							onChangeText={(text) => setpickUpAddress(text)}
 							value={pickUpAddress}
+						/> */}
+					</View>
+
+					<View style={formStyles.fieldContainer}>
+						<Text style={formStyles.label}>Duration</Text>
+						<RNPickerSelect
+							onValueChange={(itemValue) => setDuration(itemValue)}
+							items={[
+								{ label: "1 week", value: "1 week" },
+								{ label: "2 weeks", value: "2 weeks" },
+								{ label: "1 month", value: "1 month" },
+								{ label: "2 months", value: "2 months" },
+							]}
+							value={duration}
+							style={{
+								inputIOS: {
+									marginTop: 8,
+									backgroundColor: "#fff",
+									padding: 10,
+									fontSize: 16,
+									borderRadius: 5,
+									height: 40,
+									borderColor: primaryColor,
+									borderWidth: 1,
+								},
+								inputAndroid: {
+									marginTop: 8,
+									backgroundColor: "#fff",
+									padding: 10,
+									fontSize: 16,
+									borderRadius: 5,
+									height: 40,
+									borderColor: primaryColor,
+									borderWidth: 1,
+								},
+							}}
 						/>
 					</View>
-					<View style={formStyles.formRow}>
+
+					<View style={formStyles.fieldContainer}>
+						<Text style={formStyles.label}>Category</Text>
+						<RNPickerSelect
+							onValueChange={(itemValue) => setCategory(itemValue)}
+							items={[
+								{ label: "Furniture", value: "Furniture" },
+								{ label: "Electronics", value: "Electronics" },
+							]}
+							value={category}
+							style={{
+								inputIOS: {
+									marginTop: 8,
+									backgroundColor: "#fff",
+									padding: 10,
+									fontSize: 16,
+									borderRadius: 5,
+									height: 40,
+									borderColor: primaryColor,
+									borderWidth: 1,
+								},
+								inputAndroid: {
+									marginTop: 8,
+									backgroundColor: "#fff",
+									padding: 10,
+									fontSize: 16,
+									borderRadius: 5,
+									height: 40,
+									borderColor: primaryColor,
+									borderWidth: 1,
+								},
+							}}
+						/>
+					</View>
+
+					{/* <View style={formStyles.fieldContainer}>
 						<Text style={formStyles.label}>Duration</Text>
 						<Picker
 							selectedValue={duration}
-							style={formStyles.input}
+							style={{ flex:1, height: 100, width: 200 }}
 							onValueChange={(itemValue, itemIndex) => setDuration(itemValue)}
 						>
 							<Picker.Item label="Select" value="" />
@@ -162,23 +269,33 @@ const CreateNewListing = ({ navigation, route }) => {
 							<Picker.Item label="1 month" value="1 month" />
 							<Picker.Item label="2 months" value="2 months" />
 						</Picker>
-					</View>
-					<View style={formStyles.formRow}>
+					</View> */}
+
+					{/* <View style={formStyles.fieldContainer}>
 						<Text style={formStyles.label}>Category</Text>
 						<TextInput
 							style={formStyles.input}
 							onChangeText={(text) => setCategory(text)}
 							value={category}
 						/>
-					</View>
-					<View style={formStyles.formRow}>
+					</View> */}
+
+					<View style={formStyles.fieldContainer}>
 						<Text style={formStyles.label}>Image</Text>
-						<TextInput
+						<Input
+							placeholder="eg.Fan"
+							onChangeText={(text) => setImage(text)}
+							value={image}
+							style={formStyles.input}
+						/>
+
+						{/* <TextInput
 							style={formStyles.input}
 							onChangeText={(text) => setImage(text)}
 							value={image}
-						/>
+						/> */}
 					</View>
+
 					<Btn
 						title="Submit Listing"
 						onPress={createButtonHandler}
@@ -195,4 +312,13 @@ const CreateNewListing = ({ navigation, route }) => {
 		</>
 	);
 };
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		padding: 20,
+		backgroundColor: backgroundColor,
+	},
+});
+
 export default CreateNewListing;
