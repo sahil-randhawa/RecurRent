@@ -181,7 +181,7 @@ const Wishlist = ({ navigation }) => {
 									<Icon
 										name="trash-outline"
 										color={lightTheme.colors.error}
-										size={24}
+										size={30}
 										onPress={() => handleRemove(item)}
 									/>
 								</View>
