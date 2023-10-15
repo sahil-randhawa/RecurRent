@@ -2,7 +2,6 @@ import React from "react";
 import { View } from "react-native";
 import { Searchbar } from "react-native-paper";
 import { lightTheme, primaryColor } from "../styles/GlobalStyles";
-import { primaryBtnStyle } from "./Button";
 
 const Search = ({ placeholder, value, onChangeText, onSubmit }) => {
 	return (

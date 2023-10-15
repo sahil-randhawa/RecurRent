@@ -1,35 +1,35 @@
-import * as React from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import { useFonts } from "expo-font";
+import * as React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { useFonts } from 'expo-font';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import OnBoardingScreen from "./src/screens/OnBoardingScreen";
-import LogInScreen from "./src/screens/LogInScreen";
-import HomeScreen from "./src/screens/HomeScreen";
-import SignUpScreen from "./src/screens/SignupScreen";
-import Splash from "./src/screens/Splash";
-import ProductDetailsScreen from "./src/screens/ProductDetailsScreen";
-import CreateNewListing from "./src/screens/CreateNewListing";
-import Messages from "./src/screens/ProfileTabs/Messages";
-import Wishlist from "./src/screens/ProfileTabs/Wishlist";
-import Listings from "./src/screens/ProfileTabs/Listings";
-import AccountSettings from "./src/screens/ProfileTabs/AccountSettings";
-import Settings from "./src/screens/ProfileTabs/Settings";
-import { typography } from "./src/styles/GlobalStyles";
+import Splash from './src/screens/Splash';
+import OnBoardingScreen from './src/screens/OnBoardingScreen';
+import LogInScreen from './src/screens/LogInScreen';
+import SignUpScreen from './src/screens/SignupScreen';
+import HomeScreen from './src/screens/HomeScreen';
 
+import ProductDetailsScreen from './src/screens/ProductDetailsScreen';
+import CreateNewListing from './src/screens/CreateNewListing';
+import Messages from './src/screens/ProfileTabs/Messages';
+import Wishlist from './src/screens/ProfileTabs/Wishlist';
+import Listings from './src/screens/ProfileTabs/Listings';
+import AccountSettings from './src/screens/ProfileTabs/AccountSettings';
+import Settings from './src/screens/ProfileTabs/Settings';
+import { typography } from './src/styles/GlobalStyles';
 
 const Stack = createStackNavigator();
 
 const App = () => {
 	const [hideSplashScreen, setHideSplashScreen] = React.useState(true);
 	const [fontsLoaded, error] = useFonts({
-		"Montserrat-Black": require("./assets/fonts/Montserrat-Black.ttf"),
-		"Montserrat-Bold": require("./assets/fonts/Montserrat-Bold.ttf"),
-		"Montserrat-SemiBold": require("./assets/fonts/Montserrat-SemiBold.ttf"),
-		"Montserrat-Medium": require("./assets/fonts/Montserrat-Medium.ttf"),
-		"Montserrat-Regular": require("./assets/fonts/Montserrat-Regular.ttf"),
-		"Manrope-Regular": require("./assets/fonts/Manrope-Regular.ttf"),
-		"Manrope-Medium": require("./assets/fonts/Manrope-Medium.ttf"),
+		'Montserrat-Black': require('./assets/fonts/Montserrat-Black.ttf'),
+		'Montserrat-Bold': require('./assets/fonts/Montserrat-Bold.ttf'),
+		'Montserrat-SemiBold': require('./assets/fonts/Montserrat-SemiBold.ttf'),
+		'Montserrat-Medium': require('./assets/fonts/Montserrat-Medium.ttf'),
+		'Montserrat-Regular': require('./assets/fonts/Montserrat-Regular.ttf'),
+		'Manrope-Regular': require('./assets/fonts/Manrope-Regular.ttf'),
+		'Manrope-Medium': require('./assets/fonts/Manrope-Medium.ttf'),
 	});
 
 	if (!fontsLoaded && !error) {
@@ -42,7 +42,8 @@ const App = () => {
 				{hideSplashScreen ? (
 					<Stack.Navigator
 						screenOptions={{ headerShown: false }}
-						initialRouteName="Splash">
+						initialRouteName="Splash"
+					>
 						<Stack.Screen
 							name="Splash"
 							component={Splash}
@@ -76,16 +77,16 @@ const App = () => {
 						<Stack.Screen
 							name="CreateNewListing"
 							component={CreateNewListing}
-							options={{ headerShown: true, title: "Create New Listing" }}
+							options={{ headerShown: true, title: 'Create New Listing' }}
 						/>
 						<Stack.Screen
 							name="Messages"
 							component={Messages}
 							options={{
 								headerShown: true,
-								title: "Messages",
+								title: 'Messages',
 								headerTitleStyle: typography.navHeading,
-								headerBackTitle: "Profile",
+								headerBackTitle: 'Profile',
 							}}
 						/>
 						<Stack.Screen
@@ -93,9 +94,9 @@ const App = () => {
 							component={Wishlist}
 							options={{
 								headerShown: true,
-								title: "Wishlist",
+								title: 'Wishlist',
 								headerTitleStyle: typography.navHeading,
-								headerBackTitle: "Profile",
+								headerBackTitle: 'Profile',
 							}}
 						/>
 						<Stack.Screen
@@ -103,9 +104,9 @@ const App = () => {
 							component={Listings}
 							options={{
 								headerShown: true,
-								title: "Your Listings",
+								title: 'Your Listings',
 								headerTitleStyle: typography.navHeading,
-								headerBackTitle: "Profile",
+								headerBackTitle: 'Profile',
 							}}
 						/>
 						<Stack.Screen
@@ -113,9 +114,9 @@ const App = () => {
 							component={AccountSettings}
 							options={{
 								headerShown: true,
-								title: "Account Settings",
+								title: 'Account Settings',
 								headerTitleStyle: typography.navHeading,
-								headerBackTitle: "Profile",
+								headerBackTitle: 'Profile',
 							}}
 						/>
 						<Stack.Screen
@@ -123,9 +124,9 @@ const App = () => {
 							component={Settings}
 							options={{
 								headerShown: true,
-								title: "Settings",
+								title: 'Settings',
 								headerTitleStyle: typography.navHeading,
-								headerBackTitle: "Profile",
+								headerBackTitle: 'Profile',
 							}}
 						/>
 					</Stack.Navigator>

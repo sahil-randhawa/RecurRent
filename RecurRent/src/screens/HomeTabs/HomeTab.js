@@ -38,9 +38,9 @@ import {
 	documentId,
 } from "firebase/firestore";
 import Search from "../../components/SearchBar";
-import ProductCard from "../../components/Card";
+import ProductCard from "../../components/ProductCard";
 
-const MainTab = ({ navigation, route }) => {
+const HomeTab = ({ navigation, route }) => {
 	useEffect(() => {
 		getProductListings();
 	}, []);
@@ -193,4 +193,4 @@ const MainTab = ({ navigation, route }) => {
 };
 
 const styles = StyleSheet.create({});
-export default MainTab;
+export default HomeTab;
