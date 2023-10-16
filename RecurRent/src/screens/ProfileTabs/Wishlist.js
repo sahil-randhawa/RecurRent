@@ -160,18 +160,16 @@ const Wishlist = ({ navigation }) => {
 						color={primaryColor}
 					/>
 				) : wishList.length === 0 ? (
-
 					<View style={styles.emptyWishlist}>
-          <Image
-            source={require('../../../assets/images/no-wishlist.png')} // Replace with the path to your image
-            style={styles.image}
-          />
-          <Text style={[typography.bodyHeading, { textAlign: 'center' }]}>
-						View all your favorite items here{'\n'} by adding to your Wishlist!
-					</Text>
-        </View>
-
-					
+						<Image
+							source={require('../../../assets/images/no-wishlist.png')} 
+							style={styles.image}
+						/>
+						<Text style={[typography.bodyHeading, { textAlign: 'center' }]}>
+							View all your favorite items here{'\n'} by adding to your
+							Wishlist!
+						</Text>
+					</View>
 				) : (
 					<View style={styles.container}>
 						<SwipeListView
@@ -216,14 +214,14 @@ const styles = StyleSheet.create({
 		paddingBottom: 30,
 	},
 	emptyWishlist: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
 	image: {
-    width: 200,
-    height: 200,
-  },
+		width: 200,
+		height: 200,
+	},
 	lastItem: {
 		marginBottom: 20,
 	},
