@@ -37,7 +37,7 @@ const typography = StyleSheet.create({
 
 	subheading: {
 		fontSize: baseFontSize + 4,
-		fontFamily: 'Montserrat-Regular',
+		fontFamily: 'Montserrat-Medium',
 		color: textColor,
 		marginBottom: 12,
 	},
