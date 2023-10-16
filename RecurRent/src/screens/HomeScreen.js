@@ -32,19 +32,16 @@ import HomeTab from './HomeTabs/HomeTab';
 import MapTab from './HomeTabs/MapTab';
 import BookingRequestTab from './HomeTabs/BookingRequestTab';
 import ProfileTab from './HomeTabs/ProfileTab';
+import Notifications from './Notifications';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const Tab = createBottomTabNavigator();
 
 // Style for navigation header
-const NavigationHeader = ({ title }) => {
+const NavigationHeader = ({ title, showNotification }) => {
 	return (
-		<View
-			style={{
-				paddingLeft: 10,
-			}}
-		>
-			<Text style={[typography.navHeading]}>{title}</Text>
+		<View>
+			<Text style={typography.navHeading}>{title}</Text>
 		</View>
 	);
 };
@@ -96,12 +93,29 @@ const HomeScreen = ({ navigation, route }) => {
 						name="Home"
 						component={HomeTab}
 						options={{
-							headerTitle: () => <NavigationHeader title="RecurRent" />,
+							headerTitle: () => (
+								<NavigationHeader
+									title="RecurRent"
+									showNotification
+								/>
+							),
 							headerTitleAlign: 'center',
 							headerStyle: {
 								// backgroundColor: lightTheme.colors.primaryContainer,
 								shadowColor: lightTheme.colors.shadow,
 							},
+							headerRight: () => (
+								<TouchableOpacity
+									style={{ paddingRight: 20 }}
+									onPress={() => navigation.navigate('Notifications')}
+								>
+									<Icon
+										name="notifications-outline"
+										size={26}
+										color={primaryColor}
+									/>
+								</TouchableOpacity>
+							),
 						}}
 					/>
 					<Tab.Screen

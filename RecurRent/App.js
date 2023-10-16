@@ -9,6 +9,8 @@ import LogInScreen from './src/screens/LogInScreen';
 import SignUpScreen from './src/screens/SignupScreen';
 import HomeScreen from './src/screens/HomeScreen';
 
+import Notifications from './src/screens/Notifications';
+
 import ProductDetailsScreen from './src/screens/ProductDetailsScreen';
 import CreateNewListing from './src/screens/CreateNewListing';
 import Messages from './src/screens/ProfileTabs/Messages';
@@ -72,6 +74,11 @@ const App = () => {
 						<Stack.Screen
 							name="ProductDetails"
 							component={ProductDetailsScreen}
+							options={{ headerShown: true }}
+						/>
+						<Stack.Screen
+							name="Notifications"
+							component={Notifications}
 							options={{ headerShown: true }}
 						/>
 						<Stack.Screen
