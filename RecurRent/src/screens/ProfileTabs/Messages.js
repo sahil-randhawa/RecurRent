@@ -3,6 +3,7 @@ import {
 	StyleSheet,
 	Text,
 	View,
+	Image,
 	TextInput,
 	TouchableOpacity,
 	SafeAreaView,
@@ -42,10 +43,29 @@ const Messages = ({ navigation }) => {
 	return (
 		<>
 			<View style={spacing.container}>
-				<Text style={typography.body}>No Messages</Text>
+				<Image
+					source={require('../../../assets/images/noMessage.png')}
+					style={styles.image}
+				/>
+				<Text
+					style={[
+						typography.bodyHeading,
+						{ textAlign: 'center', marginTop: 30 },
+					]}
+				>
+					We'll notify you when {'\n'}
+					you get new messages.
+				</Text>
 			</View>
 		</>
 	);
 };
+
+const styles = StyleSheet.create({
+	image: {
+		width: 100,
+		height: 100,
+	},
+});
 
 export default Messages;
