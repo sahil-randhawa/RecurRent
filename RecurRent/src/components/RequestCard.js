@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet } from 'react-native';
 import { Card } from 'react-native-paper';
 import {
 	lightTheme,
@@ -9,6 +9,11 @@ import {
 	tertiaryColor,
 	textColor,
 } from '../styles/GlobalStyles';
+import Btn, {
+	primaryBtnStyle,
+	secondaryBtnStyle,
+	logoutBtnStyle,
+} from '../components/Button';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const RequestCard = ({ rowData, handleConfirm, handleDecline }) => {
@@ -25,7 +30,7 @@ const RequestCard = ({ rowData, handleConfirm, handleDecline }) => {
 							<Card.Title
 								title={rowData.item.name}
 								titleNumberOfLines={2}
-								titleStyle={[typography.bodyHeading, { color: secondaryColor, }]}
+								titleStyle={[typography.bodyHeading, { color: secondaryColor }]}
 								subtitle={`Renter: ${rowData.item.renterName}`}
 								subtitleStyle={[
 									typography.caption,
@@ -62,25 +67,33 @@ const RequestCard = ({ rowData, handleConfirm, handleDecline }) => {
 					</View>
 
 					<View style={styles.buttonContainer}>
-						<TouchableOpacity
-							style={[styles.btn, { backgroundColor: lightTheme.colors.error }]}
+						<Btn
+							title="DECLINE"
 							onPress={() => alert('Declined')}
-						>
-							<Text style={[typography.captionHeading, styles.buttonText]}>
-								Decline
-							</Text>
-						</TouchableOpacity>
-						<TouchableOpacity
-							style={[
-								styles.btn,
-								{ backgroundColor: lightTheme.colors.onSuccessContainer },
-							]}
+							mode="outlined"
+							style={{
+								flex: 1,
+								textAlign: 'center',
+								marginTop: 10,
+								borderRadius: 10,
+								backgroundColor: 'transparent',
+								paddingVertical: 10,
+								marginRight: 5,
+							}}
+						/>
+						<Btn
+							title="CONFIRM"
 							onPress={() => alert('Confirmed')}
-						>
-							<Text style={[typography.captionHeading, styles.buttonText]}>
-								Confirm
-							</Text>
-						</TouchableOpacity>
+							mode="contained"
+							style={{
+								flex: 1,
+								textAlign: 'center',
+								marginTop: 10,
+								borderRadius: 10,
+								backgroundColor: primaryColor,
+								paddingVertical: 10,
+							}}
+						/>
 					</View>
 				</Card.Content>
 			</Card>
@@ -112,16 +125,6 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: 'space-between',
 		marginTop: 15,
-	},
-
-	btn: {
-		width: '49%',
-		padding: 12,
-		borderRadius: 5,
-	},
-	buttonText: {
-		color: lightTheme.colors.onPrimary,
-		textAlign: 'center',
 	},
 });
 
