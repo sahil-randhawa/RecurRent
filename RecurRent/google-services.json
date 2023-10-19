@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "882869436488",
+    "project_id": "g04recurrent",
+    "storage_bucket": "g04recurrent.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:882869436488:android:5f9b10bb38009fd769d87d",
+        "android_client_info": {
+          "package_name": "com.sahilr.RecurRent"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "882869436488-ehsbm3c2ik1l3sfqiuh3466rvn97p44b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sahilr.RecurRent",
+            "certificate_hash": "d591cb7471ab37edac59a0f7907c0a12bbc069c3"
+          }
+        },
+        {
+          "client_id": "882869436488-1u0tfh43ilu854l5ph2vl57228fqd8jn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDyb0W4D_mpAwvKRvcs95JrUIf7M-xbU8Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "882869436488-1u0tfh43ilu854l5ph2vl57228fqd8jn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
