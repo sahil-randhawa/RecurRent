@@ -10,7 +10,7 @@ import {
 	spacing,
 } from '../styles/GlobalStyles';
 
-const Notifications = () => {
+const NotificationsScreen = () => {
 	return (
 		<>
 			<View style={spacing.container}>
@@ -39,4 +39,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default Notifications;
+export default NotificationsScreen;

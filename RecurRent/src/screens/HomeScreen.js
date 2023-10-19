@@ -32,7 +32,7 @@ import HomeTab from './HomeTabs/HomeTab';
 import MapTab from './HomeTabs/MapTab';
 import BookingRequestTab from './HomeTabs/BookingRequestTab';
 import ProfileTab from './HomeTabs/ProfileTab';
-import Notifications from './Notifications';
+import NotificationsScreen from './Notifications';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const Tab = createBottomTabNavigator();
@@ -61,7 +61,7 @@ const HomeScreen = ({ navigation, route }) => {
 						tabBarIcon: ({ focused, color, size }) => {
 							let iconName;
 
-							if (route.name === 'Home') {
+							if (route.name === 'HomeTab') {
 								iconName = focused ? 'home' : 'home-outline';
 							} else if (route.name === 'Profile') {
 								iconName = focused ? 'person' : 'person-outline';
@@ -90,7 +90,7 @@ const HomeScreen = ({ navigation, route }) => {
 					})}
 				>
 					<Tab.Screen
-						name="Home"
+						name="HomeTab"
 						component={HomeTab}
 						options={{
 							headerTitle: () => (
@@ -107,7 +107,7 @@ const HomeScreen = ({ navigation, route }) => {
 							headerRight: () => (
 								<TouchableOpacity
 									style={{ paddingRight: 20 }}
-									onPress={() => navigation.navigate('Notifications')}
+									onPress={() => navigation.navigate('NotificationsScreen')}
 								>
 									<Icon
 										name="notifications-outline"
