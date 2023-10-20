@@ -137,7 +137,7 @@ const MapTab = ({ navigation, route }) => {
             if (docSnap.exists()) {
                 console.log("Document data:", docSnap.data());
                 // const data = docSnap.data();
-                //     // const documentId = ownerID; // Get the document ID
+                // const documentId = ownerID; // Get the document ID
 
 
                 const combinedData = {
