@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet,TouchableOpacity } from 'react-native';
 import { Card } from 'react-native-paper';
 import {
 	lightTheme,
@@ -16,7 +16,7 @@ import Btn, {
 } from '../components/Button';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const RequestCard = ({ rowData, handleConfirm, handleDecline }) => {
+const RequestCard = ({ rowData, handleConfirm, handleDecline,handleChat }) => {
 	return (
 		<>
 			<Card style={styles.card}>
@@ -67,6 +67,18 @@ const RequestCard = ({ rowData, handleConfirm, handleDecline }) => {
 					</View>
 
 					<View style={styles.buttonContainer}>
+					<TouchableOpacity 
+						style={{ 
+							    // flex: 1,
+								textAlign: 'center',
+								marginTop: 10,
+								alignContent:'center',
+								paddingVertical: 10, 
+								padding:10
+								}}
+								onPress={handleChat}>
+							<Icon name="chatbubbles" size={40} style={{color: primaryColor,}} /> 
+						</TouchableOpacity>
 						<Btn
 							title="DECLINE"
 							onPress={() => alert('Declined')}

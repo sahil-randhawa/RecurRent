@@ -115,6 +115,13 @@ const BookingRequestTab = ({ navigation, route }) => {
 		}
 	};
 
+	const chatClicked = (bookingRequestId) => {
+		console.log("Chat",bookingRequestId)
+		navigation.navigate("Chat",{
+			chatId:bookingRequestId
+		})
+	}
+
 	return (
 		<View style={spacing.container}>
 			{loading ? (
@@ -126,7 +133,11 @@ const BookingRequestTab = ({ navigation, route }) => {
 				<View style={styles.listContainer}>
 					<FlatList
 						data={ownerRequestsListings}
-						renderItem={(rowData) => <RequestCard rowData={rowData} />}
+						renderItem={(rowData) => <RequestCard rowData={rowData} 
+						handleChat={()=>
+							{chatClicked(rowData.item.id)}
+						}
+							/>}
 						contentContainerStyle={{ paddingVertical: 10 }}
 					/>
 				</View>

@@ -19,6 +19,7 @@ import Listings from './src/screens/ProfileTabs/Listings';
 import AccountSettings from './src/screens/ProfileTabs/AccountSettings';
 import Settings from './src/screens/ProfileTabs/Settings';
 import { typography } from './src/styles/GlobalStyles';
+import ChatScreen from './src/screens/ChatScreen';
 
 const Stack = createStackNavigator();
 
@@ -85,6 +86,11 @@ const App = () => {
 							name="CreateNewListing"
 							component={CreateNewListing}
 							options={{ headerShown: true, title: 'Create New Listing' }}
+						/>
+						<Stack.Screen
+							name="Chat"
+							component={ChatScreen}
+							options={{ headerShown: true, title: 'Chat' }}
 						/>
 						<Stack.Screen
 							name="Messages"
