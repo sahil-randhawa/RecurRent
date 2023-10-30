@@ -54,7 +54,7 @@ const LogInScreen = ({ navigation, route }) => {
 					const profileInfo = docSnap.data();
 					if (profileInfo.typeUser === "user") {
 						console.log("Login Success: " + auth.currentUser.email);
-						navigation.navigate("Home");
+						navigation.navigate("HomeScreen");
 					} else {
 						console.log("Error: Type of user does not match!");
 						alert("Invalid Credential!");
