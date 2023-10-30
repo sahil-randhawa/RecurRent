@@ -217,8 +217,8 @@ const MapTab = ({ navigation, route }) => {
                                     <Marker
                                         key={marker.id}
                                         coordinate={{
-                                            latitude: marker.coordinates.lat,
-                                            longitude: marker.coordinates.lng,
+                                            latitude: parseFloat(marker.coordinates.lat),
+                                            longitude: parseFloat(marker.coordinates.lng),
                                         }}
                                         title={marker.name}
                                         description={marker.description}
