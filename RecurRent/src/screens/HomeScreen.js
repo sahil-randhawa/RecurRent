@@ -33,7 +33,7 @@ import HomeTab from './HomeTabs/HomeTab';
 import MapTab from './HomeTabs/MapTab';
 import BookingRequestTab from './HomeTabs/BookingRequestTab';
 import ProfileTab from './HomeTabs/ProfileTab';
-import NotificationsScreen from './Notifications';
+import NotificationsScreen from './NotificationsScreen';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import messaging from '@react-native-firebase/messaging';
@@ -119,7 +119,7 @@ const HomeScreen = ({ navigation, route }) => {
 						tabBarIcon: ({ focused, color, size }) => {
 							let iconName;
 
-							if (route.name === 'HomeTab') {
+							if (route.name === 'Home') {
 								iconName = focused ? 'home' : 'home-outline';
 							} else if (route.name === 'Profile') {
 								iconName = focused ? 'person' : 'person-outline';
@@ -148,7 +148,7 @@ const HomeScreen = ({ navigation, route }) => {
 					})}
 				>
 					<Tab.Screen
-						name="HomeTab"
+						name="Home"
 						component={HomeTab}
 						options={{
 							headerTitle: () => (

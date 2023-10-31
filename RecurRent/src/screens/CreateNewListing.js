@@ -108,7 +108,7 @@ const CreateNewListing = ({ navigation, route }) => {
 				);
 				console.log("New Listing Document written with ID: ", docRef.id);
 				alert("Listing created successfully!");
-				navigation.navigate("Home");
+				navigation.navigate("HomeScreen");
 			} catch (e) {
 				console.error("Error adding listing document: ", e);
 			}
