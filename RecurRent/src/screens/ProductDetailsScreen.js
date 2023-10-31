@@ -97,7 +97,7 @@ const ProductDetailsScreen = ({ navigation, route }) => {
 						if (!querySnapshot.empty) {
 							alert(
 								"You already requested for this Product!\n Requested duration: " +
-									querySnapshot.docs[0].data().duration
+								querySnapshot.docs[0].data().duration
 							);
 							return;
 						}
@@ -131,6 +131,41 @@ const ProductDetailsScreen = ({ navigation, route }) => {
 							"Booking Request sent successfully with ID: ",
 							docRef.id
 						);
+
+						// step 2: create a notification entry for the owner
+						// in the userprofiles collection, get the userprofile document for the owner, add a notification entry to the notifications array
+
+						const ownerDocRef = doc(db, "userProfiles", selectedProduct.item.userID);
+						console.log("ownerDocRef : ", ownerDocRef);
+
+						try {
+							const newNotification = await runTransaction(
+								db,
+								async (transaction) => {
+									const ownerDoc = await transaction.get(ownerDocRef);
+									if (!ownerDoc.exists()) {
+										throw "Owner document does not exist!";
+									} else {
+										transaction.update(ownerDocRef, {
+											notifications: [
+												...ownerDoc.data().notifications ? ownerDoc.data().notifications : [],
+												{
+													notificationID: docRef.id,
+													notificationType: "Booking Request",
+													notificationUnreadStatus: false,
+													notificationMessage: "New Booking Request for your product : " + selectedProduct.item.name,
+													notificationDate: new Date(),
+												},
+											],
+										});
+									}
+								}
+							);
+							console.log("Notification added to owner's profile");
+						} catch (error) {
+							console.log("Error in updating notifications: ", error);
+							alert(`Error : ${error}`);
+						}
 						alert("Booking Request sent successfully!");
 					} catch (error) {
 						console.log("Error: ", error);

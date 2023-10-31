@@ -19,6 +19,7 @@ import Listings from './src/screens/ProfileTabs/Listings';
 import AccountSettings from './src/screens/ProfileTabs/AccountSettings';
 import Settings from './src/screens/ProfileTabs/Settings';
 import { typography } from './src/styles/GlobalStyles';
+import Toast from 'react-native-toast-message';
 
 const Stack = createStackNavigator();
 
@@ -151,6 +152,9 @@ const App = () => {
 					</Stack.Navigator>
 				) : null}
 			</NavigationContainer>
+			<Toast
+			// ref={(ref) => Toast.setRef(ref)}
+			/>
 		</>
 	);
 };
