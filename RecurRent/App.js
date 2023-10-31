@@ -9,7 +9,7 @@ import LogInScreen from './src/screens/LogInScreen';
 import SignUpScreen from './src/screens/SignupScreen';
 import HomeScreen from './src/screens/HomeScreen';
 
-import Notifications from './src/screens/Notifications';
+import NotificationsScreen from './src/screens/NotificationsScreen';
 
 import ProductDetailsScreen from './src/screens/ProductDetailsScreen';
 import CreateNewListing from './src/screens/CreateNewListing';
@@ -19,6 +19,7 @@ import Listings from './src/screens/ProfileTabs/Listings';
 import AccountSettings from './src/screens/ProfileTabs/AccountSettings';
 import Settings from './src/screens/ProfileTabs/Settings';
 import { typography } from './src/styles/GlobalStyles';
+import Toast from 'react-native-toast-message';
 
 const Stack = createStackNavigator();
 
@@ -67,24 +68,36 @@ const App = () => {
 							options={{ headerShown: false }}
 						/>
 						<Stack.Screen
-							name="Home"
+							name="HomeScreen"
 							component={HomeScreen}
 							options={{ headerShown: false }}
 						/>
 						<Stack.Screen
 							name="ProductDetails"
 							component={ProductDetailsScreen}
-							options={{ headerShown: true }}
+							options={{
+								headerShown: true,
+								title: 'Product Details',
+								headerBackTitle: 'Home',
+							}}
 						/>
 						<Stack.Screen
-							name="Notifications"
-							component={Notifications}
-							options={{ headerShown: true }}
+							name="NotificationsScreen"
+							component={NotificationsScreen}
+							options={{
+								headerShown: true,
+								title: 'Notifications',
+								headerBackTitle: 'Home',
+							}}
 						/>
 						<Stack.Screen
 							name="CreateNewListing"
 							component={CreateNewListing}
-							options={{ headerShown: true, title: 'Create New Listing' }}
+							options={{
+								headerShown: true,
+								title: 'Create New Listing',
+								headerBackTitle: 'Home'
+							}}
 						/>
 						<Stack.Screen
 							name="Messages"
@@ -139,6 +152,9 @@ const App = () => {
 					</Stack.Navigator>
 				) : null}
 			</NavigationContainer>
+			<Toast
+			// ref={(ref) => Toast.setRef(ref)}
+			/>
 		</>
 	);
 };

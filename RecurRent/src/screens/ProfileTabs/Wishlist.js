@@ -162,7 +162,7 @@ const Wishlist = ({ navigation }) => {
 				) : wishList.length === 0 ? (
 					<View style={styles.emptyWishlist}>
 						<Image
-							source={require('../../../assets/images/no-wishlist.png')} 
+							source={require('../../../assets/images/no-wishlist.png')}
 							style={styles.image}
 						/>
 						<Text style={[typography.bodyHeading, { textAlign: 'center' }]}>
