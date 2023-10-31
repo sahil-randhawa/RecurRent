@@ -87,18 +87,20 @@ const ChatScreen = ({navigation,route }) =>{
                     {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
                 <>
                     <ScrollView>
-                        {messages.map(({id,data})=>{
-                            <Text style={styles.recieverText}>{data.message}</Text>;
-                            data.email === auth.currentUser.email ?(
-                                <View styles={styles.reciever} >
+                    {messages.map(({ id, data }) => {
+                        if (data) {
+                            return data.email === auth.currentUser.email ? (
+                                <View style={styles.reciever} key={id}>
                                     <Text style={styles.recieverText}>{data.message}</Text>
                                 </View>
-                            ):(
-                                <View styles={styles.sender} >
+                            ) : (
+                                <View style={styles.sender} key={id}>
                                     <Text style={styles.senderText}>{data.message}</Text>
                                 </View>
-                            )
-                        })}
+                            );
+                        }
+                        return null; // Handle the case when data is undefined
+                    })}
                     </ScrollView>
                     <View style={styles.footer}>
                         <TextInput placeholder='Your Message' 
