@@ -32,7 +32,7 @@ import HomeTab from './HomeTabs/HomeTab';
 import MapTab from './HomeTabs/MapTab';
 import BookingRequestTab from './HomeTabs/BookingRequestTab';
 import ProfileTab from './HomeTabs/ProfileTab';
-import Notifications from './Notifications';
+import NotificationsScreen from './NotificationsScreen';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const Tab = createBottomTabNavigator();
@@ -107,7 +107,7 @@ const HomeScreen = ({ navigation, route }) => {
 							headerRight: () => (
 								<TouchableOpacity
 									style={{ paddingRight: 20 }}
-									onPress={() => navigation.navigate('Notifications')}
+									onPress={() => navigation.navigate('NotificationsScreen')}
 								>
 									<Icon
 										name="notifications-outline"

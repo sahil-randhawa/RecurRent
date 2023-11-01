@@ -68,7 +68,7 @@ const SignUpScreen = ({ navigation, route }) => {
 
 						console.log(`user uid ${user.uid}`);
 						console.log("User account created & signed in!");
-						navigation.navigate("Home");
+						navigation.navigate("HomeScreen");
 					} catch (error) {
 						if (error.code === "auth/email-already-in-use") {
 							console.log("That email address is already in use!");

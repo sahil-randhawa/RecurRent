@@ -137,7 +137,7 @@ const MapTab = ({ navigation, route }) => {
             if (docSnap.exists()) {
                 console.log("Document data:", docSnap.data());
                 // const data = docSnap.data();
-                //     // const documentId = ownerID; // Get the document ID
+                // const documentId = ownerID; // Get the document ID
 
 
                 const combinedData = {
@@ -217,8 +217,8 @@ const MapTab = ({ navigation, route }) => {
                                     <Marker
                                         key={marker.id}
                                         coordinate={{
-                                            latitude: marker.coordinates.lat,
-                                            longitude: marker.coordinates.lng,
+                                            latitude: parseFloat(marker.coordinates.lat),
+                                            longitude: parseFloat(marker.coordinates.lng),
                                         }}
                                         title={marker.name}
                                         description={marker.description}
