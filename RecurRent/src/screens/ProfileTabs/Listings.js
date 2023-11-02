@@ -22,27 +22,21 @@ import Btn, {
 	primaryBtnStyle,
 	secondaryBtnStyle,
 } from '../../components/Button';
-import { StatusBar } from 'expo-status-bar';
+import { useIsFocused } from '@react-navigation/native';
 import UserListingCard from '../../components/UserListingCard';
 import { auth, db } from '../../../firebaseConfig';
-import { signOut } from 'firebase/auth';
-import {
-	collection,
-	getDocs,
-	query,
-	where,
-	doc,
-	getDoc,
-	documentId,
-} from 'firebase/firestore';
+import {collection, getDocs, query, where} from 'firebase/firestore';
 
 const Listings = ({ navigation }) => {
 	const [userListings, setUserListings] = useState([]);
 	const [loading, setLoading] = useState(true);
+	const isFocused = useIsFocused();
 
 	useEffect(() => {
-		getUserListings();
-	}, []);
+		if (isFocused) {
+			getUserListings();
+		}
+	  }, [isFocused]);
 
 	const getUserListings = async () => {
 		try {
@@ -51,10 +45,10 @@ const Listings = ({ navigation }) => {
 	  
 			const allUserListings = [];
 			querySnapshot.forEach((doc) => {
-				allUserListings.push(doc.data()); // Push each document's data to the array
+				allUserListings.push(doc.data());
 			});
 	  
-			setUserListings(allUserListings); // Set the state with the array of documents
+			setUserListings(allUserListings);
 		  } catch (error) {
 			console.error("Error fetching data from Firestore:", error);
 		}
@@ -66,34 +60,19 @@ const Listings = ({ navigation }) => {
 	};
 
 	const handlePress = async (item) => {
-		//Navigate to ProductDetailsScreen
+		//Navigate to EditListingScreen
+
+		//How to send Document id of the selected product
 		try {
-			const ownerID = item.userID;
-			console.log(ownerID);
 			const selectedProductData = {
 				item: item,
 			};
-			const docRef = doc(db, 'userProfiles', ownerID);
-			const docSnap = await getDoc(docRef);
 
-			if (docSnap.exists()) {
-				console.log('Document data:', docSnap.data());
-
-				const combinedData = {
-					selectedProduct: selectedProductData,
-					ownerData: docSnap.data(),
-				};
-				console.log('combine', combinedData);
-				navigation.navigate('ProductDetails', { combinedData: combinedData });
-			} else {
-				console.log('No such document!');
-				const combinedData = {
-					selectedProduct: selectedProductData,
-					ownerData: {},
-				};
-				console.log('combine', combinedData);
-				navigation.navigate('ProductDetails', { combinedData: combinedData });
-			}
+			const combinedData = {
+				selectedProduct: selectedProductData,
+			};
+			
+			navigation.navigate('EditListing', { combinedData: combinedData });
 		} catch (error) {
 			console.log(error);
 		}
