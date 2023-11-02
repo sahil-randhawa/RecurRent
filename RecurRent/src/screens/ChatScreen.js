@@ -1,6 +1,8 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState, useRef } from 'react'
 import { Keyboard, KeyboardAvoidingView, Platform, StyleSheet,Text,TouchableOpacity,View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+
 // import styles from '../styles/AuthStyles'
 import { ScrollView, TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import { TextInput } from 'react-native-paper'
@@ -19,9 +21,11 @@ import {
     onSnapshot
 } from 'firebase/firestore';
 import { async } from '@firebase/util'
+import { primaryColor } from '../styles/GlobalStyles'
 const ChatScreen = ({navigation,route }) =>{
     const [chatText,setChatText] = useState('')
     const [messages, setMessages] = useState([]);
+    const scrollViewRef = useRef(null);
     const sendMessage = async() =>{
         Keyboard.dismiss()
       console.log("Chat id",route.params.chatId)
@@ -44,11 +48,14 @@ const ChatScreen = ({navigation,route }) =>{
         // })
         console.log("Message Sent",chat.id)
         setChatText("")
-        
+        if (scrollViewRef.current) {
+            scrollViewRef.current.scrollToEnd({ animated: true }); // Scroll to the end when a new message is sent
+          }
     }
 
     useEffect(()=>{
-        fetchMsg()
+        fetchMsg();
+        
     },[])
 
     useLayoutEffect(()=>{
@@ -65,9 +72,10 @@ const ChatScreen = ({navigation,route }) =>{
 
         // Get a reference to the "messages" subcollection
         const messagesRef = collection(querySnapshot.docs[0].ref, "messages");
+        const orderedMessagesRef = query(messagesRef, orderBy("timestemp", "asc"));
         console.log("message Ref on load",messagesRef)
         // Set up the listener for the "messages" subcollection
-        const unsubscribe = onSnapshot(messagesRef, (snapshot) => {
+        const unsubscribe = onSnapshot(orderedMessagesRef, (snapshot) => {
             setMessages(
                 snapshot.docs.map(doc => ({
                     id: doc.id,
@@ -78,15 +86,23 @@ const ChatScreen = ({navigation,route }) =>{
         console.log("messages on load!",messages)
         return unsubscribe;  
     } 
+    // const scrollToBottom = () => {
+    //     scrollViewRef.current.scrollToEnd({ animated: true });
+    //   };
     return(
         <SafeAreaView style={{flex:1,backgroundColor:"white"}}>
             <KeyboardAvoidingView
-                behavior={Platform.OS === "ios" ? "padding" : "height"}
-                style={styles.container}
-                keyboardVerticalOffset={90}>
+               behavior={Platform.OS === "ios" ? "padding" : "height"}
+               style={styles.container}
+               keyboardVerticalOffset={90}
+               contentContainerStyle={{ flexGrow: 1 }}>
                     {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
                 <>
-                    <ScrollView>
+                <KeyboardAwareScrollView
+                ref={scrollViewRef}
+  contentContainerStyle={{ flexGrow: 1 }}
+  extraHeight={Platform.OS === 'ios' ? 100 : 0} // Adjust this value as needed
+>
                     {messages.map(({ id, data }) => {
                         if (data) {
                             return data.email === auth.currentUser.email ? (
@@ -95,13 +111,13 @@ const ChatScreen = ({navigation,route }) =>{
                                 </View>
                             ) : (
                                 <View style={styles.sender} key={id}>
-                                    <Text style={styles.senderText}>{data.message}</Text>
+                                    <Text style={[styles.senderText,{color:"white"}]}>{data.message}</Text>
                                 </View>
                             );
                         }
                         return null; // Handle the case when data is undefined
                     })}
-                    </ScrollView>
+                    </KeyboardAwareScrollView>
                     <View style={styles.footer}>
                         <TextInput placeholder='Your Message' 
                         value={chatText}
@@ -141,12 +157,13 @@ const styles =StyleSheet.create({
     },
     sender:{
         padding:15,
-        backgroundColor:"#2B68E6",
+        backgroundColor:primaryColor,
         alignSelf:"flex-start",
         borderRadius:20,
         margin:15,
         maxWidth:"80%",
         position:"relative",
+        color:"white"
     },
     recieverText:{
         color:"black",
@@ -154,7 +171,6 @@ const styles =StyleSheet.create({
         marginLeft:10,
     },
     senderText:{
-        color:"white",
         fontWeight:"500",
         marginLeft:10,
         marginBottom:15,
