@@ -11,6 +11,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { auth, db } from "../../firebaseConfig";
 import { collection, getDocs, query, where, doc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 import Btn, { secondaryBtnStyle } from "./Button";
+import Toast from 'react-native-toast-message';
 
 const ProductCard = ({ coverUri, title, duration, productId, buttonLabel, onPressAction }) => {
 	const [isHeartFilled, setIsHeartFilled] = useState(false);
@@ -69,6 +70,13 @@ const ProductCard = ({ coverUri, title, duration, productId, buttonLabel, onPres
 	  
 		  console.log('String added to array in Firebase.');
 		  fetchFromDB()
+		  Toast.show({
+			type: 'success',
+			position: 'bottom',
+			text1: 'Added to Favorites!',
+			visibilityTime: 3000,
+			autoHide: true,
+		});
 		} catch (error) {
 		  console.error('Error adding string to array in Firebase:', error);
 		}
@@ -84,6 +92,13 @@ const ProductCard = ({ coverUri, title, duration, productId, buttonLabel, onPres
 	  
 		  console.log('String removed from array in Firebase.');
 		  fetchFromDB()
+		  Toast.show({
+			type: 'success',
+			position: 'bottom',
+			text1: 'Removed from Favorites!',
+			visibilityTime: 3000,
+			autoHide: true,
+		});
 		} catch (error) {
 		  console.error('Error removing string from array in Firebase:', error);
 		}
