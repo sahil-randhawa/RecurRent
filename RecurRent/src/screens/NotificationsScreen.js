@@ -42,14 +42,18 @@ const NotificationsScreen = () => {
 			const docRef = doc(db, 'userProfiles', auth.currentUser.uid);
 			const docSnap = await getDoc(docRef);
 			if (docSnap.exists) {
-				const notifications = docSnap.data().notifications;
-				console.log(JSON.stringify(notifications, null, 2));
-				// sort the notifications by date in descending order
-				notifications.sort((a, b) => b.notificationDate.toDate() - a.notificationDate.toDate());
-				setNotificationsList(notifications);
+				if (docSnap.data().notifications) {
+					const notifications = docSnap.data().notifications;
+					console.log(JSON.stringify(notifications, null, 2));
+					// sort the notifications by date in descending order
+					notifications.sort((a, b) => b.notificationDate.toDate() - a.notificationDate.toDate());
+					setNotificationsList(notifications);
+				} else {
+					console.log('No notifications found');
+				}
 				setLoading(false);
 			} else {
-				console.log('No such document!');
+				console.log('No such user document!');
 			}
 		} catch (error) {
 			console.log("Error getting document:", error);
