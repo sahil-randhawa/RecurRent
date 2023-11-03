@@ -34,6 +34,7 @@ import {
 	where,
 	runTransaction,
 	doc,
+	add,
 } from "firebase/firestore";
 
 const ProductDetailsScreen = ({ navigation, route }) => {
@@ -106,6 +107,13 @@ const ProductDetailsScreen = ({ navigation, route }) => {
 							collection(db, "Bookings"),
 							bookingRequestToInsert
 						);
+
+						const docChatRef= await addDoc(collection(db,"chats"),{
+							chatId:docRef.id	
+						});
+
+						console.log("Chat added:",docChatRef.id)
+
 						const idDocRef = doc(db, "Products", selectedProduct.item.id);
 						console.log("update id", idDocRef);
 						try {

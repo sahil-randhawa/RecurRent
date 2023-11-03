@@ -52,68 +52,118 @@ const BookingRequestTab = ({ navigation, route }) => {
 	// const [ownerInfo, setOwnerInfo] = useState()
 	// const [renterInfo, setRenterInfo] = useState()
 	const [loading, setLoading] = useState(true);
+	// const getRequestedProductListings = async () => {
+	// 	console.log('user id', auth.currentUser.uid);
+	// 	try {
+	// 		const q = query(
+	// 			collection(db, 'Bookings'),
+	// 			where('ownerID', '==', auth.currentUser.uid)
+	// 		);
+	// 		const querySnapshot = await getDocs(q);
+	// 		const resultsFromFirestore = [];
+
+	// 		querySnapshot.forEach(async (docc) => {
+	// 			console.log(docc.id, ' => ', docc.data());
+	// 			const currentDoc = docc.data();
+	// 			console.log(currentDoc.productID);
+	// 			const documentRef = doc(db, 'Products', currentDoc.productID);
+	// 			const documentRefRenter = doc(db, 'userProfiles', currentDoc.renterID);
+
+	// 			getDoc(documentRefRenter)
+	// 				.then((docSnapshotrenter) => {
+	// 					if (docSnapshotrenter.exists()) {
+	// 						const renter = docSnapshotrenter.data();
+	// 						console.log('Requested Renter', renter);
+	// 						getDoc(documentRef)
+	// 							.then((docSnapshot) => {
+	// 								if (docSnapshot.exists()) {
+	// 									const documentData = docSnapshot.data();
+	// 									console.log('Requested product', documentData);
+	// 									const itemToAdd = {
+	// 										renterName: renter.name,
+	// 										renterEmail: renter.email,
+	// 										renterMobileNumber: renter.mobileNumber,
+	// 										id: docc.id,
+	// 										...docSnapshot.data(),
+	// 									};
+	// 									console.log('Item to Add', itemToAdd);
+	// 									resultsFromFirestore.push(itemToAdd);
+	// 								} else {
+	// 									console.log('Document does not exist');
+	// 								}
+	// 							})
+	// 							.catch((error) => {
+	// 								console.error('Error getting document:', error);
+	// 							});
+	// 					} else {
+	// 						console.log('Renter Document does not exist');
+	// 					}
+	// 				})
+	// 				.catch((error) => {
+	// 					console.error('Error getting document:', error);
+	// 				});
+	// 		});
+
+	// 		console.log('requets for owner', resultsFromFirestore);
+	// 		setOwnerRequestsListings(resultsFromFirestore);
+	// 	} catch (err) {
+	// 		console.log(err);
+	// 	}
+	// 	try {
+	// 	} finally {
+	// 		setLoading(false);
+	// 	}
+	// };
+
 	const getRequestedProductListings = async () => {
-		console.log('user id', auth.currentUser.uid);
 		try {
-			const q = query(
-				collection(db, 'Bookings'),
-				where('ownerID', '==', auth.currentUser.uid)
-			);
-			const querySnapshot = await getDocs(q);
-			const resultsFromFirestore = [];
-
-			querySnapshot.forEach(async (docc) => {
-				console.log(docc.id, ' => ', docc.data());
-				const currentDoc = docc.data();
-				console.log(currentDoc.productID);
-				const documentRef = doc(db, 'Products', currentDoc.productID);
-				const documentRefRenter = doc(db, 'userProfiles', currentDoc.renterID);
-
-				getDoc(documentRefRenter)
-					.then((docSnapshotrenter) => {
-						if (docSnapshotrenter.exists()) {
-							const renter = docSnapshotrenter.data();
-							console.log('Requested Renter', renter);
-							getDoc(documentRef)
-								.then((docSnapshot) => {
-									if (docSnapshot.exists()) {
-										const documentData = docSnapshot.data();
-										console.log('Requested product', documentData);
-										const itemToAdd = {
-											renterName: renter.name,
-											renterEmail: renter.email,
-											renterMobileNumber: renter.mobileNumber,
-											id: docc.id,
-											...docSnapshot.data(),
-										};
-										console.log('Item to Add', itemToAdd);
-										resultsFromFirestore.push(itemToAdd);
-									} else {
-										console.log('Document does not exist');
-									}
-								})
-								.catch((error) => {
-									console.error('Error getting document:', error);
-								});
-						} else {
-							console.log('Renter Document does not exist');
-						}
-					})
-					.catch((error) => {
-						console.error('Error getting document:', error);
-					});
-			});
-
-			console.log('requets for owner', resultsFromFirestore);
-			setOwnerRequestsListings(resultsFromFirestore);
+		  const q = query(
+			collection(db, 'Bookings'),
+			where('ownerID', '==', auth.currentUser.uid)
+		  );
+		  const querySnapshot = await getDocs(q);
+		  const resultsFromFirestore = [];
+	  
+		  const fetchPromises = querySnapshot.docs.map(async (docc) => {
+			const currentDoc = docc.data();
+			const documentRef = doc(db, 'Products', currentDoc.productID);
+			const documentRefRenter = doc(db, 'userProfiles', currentDoc.renterID);
+	  
+			const [docSnapshot, docSnapshotRenter] = await Promise.all([
+			  getDoc(documentRef),
+			  getDoc(documentRefRenter),
+			]);
+	  
+			if (docSnapshot.exists() && docSnapshotRenter.exists()) {
+			  const renter = docSnapshotRenter.data();
+			  const itemToAdd = {
+				renterName: renter.name,
+				renterEmail: renter.email,
+				renterMobileNumber: renter.mobileNumber,
+				id: docc.id,
+				...docSnapshot.data(),
+			  };
+			  resultsFromFirestore.push(itemToAdd);
+			}
+		  });
+	  
+		  await Promise.all(fetchPromises);
+	  
+		  setOwnerRequestsListings(resultsFromFirestore);
 		} catch (err) {
-			console.log(err);
-		}
-		try {
+		  console.log(err);
 		} finally {
-			setLoading(false);
+		  setLoading(false);
 		}
-	};
+	  };
+	  
+
+	const chatClicked = (bookingRequestId) => {
+		console.log("Chat",bookingRequestId)
+		navigation.navigate("Chat",{
+			chatId:bookingRequestId
+		})
+	}
 
 	return (
 		<View style={spacing.container}>
@@ -126,7 +176,11 @@ const BookingRequestTab = ({ navigation, route }) => {
 				<View style={styles.listContainer}>
 					<FlatList
 						data={ownerRequestsListings}
-						renderItem={(rowData) => <RequestCard rowData={rowData} />}
+						renderItem={(rowData) => <RequestCard rowData={rowData} 
+						handleChat={()=>
+							{chatClicked(rowData.item.id)}
+						}
+							/>}
 						contentContainerStyle={{ paddingVertical: 10 }}
 					/>
 				</View>

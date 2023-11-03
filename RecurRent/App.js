@@ -20,6 +20,8 @@ import AccountSettings from './src/screens/ProfileTabs/AccountSettings';
 import Settings from './src/screens/ProfileTabs/Settings';
 import { typography } from './src/styles/GlobalStyles';
 import Toast from 'react-native-toast-message';
+import ChatScreen from './src/screens/ChatScreen';
+import EditListing from './src/screens/EditListing';
 
 const Stack = createStackNavigator();
 
@@ -96,8 +98,13 @@ const App = () => {
 							options={{
 								headerShown: true,
 								title: 'Create New Listing',
-								headerBackTitle: 'Home'
+								headerBackTitle: 'Back'
 							}}
+						/>
+						<Stack.Screen
+							name="Chat"
+							component={ChatScreen}
+							options={{ headerShown: true, title: 'Chat' }}
 						/>
 						<Stack.Screen
 							name="Messages"
@@ -147,6 +154,15 @@ const App = () => {
 								title: 'Settings',
 								headerTitleStyle: typography.navHeading,
 								headerBackTitle: 'Profile',
+							}}
+						/>
+						<Stack.Screen
+							name="EditListing"
+							component={EditListing}
+							options={{
+								headerShown: true,
+								title: 'Edit Listing',
+								headerBackTitle: 'Your Listings'
 							}}
 						/>
 					</Stack.Navigator>

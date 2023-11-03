@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import {
 	View,
 	Text,
-	FlatList,
-	TextInput,
 	ScrollView,
 	StyleSheet,
 } from "react-native";
@@ -23,10 +21,9 @@ import {
 import Input from "../components/Input";
 import Btn, { primaryBtnStyle } from "../components/Button";
 import { auth, db } from "../../firebaseConfig";
-import { collection, addDoc, getDocs, query, where, updateDoc } from "firebase/firestore";
-import * as Location from "expo-location";
+import { setDoc, doc } from "firebase/firestore";
 
-const CreateNewListing = ({ navigation, route }) => {
+const EditListing = ({ navigation, route }) => {
 	const [name, setName] = useState("StudyTable");
 	const [description, setDescription] = useState(
 		"Good condition study table from IKEA. Color: Black."
@@ -39,87 +36,46 @@ const CreateNewListing = ({ navigation, route }) => {
 	const [category, setCategory] = useState("");
 	const [image, setImage] = useState("table");
 
-	const [coordinates, setCoordinates] = useState({ lat: 0, lng: 0 });
-
 	useEffect(() => {
-		// get location
-		console.log("Getting location...");
-		getLocationPermissions();
+		// Update state variables with values from route.params when the screen loads
+        const selectedProduct = route.params.combinedData.selectedProduct;
+        setName(selectedProduct.item.name);
+        setDescription(selectedProduct.item.description);
+        setPrice(selectedProduct.item.price);
+        setpickUpAddress(selectedProduct.item.pickUpAddress);
+		setDuration(selectedProduct.item.duration);
+		setCategory(selectedProduct.item.category);
+		setImage(selectedProduct.item.name); //Need to change
 	}, []);
 
-	const getLocationPermissions = async () => {
-		let { status } = await Location.requestForegroundPermissionsAsync();
-		if (status !== "granted") {
-			console.log("Permission to access location was denied");
-			return;
-		} else if (status === "granted") {
-			console.log("Permission to access location granted");
-		}
+	//Route Data
+	const [selectedProduct, setSelectedProduct] = useState(
+		route.params.combinedData.selectedProduct
+	);
 
-		let location = await Location.getCurrentPositionAsync({});
-		setCoordinates({
-			lat: location.coords.latitude,
-			lng: location.coords.longitude,
-		});
-	};
-
-	const createButtonHandler = async () => {
-		if (pickUpAddress == "") {
-		  alert("Please enter a pickup location");
-		  return;
-		} else if (duration == "") {
-		  alert("Please select a duration to rent");
-		  return;
-		}
-		const geoCodedLocation = await Location.geocodeAsync(pickUpAddress);
-		const location = geoCodedLocation[0];
-		if (location === undefined) {
-		  alert("Location not found, Please provide a valid address!");
-		  return;
-		}
-		setCoordinates({ lat: location.latitude, lng: location.longitude });
+	const updateButtonHandler = async () => {
+		const docRef = doc(db, "Products", selectedProduct.item.productId);
 	  
-		console.log("Coordinates: ", coordinates);
-		console.log("Creating new listing...");
+		const updatedData = {
+		  name: name,
+		  description: description,
+		  price: price,
+		  pickUpAddress: pickUpAddress,
+		  duration: duration,
+		  category: category,
+		  productPhoto: "https://source.unsplash.com/600x500/?" + image,
+		};
 	  
-		if (coordinates.lat !== 0 && coordinates.lng !== 0) {
-		  const listingToBeSaved = {
-			name: name,
-			description: description,
-			price: price,
-			pickUpAddress: pickUpAddress,
-			duration: duration,
-			category: category,
-			productPhoto: "https://source.unsplash.com/600x500/?" + name,
-			coordinates: coordinates,
-			owner: auth.currentUser.email,
-			status: "Available",
-			userID: auth.currentUser.uid,
-		  };
-	  
-		  console.log("Listing to be saved: ", listingToBeSaved);
-	  
-		  try {
-			const collectionRef = collection(db, "Products");
-			const docRef = await addDoc(collectionRef, listingToBeSaved);
-	  
-			// Retrieve the document ID from the reference
-			const productId = docRef.id;
-	  
-			// Now, update the document with the actual productId field
-			await updateDoc(docRef, { productId: productId });
-	  
-			console.log("New Listing Document written with ID: ", docRef.id);
-			alert("Listing created successfully!");
-			navigation.navigate("HomeScreen");
-		  } catch (e) {
-			console.error("Error adding listing document: ", e);
-		  }
-		} else {
-		  alert("Invalid Location, Please provide a valid address!");
-		  return;
+		try {
+		  await setDoc(docRef, updatedData, { merge: true });
+		  console.log("Document updated successfully");
+		  alert("Listing updated successfully!");
+		  navigation.navigate("Listings");
+		} catch (error) {
+		  console.error("Error updating document: ", error);
 		}
 	  };
+	  
 	  
 
 	return (
@@ -134,12 +90,6 @@ const CreateNewListing = ({ navigation, route }) => {
 							value={name}
 							style={formStyles.input}
 						/>
-
-						{/* <TextInput
-							style={formStyles.input}
-							onChangeText={(text) => setName(text)}
-							value={name}
-						/> */}
 					</View>
 
 					<View style={formStyles.fieldContainer}>
@@ -150,12 +100,6 @@ const CreateNewListing = ({ navigation, route }) => {
 							value={description}
 							style={formStyles.input}
 						/>
-
-						{/* <TextInput
-							style={formStyles.input}
-							onChangeText={(text) => setDescription(text)}
-							value={description}
-						/> */}
 					</View>
 
 					<View style={formStyles.fieldContainer}>
@@ -166,12 +110,6 @@ const CreateNewListing = ({ navigation, route }) => {
 							value={price}
 							style={formStyles.input}
 						/>
-
-						{/* <TextInput
-							style={formStyles.input}
-							onChangeText={(text) => setPrice(text)}
-							value={price}
-						/> */}
 					</View>
 
 					<View style={formStyles.fieldContainer}>
@@ -182,12 +120,6 @@ const CreateNewListing = ({ navigation, route }) => {
 							value={pickUpAddress}
 							style={formStyles.input}
 						/>
-
-						{/* <TextInput
-							style={formStyles.input}
-							onChangeText={(text) => setpickUpAddress(text)}
-							value={pickUpAddress}
-						/> */}
 					</View>
 
 					<View style={formStyles.fieldContainer}>
@@ -260,49 +192,19 @@ const CreateNewListing = ({ navigation, route }) => {
 						/>
 					</View>
 
-					{/* <View style={formStyles.fieldContainer}>
-						<Text style={formStyles.label}>Duration</Text>
-						<Picker
-							selectedValue={duration}
-							style={{ flex:1, height: 100, width: 200 }}
-							onValueChange={(itemValue, itemIndex) => setDuration(itemValue)}
-						>
-							<Picker.Item label="Select" value="" />
-							<Picker.Item label="1 week" value="1 week" />
-							<Picker.Item label="2 weeks" value="2 weeks" />
-							<Picker.Item label="1 month" value="1 month" />
-							<Picker.Item label="2 months" value="2 months" />
-						</Picker>
-					</View> */}
-
-					{/* <View style={formStyles.fieldContainer}>
-						<Text style={formStyles.label}>Category</Text>
-						<TextInput
-							style={formStyles.input}
-							onChangeText={(text) => setCategory(text)}
-							value={category}
-						/>
-					</View> */}
-
 					<View style={formStyles.fieldContainer}>
 						<Text style={formStyles.label}>Image</Text>
 						<Input
 							placeholder="eg.Fan"
 							onChangeText={(text) => setImage(text)}
-							value={image}
+							value={image} //Need to change
 							style={formStyles.input}
 						/>
-
-						{/* <TextInput
-							style={formStyles.input}
-							onChangeText={(text) => setImage(text)}
-							value={image}
-						/> */}
 					</View>
 
 					<Btn
-						title="Submit Listing"
-						onPress={createButtonHandler}
+						title="Save Listing"
+						onPress={updateButtonHandler}
 						mode="contained"
 						style={[
 							primaryBtnStyle,
@@ -325,4 +227,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default CreateNewListing;
+export default EditListing;
