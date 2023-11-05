@@ -1,7 +1,11 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { List, Button } from 'react-native-paper';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, Alert, Image } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
+import { db, auth, firebase } from '../../../firebaseConfig';
+import * as FileSystem from 'expo-file-system';
+import { List, Button, Avatar, IconButton } from 'react-native-paper';
 import Input from '../../components/Input';
+import { LinearGradient } from 'expo-linear-gradient';
 import Btn, {
 	primaryBtnStyle,
 	secondaryBtnStyle,
@@ -32,6 +36,71 @@ const AccountSettingsScreen = () => {
 	fields.forEach((field) => {
 		fieldStates[field.key] = useState(false);
 	});
+
+	const [imageToUpload, setImageToUpload] = useState(null);
+	const [uploading, setUploading] = useState(false);
+
+
+	const pickImage = async () => {
+		console.log('Picking image...');
+		try {
+			setImageToUpload(null);
+			const result = await ImagePicker.launchImageLibraryAsync({  // launchCameraAsync
+				mediaTypes: ImagePicker.MediaTypeOptions.Images,  // All, Images, Videos
+				// mediaTypes: ImagePicker.MediaTypeOptions.All,
+				allowsEditing: true,
+				aspect: [3, 3],
+				quality: 1,
+			});
+			// console.log('Selected result :' + JSON.stringify(result));
+			if (!result.canceled) {
+				// setImage(result.uri);
+				setImageToUpload(result.assets[0].uri);
+				console.log('Image selected!' + JSON.stringify(result));
+			}
+		} catch (e) {
+			console.log(e);
+		}
+	};
+
+	const uploadImage = async () => {
+		try {
+			setUploading(true);
+			const { uri } = await FileSystem.getInfoAsync(imageToUpload);
+			const blob = await new Promise((resolve, reject) => {
+				const xhr = new XMLHttpRequest();
+				xhr.onload = function () {
+					resolve(xhr.response);
+				};
+				xhr.onerror = function (e) {
+					console.log(e);
+					reject(new TypeError('Network request failed'));
+				};
+				xhr.responseType = 'blob';
+				xhr.open('GET', uri, true);
+				xhr.send(null);
+			});
+
+			const filename = imageToUpload.substring(imageToUpload.lastIndexOf('/') + 1);
+
+			// const ref = firebase.storage().ref().child(uuid.v4());
+			const ref = firebase.storage().ref().child(filename);
+
+			const snapshot = await ref.put(blob);
+
+			// blob.close();
+			const url = await snapshot.ref.getDownloadURL();
+			console.log('Successfully uploaded! Image url : ', url);
+			setUploading(false);
+			setImageToUpload(null);
+			Alert.alert('Success', 'Image uploaded successfully');
+			// return url;
+		} catch (e) {
+			console.log(e);
+			setUploading(false);
+			return null;
+		}
+	};
 
 	const handleSaveChanges = (fieldKey) => {
 		// Implement saving changes here for the specific field
@@ -115,7 +184,78 @@ const AccountSettingsScreen = () => {
 	};
 
 	return (
-		<View style={[spacing.container, { alignItems: 'flex-start' }]}>
+		<View style={[spacing.container, {
+			justifyContent: 'flex-start',
+		}]}>
+			{/* profile image edit */}
+			<View style={styles.rowData}>
+				<View style={{
+					marginTop: 35,
+					marginBottom: 20,
+				}}>
+					<TouchableOpacity onPress={() => {
+						pickImage();
+					}}>
+						<ImageBackground
+							style={{
+								width: 120,
+								height: 120,
+								borderRadius: 100,
+								overflow: 'hidden'
+							}}
+							imageStyle={{ borderRadius: 50 }} // to make it circular
+							source={{ uri: "https://i.pravatar.cc/300" }}
+						>
+							<View style={{
+								flex: 2,
+							}}></View>
+							<View
+								style={{
+									flex: 1,
+									justifyContent: 'center',
+									alignItems: 'center',
+									// borderBottomLeftRadius: 100,
+									// borderBottomRightRadius: 100,
+									marginTop: 5,
+									backgroundColor: 'rgba(0,0,0,0.5)',
+								}}
+							>
+								{/* <Text style={{
+								color: '#fff',
+								fontSize: 12,
+								fontWeight: 'bold',
+							}}>Edit</Text> */}
+								<IconButton
+									icon="pencil"
+									color="#fff"
+									size={20}
+								/>
+							</View>
+						</ImageBackground>
+					</TouchableOpacity>
+				</View>
+				{imageToUpload &&
+					<TouchableOpacity
+						style={{
+							borderRadius: 5,
+							marginTop: 5,
+							paddingVertical: 15,
+							paddingHorizontal: 20,
+							backgroundColor: primaryColor,
+						}}
+						onPress={() => {
+							uploadImage();
+						}}>
+						<Text style={{
+							color: '#fff',
+							fontSize: 12,
+							fontWeight: 'bold',
+						}}>Save Image</Text>
+					</TouchableOpacity>
+				}
+			</View>
+
+			{/* user details edit*/}
 			{fields.map((field) => renderField(field))}
 		</View>
 	);

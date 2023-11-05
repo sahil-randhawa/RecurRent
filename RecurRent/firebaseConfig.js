@@ -1,5 +1,7 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
+// import { initializeApp } from "firebase/app";
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/storage';
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth"
 import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
@@ -11,18 +13,21 @@ import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 const firebaseConfig = {
   apiKey: "AIzaSyDJuDvhf4EEOjJG3weEBvsGkw4nzkXFtac",
   authDomain: "g04recurrent.firebaseapp.com",
+  databaseURL: "https://g04recurrent-default-rtdb.firebaseio.com",
   projectId: "g04recurrent",
   storageBucket: "g04recurrent.appspot.com",
   messagingSenderId: "882869436488",
-  appId: "1:882869436488:web:75cf96b656aa56c569d87d"
+  appId: "1:882869436488:web:75cf96b656aa56c569d87d",
+  measurementId: "G-9H9EY40T5L"
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+// if (!firebase.apps.length) {
+const app = firebase.initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
 const auth = initializeAuth(app, {
   persistence: getReactNativePersistence(ReactNativeAsyncStorage)
 });
-
-export { db, auth }
+// }
+export { db, auth, firebase }
