@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, Alert, Image } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { db, auth, firebase } from '../../../firebaseConfig';
+import { collection, doc, getDoc, updateDoc } from 'firebase/firestore';
 import * as FileSystem from 'expo-file-system';
 import { List, Button, Avatar, IconButton } from 'react-native-paper';
 import Input from '../../components/Input';
@@ -40,6 +41,29 @@ const AccountSettingsScreen = () => {
 	const [imageToUpload, setImageToUpload] = useState(null);
 	const [uploading, setUploading] = useState(false);
 
+	// get logged in user details from the db
+	const [user, setUser] = useState(null);
+	const [profileUrl, setProfileUrl] = useState("../../../assets/images/profile_placeholder.png");
+
+	useEffect(() => {
+		getUser();
+	}, []);
+
+
+	const getUser = async () => {
+		try {
+			const user = await getDoc(doc(db, 'userProfiles', auth.currentUser.uid));
+			if (!user.exists) {
+				console.log('No such user!');
+			} else {
+				console.log('User data:', JSON.stringify(user.data(), null, 2));
+				setUser(user.data());
+				setProfileUrl(user.data().imageUrl ? user.data().imageUrl : `https://ui-avatars.com/api/?name=${user.data().name}&size=128&length=1`);
+			}
+		} catch (e) {
+			console.log('Error in fetching user: ' + e);
+		}
+	};
 
 	const pickImage = async () => {
 		console.log('Picking image...');
@@ -91,12 +115,21 @@ const AccountSettingsScreen = () => {
 			// blob.close();
 			const url = await snapshot.ref.getDownloadURL();
 			console.log('Successfully uploaded! Image url : ', url);
+
+			// Update user's profile image url
+			const userRef = doc(db, 'userProfiles', auth.currentUser.uid);
+			await updateDoc(userRef, {
+				imageUrl: url,
+			});
+			setProfileUrl(url);
+			console.log('Successfully updated user profile image url!');
+
 			setUploading(false);
 			setImageToUpload(null);
 			Alert.alert('Success', 'Image uploaded successfully');
 			// return url;
 		} catch (e) {
-			console.log(e);
+			console.log('Error-[function#uploadImage]: ' + e);
 			setUploading(false);
 			return null;
 		}
@@ -204,7 +237,7 @@ const AccountSettingsScreen = () => {
 								overflow: 'hidden'
 							}}
 							imageStyle={{ borderRadius: 50 }} // to make it circular
-							source={{ uri: "https://i.pravatar.cc/300" }}
+							source={{ uri: profileUrl }}
 						>
 							<View style={{
 								flex: 2,
