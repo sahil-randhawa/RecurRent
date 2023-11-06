@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, Alert, Image } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, Alert, Image, ActivityIndicator } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { db, auth, firebase } from '../../../firebaseConfig';
 import { collection, doc, getDoc, updateDoc } from 'firebase/firestore';
 import * as FileSystem from 'expo-file-system';
 import { List, Button, Avatar, IconButton } from 'react-native-paper';
 import Input from '../../components/Input';
+import Toast from 'react-native-toast-message';
 import { LinearGradient } from 'expo-linear-gradient';
 import Btn, {
 	primaryBtnStyle,
@@ -43,7 +44,7 @@ const AccountSettingsScreen = () => {
 
 	// get logged in user details from the db
 	const [user, setUser] = useState(null);
-	const [profileUrl, setProfileUrl] = useState("../../../assets/images/profile_placeholder.png");
+	const [profileUrl, setProfileUrl] = useState(null);
 
 	useEffect(() => {
 		getUser();
@@ -56,9 +57,11 @@ const AccountSettingsScreen = () => {
 			if (!user.exists) {
 				console.log('No such user!');
 			} else {
-				console.log('User data:', JSON.stringify(user.data(), null, 2));
+				console.log('User profile data:', JSON.stringify(user.data(), null, 2));
 				setUser(user.data());
-				setProfileUrl(user.data().imageUrl ? user.data().imageUrl : `https://ui-avatars.com/api/?name=${user.data().name}&size=128&length=1`);
+				// setProfileUrl(user.data().imageUrl ? user.data().imageUrl : `https://ui-avatars.com/api/?name=${user.data().name}&size=128&length=1`);
+				setProfileUrl(user.data().imageUrl ? user.data().imageUrl : null);
+
 			}
 		} catch (e) {
 			console.log('Error in fetching user: ' + e);
@@ -90,6 +93,17 @@ const AccountSettingsScreen = () => {
 	const uploadImage = async () => {
 		try {
 			setUploading(true);
+			// delete the old image from firebase storage
+			if (user.imageUrl) {
+				try {
+					const oldImageRef = firebase.storage().refFromURL(user.imageUrl);
+					await oldImageRef.delete();
+					console.log('Successfully deleted old image!');
+				} catch (e) {
+					console.log('Error in deleting old image: ' + e);
+				}
+			}
+			// upload new image to firebase storage
 			const { uri } = await FileSystem.getInfoAsync(imageToUpload);
 			const blob = await new Promise((resolve, reject) => {
 				const xhr = new XMLHttpRequest();
@@ -112,7 +126,7 @@ const AccountSettingsScreen = () => {
 
 			const snapshot = await ref.put(blob);
 
-			// blob.close();
+			blob.close();
 			const url = await snapshot.ref.getDownloadURL();
 			console.log('Successfully uploaded! Image url : ', url);
 
@@ -126,7 +140,14 @@ const AccountSettingsScreen = () => {
 
 			setUploading(false);
 			setImageToUpload(null);
-			Alert.alert('Success', 'Image uploaded successfully');
+			Toast.show({
+				type: 'success',
+				position: 'bottom',
+				text1: 'Profile image updated successfully.',
+				visibilityTime: 3000,
+				autoHide: true,
+			});
+			// Alert.alert('Success', 'Image uploaded successfully');
 			// return url;
 		} catch (e) {
 			console.log('Error-[function#uploadImage]: ' + e);
@@ -221,49 +242,74 @@ const AccountSettingsScreen = () => {
 			justifyContent: 'flex-start',
 		}]}>
 			{/* profile image edit */}
-			<View style={styles.rowData}>
+			<View style={[styles.rowData, {
+				justifyContent: 'space-around',
+			}]}>
 				<View style={{
 					marginTop: 35,
 					marginBottom: 20,
 				}}>
-					<TouchableOpacity onPress={() => {
-						pickImage();
-					}}>
+					<TouchableOpacity
+						style={{
+							width: 120,
+							height: 120,
+							borderRadius: 100,
+							overflow: 'hidden',
+							borderWidth: 1,
+							borderColor: '#707070',
+						}}
+						onPress={() => {
+							pickImage();
+						}}>
 						<ImageBackground
 							style={{
 								width: 120,
 								height: 120,
-								borderRadius: 100,
-								overflow: 'hidden'
+								alignItems: 'center',
+								justifyContent: 'center',
 							}}
 							imageStyle={{ borderRadius: 50 }} // to make it circular
-							source={{ uri: profileUrl }}
+							// source={{ uri: imageToUpload ? imageToUpload : profileUrl }}
+							source={profileUrl ? { uri: imageToUpload ? imageToUpload : profileUrl } : (imageToUpload ? { uri: imageToUpload } : require('../../../assets/images/profile_placeholder.png'))}
 						>
-							<View style={{
-								flex: 2,
-							}}></View>
-							<View
-								style={{
-									flex: 1,
-									justifyContent: 'center',
-									alignItems: 'center',
-									// borderBottomLeftRadius: 100,
-									// borderBottomRightRadius: 100,
-									marginTop: 5,
-									backgroundColor: 'rgba(0,0,0,0.5)',
-								}}
-							>
-								{/* <Text style={{
+							{uploading ? (<ActivityIndicator
+								size="large"
+								color="#fff"
+								animating={true}
+							/>) : (<View style={{
+								flex: 1,
+								width: '100%',
+								flexDirection: 'column',
+								justifyContent: 'center',
+								alignItems: 'center',
+							}}>
+								<View style={{
+									flex: 2,
+								}}></View>
+								<View
+									style={{
+										flex: 1,
+										width: '100%',
+										justifyContent: 'center',
+										alignItems: 'center',
+										// borderBottomLeftRadius: 100,
+										// borderBottomRightRadius: 100,
+										marginTop: 5,
+										backgroundColor: 'rgba(0,0,0,0.5)',
+									}}
+								>
+									{/* <Text style={{
 								color: '#fff',
 								fontSize: 12,
 								fontWeight: 'bold',
 							}}>Edit</Text> */}
-								<IconButton
-									icon="pencil"
-									color="#fff"
-									size={20}
-								/>
-							</View>
+									<IconButton
+										icon="pencil"
+										color="#fff"
+										size={20}
+									/>
+								</View>
+							</View>)}
 						</ImageBackground>
 					</TouchableOpacity>
 				</View>

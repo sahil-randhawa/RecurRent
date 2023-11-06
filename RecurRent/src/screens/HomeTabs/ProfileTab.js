@@ -26,17 +26,39 @@ import Btn, {
 } from "../../components/Button";
 import { signOut } from "firebase/auth";
 import { auth, db } from "../../../firebaseConfig";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { useState, useEffect } from "react";
 import Icon from "react-native-vector-icons/Ionicons";
 
 const ProfileTab = ({ navigation, route }) => {
 	const [isLoading, setIsLoading] = useState(true);
 	const [user, setUser] = useState({});
+	const [profileUrl, setProfileUrl] = useState(null);
 
 	useEffect(() => {
 		fetchFromDB();
 	}, []);
+
+	const fetchFromDB = async () => {
+		console.log("Fetching from db: " + auth.currentUser.email);
+		try {
+			// const q = query(
+			// 	collection(db, "userProfiles"),
+			// 	where("email", "==", auth.currentUser.email)
+			// );
+			// const querySnapshot = await getDocs(q);
+			// querySnapshot.forEach((doc) => {
+			// 	setUser(doc.data());
+			// });
+			const userDoc = await getDoc(doc(db, 'userProfiles', auth.currentUser.uid));
+			setUser(userDoc.data());
+			setProfileUrl(userDoc.data().imageUrl ? userDoc.data().imageUrl : null);
+			setIsLoading(false);
+		} catch (error) {
+			console.log(error);
+		}
+		console.log({ user });
+	};
 
 	const onLogoutClicked = () => {
 		signOut(auth)
@@ -100,24 +122,6 @@ const ProfileTab = ({ navigation, route }) => {
 		},
 	];
 
-	const fetchFromDB = async () => {
-		console.log("fetching from db: " + auth.currentUser.email);
-		try {
-			const q = query(
-				collection(db, "userProfiles"),
-				where("email", "==", auth.currentUser.email)
-			);
-			const querySnapshot = await getDocs(q);
-			querySnapshot.forEach((doc) => {
-				setUser(doc.data());
-			});
-
-			setIsLoading(false);
-		} catch (error) {
-			console.log(error);
-		}
-		console.log({ user });
-	};
 
 	return (
 		// Profile Screen
@@ -136,7 +140,7 @@ const ProfileTab = ({ navigation, route }) => {
 						<View>
 							<Avatar.Image
 								size={60}
-								source={{ uri: "https://i.pravatar.cc/300" }}
+								source={profileUrl ? { uri: profileUrl } : require("../../../assets/images/profile_placeholder.png")}
 							/>
 						</View>
 						<View style={styles.textContainer}>
@@ -223,7 +227,7 @@ const styles = StyleSheet.create({
 		paddingLeft: 15,
 	},
 	flatListContainer: {
-    justifyContent: 'center',
+		justifyContent: 'center',
 	},
 	listContainer: {
 		flex: 1,
