@@ -46,7 +46,7 @@ const HomeTab = ({ navigation, route }) => {
 	}, []);
 
 	const [productsListings, setProductsListings] = useState([]);
-	const [ownerDetails, setOwnerDetails] = useState({});
+	const [searchQuery, setSearchQuery] = useState("");
 
 	const getProductListings = async () => {
 		try {
@@ -118,15 +118,26 @@ const HomeTab = ({ navigation, route }) => {
 		// navigation.navigate("ProductDetails",{combinedData:combinedData})
 	};
 
-	// Search Button
-	const [searchQuery, setSearchQuery] = useState("");
-
 	const handleSearch = () => {
-		// Handle the search functionality here
-		// You can perform actions based on the searchQuery
-		// For example, fetch data from an API or filter a list of items
 		console.log("Search query:", searchQuery);
+		const q = query(collection(db, "Products"));
+	  
+		getDocs(q)
+		  .then((querySnapshot) => {
+			const filteredResults = [];
+			querySnapshot.forEach((doc) => {
+			  const product = doc.data();
+			  if ((product.name.toLowerCase().includes(searchQuery.toLowerCase())) || (product.description.toLowerCase().includes(searchQuery.toLowerCase()))) {
+				filteredResults.push({ id: doc.id, ...product });
+			  }
+			});
+			setProductsListings(filteredResults);
+		  })
+		  .catch((error) => {
+			console.error("Error filtering products:", error);
+		  });
 	};
+
 	return (
 		<>
 			<ScrollView
@@ -136,7 +147,7 @@ const HomeTab = ({ navigation, route }) => {
 					<Search
 						placeholder={"Search here"}
 						value={searchQuery}
-						onChangeText={setSearchQuery}
+						onChangeText={(text) => setSearchQuery(text)}
 						onSubmit={handleSearch}
 					/>
 					<FlatList
