@@ -9,6 +9,7 @@ import {
 	Platform,
 	FlatList,
 	ScrollView,
+	ActivityIndicator,
 } from "react-native";
 import {
 	primaryColor,
@@ -43,12 +44,14 @@ import ProductCard from "../../components/ProductCard";
 const HomeTab = ({ navigation, route }) => {
 	const [productsListings, setProductsListings] = useState([]);
 	const [searchQuery, setSearchQuery] = useState("");
+	const [isLoading, setIsLoading] = useState(false);
 
 	useEffect(() => {
 		getProductListings();
 	}, []);
 
 	const getProductListings = async () => {
+		setIsLoading(true); // Show loader while fetching data
 		try {
 			const q = query(
 				collection(db, "Products")
@@ -70,6 +73,7 @@ const HomeTab = ({ navigation, route }) => {
 			// console.log(resultsFromFirestore)
 
 			setProductsListings(resultsFromFirestore);
+			setIsLoading(false); // Hide loader after fetching data
 		} catch (err) {
 			console.log(err);
 		}
@@ -121,6 +125,7 @@ const HomeTab = ({ navigation, route }) => {
 	const handleSearch = (searchText) => {
 		setSearchQuery(searchText);
 		const q = query(collection(db, "Products"));
+		setIsLoading(true); // Show loader while searching
 	
 		getDocs(q)
 		  .then((querySnapshot) => {
@@ -135,9 +140,11 @@ const HomeTab = ({ navigation, route }) => {
 			  }
 			});
 			setProductsListings(filteredResults);
+			setIsLoading(false); // Hide loader after searching
 		  })
 		  .catch((error) => {
 			console.error("Error filtering products:", error);
+			setIsLoading(false); // Hide loader on error
 		  });
 	};
 
@@ -153,28 +160,32 @@ const HomeTab = ({ navigation, route }) => {
 						onChangeText={(text) => handleSearch(text)}
 					/>
 
-					<FlatList
-						data={productsListings}
-						horizontal={true}
-						renderItem={(rowData) => {
-							return (
-								<ProductCard
-									coverUri={rowData.item["productPhoto"]}
-									title={rowData.item.name}
-									duration={rowData.item.duration}
-									productId={rowData.item.id}
-									buttonLabel={"More Details"}
-									// if onPress function is added it pops up too much of alert messages.
-									onPressAction={() => {
-										moreDetailsClicked(rowData);
-									}}
-								/>
-							);
-						}}
-						contentContainerStyle={{
-							padding: 5,
-						}}
-					/>
+					{isLoading ? (
+						<ActivityIndicator size="large" color={primaryColor} style={styles.loader} />
+					) : (
+						<FlatList
+							data={productsListings}
+							horizontal={true}
+							renderItem={(rowData) => {
+								return (
+									<ProductCard
+										coverUri={rowData.item["productPhoto"]}
+										title={rowData.item.name}
+										duration={rowData.item.duration}
+										productId={rowData.item.id}
+										buttonLabel={"More Details"}
+										// if onPress function is added it pops up too much of alert messages.
+										onPressAction={() => {
+											moreDetailsClicked(rowData);
+										}}
+									/>
+								);
+							}}
+							contentContainerStyle={{
+								padding: 5,
+							}}
+						/>
+					)}
 
 					{/* create item listing button */}
 					<Btn
@@ -206,5 +217,9 @@ const HomeTab = ({ navigation, route }) => {
 	);
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+	loader: {
+		marginTop: 20,
+	},
+});
 export default HomeTab;
