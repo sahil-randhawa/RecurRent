@@ -41,12 +41,12 @@ import Search from "../../components/SearchBar";
 import ProductCard from "../../components/ProductCard";
 
 const HomeTab = ({ navigation, route }) => {
+	const [productsListings, setProductsListings] = useState([]);
+	const [searchQuery, setSearchQuery] = useState("");
+
 	useEffect(() => {
 		getProductListings();
 	}, []);
-
-	const [productsListings, setProductsListings] = useState([]);
-	const [searchQuery, setSearchQuery] = useState("");
 
 	const getProductListings = async () => {
 		try {
@@ -118,16 +118,19 @@ const HomeTab = ({ navigation, route }) => {
 		// navigation.navigate("ProductDetails",{combinedData:combinedData})
 	};
 
-	const handleSearch = () => {
-		console.log("Search query:", searchQuery);
+	const handleSearch = (searchText) => {
+		setSearchQuery(searchText);
 		const q = query(collection(db, "Products"));
-	  
+	
 		getDocs(q)
 		  .then((querySnapshot) => {
 			const filteredResults = [];
 			querySnapshot.forEach((doc) => {
 			  const product = doc.data();
-			  if ((product.name.toLowerCase().includes(searchQuery.toLowerCase())) || (product.description.toLowerCase().includes(searchQuery.toLowerCase()))) {
+			  if (
+				product.name.toLowerCase().includes(searchText.toLowerCase()) ||
+				product.description.toLowerCase().includes(searchText.toLowerCase())
+			  ) {
 				filteredResults.push({ id: doc.id, ...product });
 			  }
 			});
@@ -147,9 +150,9 @@ const HomeTab = ({ navigation, route }) => {
 					<Search
 						placeholder={"Search here"}
 						value={searchQuery}
-						onChangeText={(text) => setSearchQuery(text)}
-						onSubmit={handleSearch}
+						onChangeText={(text) => handleSearch(text)}
 					/>
+
 					<FlatList
 						data={productsListings}
 						horizontal={true}
