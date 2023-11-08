@@ -95,7 +95,7 @@ const RequestCard = ({ rowData, handleConfirm, handleDecline,handleChat }) => {
 						/>
 						<Btn
 							title="CONFIRM"
-							onPress={() => alert('Confirmed')}
+							onPress={handleConfirm}
 							mode="contained"
 							style={{
 								flex: 1,

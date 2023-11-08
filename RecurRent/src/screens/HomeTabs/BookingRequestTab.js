@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect ,useLayoutEffect } from 'react';
 import {
 	StyleSheet,
 	Text,
@@ -50,6 +50,12 @@ const BookingRequestTab = ({ navigation, route }) => {
 	useEffect(() => {
 		getRequestedProductListings();
 	}, []);
+
+	useLayoutEffect(()=>{
+        
+        getRequestedProductListings()
+        // console.log("messages on load",messages)
+    },[route])
 
 	const [ownerRequestsListings, setOwnerRequestsListings] = useState([]);
 	// const [ownerInfo, setOwnerInfo] = useState()
@@ -122,7 +128,8 @@ const BookingRequestTab = ({ navigation, route }) => {
 		try {
 		  const q = query(
 			collection(db, 'Bookings'),
-			where('ownerID', '==', auth.currentUser.uid)
+			where('ownerID', '==', auth.currentUser.uid),
+			where("bookingStatus", "==" ,"Requested")
 		  );
 		  const querySnapshot = await getDocs(q);
 		  const resultsFromFirestore = [];
@@ -204,7 +211,7 @@ const BookingRequestTab = ({ navigation, route }) => {
 					} else {
 						if(actionStatus == "Ok"){
 							transaction.update(idDocRef, {
-								status: "Decline",
+								bookingStatus: "Decline",
 							});
 							transaction.update(productDocRef, {
 								status: "Available",
@@ -221,16 +228,18 @@ const BookingRequestTab = ({ navigation, route }) => {
 						else if(actionStatus == "Cancel"){
 							// Display a toast
 							Toast.show({
-								type: 'success',
+								type: 'info',
 								position: 'bottom',
-								text1: 'No action has been performed!',
+								text1: 'Action canceled!',
 								visibilityTime: 3000,
 								autoHide: true,
 							});
 						}
+						
 					}
 				}
 			);
+			getRequestedProductListings()
 			console.log("Status Updated to Requested");
 		} catch (error) {
 			console.log("Error in updation: ", error);
@@ -238,6 +247,107 @@ const BookingRequestTab = ({ navigation, route }) => {
 		}
 	}
 
+	const confirmClicked = (item) =>{
+		
+		Alert.alert('Confirm Request', 'Are you sure you want to confirm this request?', [
+			{
+				text: 'Cancel',
+				onPress: () => {
+					confirmAction(item,"Cancel")
+				},
+				style: 'cancel'
+			},
+			{
+				text: 'OK', 
+				onPress: () => {
+					confirmAction(item,"Ok")
+				}
+			},], { cancelable: false }
+		);
+	}
+	const confirmAction = async(item,actionStatus) =>{
+		console.log('Confirm Action: ' + JSON.stringify(item, null, 2));
+		const durationString = item.duration;
+		const parts = durationString.split(" "); // Split the string by space
+		const durationNumber = parseInt(parts[0], 10); // Convert the first part to an integer
+
+		const duartionTime = parts[1];
+
+				// Get today's date
+		const today = new Date();
+		let addingDays = 0
+
+		if(duartionTime == "weeks" || duartionTime == "week"){
+			addingDays = durationNumber * 7;
+
+		}
+		else if(duartionTime == "months" || duartionTime == "month"){
+			addingDays = durationNumber * 30.44;
+		}
+		else if(duartionTime == "days" || duartionTime == "day"){
+			addingDays = durationNumber
+		}
+
+		const newAvailableDate = new Date(today);
+		newAvailableDate.setDate(today.getDate() + Math.round(addingDays));
+
+		// Format the new date as a string (e.g., YYYY-MM-DD)
+		const newAvailableFormatted = newAvailableDate.toISOString().split('T')[0];
+		
+
+
+		const idDocRef = doc(db, "Bookings", item.id);
+		const productDocRef = doc(db, "Products", item.productId);
+		console.log("update id", JSON.stringify(idDocRef, null, 2));
+		console.log(" product update id", JSON.stringify(productDocRef, null, 2));
+		try {
+			const newStatus = await runTransaction(
+				db,
+				async (transaction) => {
+					const idDoc = await transaction.get(idDocRef);
+					const productIdDoc = await transaction.get(productDocRef);
+					if (!idDoc.exists() && !productIdDoc.exists()) {
+						throw "Document does not exist!";
+					} else {
+						if(actionStatus == "Ok"){
+							transaction.update(idDocRef, {
+								bookingStatus: "Confirm",
+
+							});
+							transaction.update(productDocRef, {
+								status: "Confirm",
+								nextAvailableDate: newAvailableFormatted 
+							});
+							// Display a toast
+							Toast.show({
+								type: 'success',
+								position: 'bottom',
+								text1: 'Request Confirm Sucessfully!',
+								visibilityTime: 3000,
+								autoHide: true,
+							});
+						}
+						else if(actionStatus == "Cancel"){
+							// Display a toast
+							Toast.show({
+								type: 'info',
+								position: 'bottom',
+								text1: 'Action canceled!',
+								visibilityTime: 3000,
+								autoHide: true,
+							});
+						}
+						
+					}
+				}
+			);
+			console.log("Status Updated to Requested");
+			getRequestedProductListings()
+		} catch (error) {
+			console.log("Error in updation: ", error);
+			alert(`Error : ${error}`);
+		}
+	}
 	return (
 		<View style={spacing.container}>
 			{loading ? (
@@ -254,6 +364,7 @@ const BookingRequestTab = ({ navigation, route }) => {
 							{chatClicked(rowData.item.id)}
 						}
 						handleDecline={()=>{declineClicked(rowData.item)}}
+						handleConfirm={()=>{confirmClicked(rowData.item)}}
 							/>}
 						contentContainerStyle={{ paddingVertical: 10 }}
 					/>
