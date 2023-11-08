@@ -7,6 +7,7 @@ import {
 	TouchableOpacity,
 	SafeAreaView,
 	Platform,
+	Alert,
 	FlatList,
 	ScrollView,
 	Image,
@@ -31,6 +32,7 @@ import Btn, {
 import { StatusBar } from 'expo-status-bar';
 import { auth, db } from '../../../firebaseConfig';
 import { signOut } from 'firebase/auth';
+import Toast from 'react-native-toast-message';
 import {
 	collection,
 	getDocs,
@@ -40,6 +42,7 @@ import {
 	getDoc,
 	documentId,
 	getDocFromCache,
+	runTransaction,
 } from 'firebase/firestore';
 import RequestCard from '../../components/RequestCard';
 
@@ -165,6 +168,76 @@ const BookingRequestTab = ({ navigation, route }) => {
 		})
 	}
 
+	const declineClicked = (item) =>{
+		
+		Alert.alert('Decline Request', 'Are you sure you want to decline this request?', [
+			{
+				text: 'Cancel',
+				onPress: () => {
+					declineAction(item,"Cancel")
+				},
+				style: 'cancel'
+			},
+			{
+				text: 'OK', 
+				onPress: () => {
+					declineAction(item,"Ok")
+				}
+			},], { cancelable: false }
+		);
+	}
+
+	const declineAction = async(item,actionStatus) =>{
+		console.log('Decline Action: ' + JSON.stringify(item, null, 2));
+		const idDocRef = doc(db, "Bookings", item.id);
+		const productDocRef = doc(db, "Products", item.productId);
+		console.log("update id", JSON.stringify(idDocRef, null, 2));
+		console.log(" product update id", JSON.stringify(productDocRef, null, 2));
+		try {
+			const newStatus = await runTransaction(
+				db,
+				async (transaction) => {
+					const idDoc = await transaction.get(idDocRef);
+					const productIdDoc = await transaction.get(productDocRef);
+					if (!idDoc.exists() && !productIdDoc.exists()) {
+						throw "Document does not exist!";
+					} else {
+						if(actionStatus == "Ok"){
+							transaction.update(idDocRef, {
+								status: "Decline",
+							});
+							transaction.update(productDocRef, {
+								status: "Available",
+							});
+							// Display a toast
+							Toast.show({
+								type: 'success',
+								position: 'bottom',
+								text1: 'Request Declined Sucessfully!',
+								visibilityTime: 3000,
+								autoHide: true,
+							});
+						}
+						else if(actionStatus == "Cancel"){
+							// Display a toast
+							Toast.show({
+								type: 'success',
+								position: 'bottom',
+								text1: 'No action has been performed!',
+								visibilityTime: 3000,
+								autoHide: true,
+							});
+						}
+					}
+				}
+			);
+			console.log("Status Updated to Requested");
+		} catch (error) {
+			console.log("Error in updation: ", error);
+			alert(`Error : ${error}`);
+		}
+	}
+
 	return (
 		<View style={spacing.container}>
 			{loading ? (
@@ -180,6 +253,7 @@ const BookingRequestTab = ({ navigation, route }) => {
 						handleChat={()=>
 							{chatClicked(rowData.item.id)}
 						}
+						handleDecline={()=>{declineClicked(rowData.item)}}
 							/>}
 						contentContainerStyle={{ paddingVertical: 10 }}
 					/>
