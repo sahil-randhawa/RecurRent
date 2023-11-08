@@ -9,6 +9,8 @@ import {
 	Platform,
 	FlatList,
 	ScrollView,
+	ActivityIndicator,
+	Image,
 } from "react-native";
 import {
 	primaryColor,
@@ -41,14 +43,16 @@ import Search from "../../components/SearchBar";
 import ProductCard from "../../components/ProductCard";
 
 const HomeTab = ({ navigation, route }) => {
+	const [productsListings, setProductsListings] = useState([]);
+	const [searchQuery, setSearchQuery] = useState("");
+	const [isLoading, setIsLoading] = useState(false);
+
 	useEffect(() => {
 		getProductListings();
 	}, []);
 
-	const [productsListings, setProductsListings] = useState([]);
-	const [ownerDetails, setOwnerDetails] = useState({});
-
 	const getProductListings = async () => {
+		setIsLoading(true); // Show loader while fetching data
 		try {
 			const q = query(
 				collection(db, "Products")
@@ -70,6 +74,10 @@ const HomeTab = ({ navigation, route }) => {
 			// console.log(resultsFromFirestore)
 
 			setProductsListings(resultsFromFirestore);
+			setIsLoading(false); // Hide loader after fetching data
+
+			// Reset the search bar to an empty string, in case "Refresh" button is pressed
+			setSearchQuery("");
 		} catch (err) {
 			console.log(err);
 		}
@@ -118,15 +126,32 @@ const HomeTab = ({ navigation, route }) => {
 		// navigation.navigate("ProductDetails",{combinedData:combinedData})
 	};
 
-	// Search Button
-	const [searchQuery, setSearchQuery] = useState("");
-
-	const handleSearch = () => {
-		// Handle the search functionality here
-		// You can perform actions based on the searchQuery
-		// For example, fetch data from an API or filter a list of items
-		console.log("Search query:", searchQuery);
+	const handleSearch = (searchText) => {
+		setSearchQuery(searchText);
+		const q = query(collection(db, "Products"));
+		setIsLoading(true); // Show loader while searching
+	
+		getDocs(q)
+		  .then((querySnapshot) => {
+			const filteredResults = [];
+			querySnapshot.forEach((doc) => {
+			  const product = doc.data();
+			  if (
+				product.name.toLowerCase().includes(searchText.toLowerCase()) ||
+				product.description.toLowerCase().includes(searchText.toLowerCase())
+			  ) {
+				filteredResults.push({ id: doc.id, ...product });
+			  }
+			});
+			setProductsListings(filteredResults);
+			setIsLoading(false); // Hide loader after searching
+		  })
+		  .catch((error) => {
+			console.error("Error filtering products:", error);
+			setIsLoading(false); // Hide loader on error
+		  });
 	};
+
 	return (
 		<>
 			<ScrollView
@@ -136,31 +161,46 @@ const HomeTab = ({ navigation, route }) => {
 					<Search
 						placeholder={"Search here"}
 						value={searchQuery}
-						onChangeText={setSearchQuery}
-						onSubmit={handleSearch}
+						onChangeText={(text) => handleSearch(text)}
 					/>
-					<FlatList
-						data={productsListings}
-						horizontal={true}
-						renderItem={(rowData) => {
-							return (
-								<ProductCard
-									coverUri={rowData.item["productPhoto"]}
-									title={rowData.item.name}
-									duration={rowData.item.duration}
-									productId={rowData.item.id}
-									buttonLabel={"More Details"}
-									// if onPress function is added it pops up too much of alert messages.
-									onPressAction={() => {
-										moreDetailsClicked(rowData);
-									}}
-								/>
-							);
-						}}
-						contentContainerStyle={{
-							padding: 5,
-						}}
-					/>
+
+					{isLoading ? (
+						<ActivityIndicator size="large" color={primaryColor} style={styles.commonContainerStyle} />
+					) : productsListings.length > 0 ? (
+						<FlatList
+							data={productsListings}
+							horizontal={true}
+							renderItem={(rowData) => {
+								return (
+									<ProductCard
+										coverUri={rowData.item["productPhoto"]}
+										title={rowData.item.name}
+										duration={rowData.item.duration}
+										productId={rowData.item.id}
+										buttonLabel={"More Details"}
+										// if onPress function is added it pops up too much of alert messages.
+										onPressAction={() => {
+											moreDetailsClicked(rowData);
+										}}
+									/>
+								);
+							}}
+							contentContainerStyle={{
+								padding: 5,
+							}}
+						/>
+					) : (
+						// Display a message when no results are found
+						<View style={styles.commonContainerStyle}>
+						<Image
+							source={require('../../../assets/images/no-wishlist.png')}
+							style={styles.image}
+						/>
+						<Text style={[typography.bodyHeading, { textAlign: 'center' }]}>
+							Oops! No matched products.{'\n'}Try another search.
+						</Text>
+						</View>
+					)}
 
 					{/* create item listing button */}
 					<Btn
@@ -192,5 +232,21 @@ const HomeTab = ({ navigation, route }) => {
 	);
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+	image: {
+		width: 200,
+		height: 200,
+	},
+	commonContainerStyle: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+		width: 300,
+		height: 400,
+		marginTop: 30,
+		marginRight: 10,
+		borderRadius: 10,
+		padding: 10,
+	},
+});
 export default HomeTab;
