@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import { Card } from 'react-native-paper';
 import {
 	StyleSheet,
@@ -12,7 +12,7 @@ import {
 	FlatList,
 	ScrollView,
 	ActivityIndicator,
-} from "react-native";
+} from 'react-native';
 import {
 	primaryColor,
 	secondaryColor,
@@ -23,15 +23,15 @@ import {
 	border,
 	lightTheme,
 	darkTheme,
-	tertiaryColor
-} from "../../styles/GlobalStyles";
+	tertiaryColor,
+} from '../../styles/GlobalStyles';
 import Btn, {
 	primaryBtnStyle,
 	secondaryBtnStyle,
-} from "../../components/Button";
-import { StatusBar } from "expo-status-bar";
-import { auth, db } from "../../../firebaseConfig";
-import { signOut } from "firebase/auth";
+} from '../../components/Button';
+import { StatusBar } from 'expo-status-bar';
+import { auth, db } from '../../../firebaseConfig';
+import { signOut } from 'firebase/auth';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {
@@ -42,10 +42,9 @@ import {
 	doc,
 	getDoc,
 	documentId,
-} from "firebase/firestore";
+} from 'firebase/firestore';
 
-const Messages = ({ navigation,route }) => {
-
+const Messages = ({ navigation, route }) => {
 	const [userRequestListings, setUserRequestListings] = useState([]);
 	const [loading, setLoading] = useState(true);
 
@@ -53,63 +52,60 @@ const Messages = ({ navigation,route }) => {
 		getUserListings();
 	}, []);
 
-
-	
 	const getUserListings = async () => {
 		try {
-		  const q = query(
-			collection(db, "Bookings"),
-			where("renterID", "==", auth.currentUser.uid),
-			where("bookingStatus", "==", "Requested")
-		  );
-		  const querySnapshot = await getDocs(q);
-	  
-		  const allUserRequestListings = [];
-		  for (const docr of querySnapshot.docs) {
-			const docData = docr.data();
-			console.log("Product data:", docr.id);
-	  
-			try {
-			  const productDocRef = doc(db, "Products", docData.productID);
-			  const productDoc = await getDoc(productDocRef);
-			  console.log("Booking Id:", docr.id);
-	  
-			  if (productDoc.exists()) {
-				const productData = productDoc.data();
-	  
-				const itemWithBookingID = {
-				  id: docr.id,
-				  ...productData,
-				};
-				console.log("Document data:", itemWithBookingID);
-				allUserRequestListings.push(itemWithBookingID);
-			  } else {
-				console.log("No such document for product ID:", docData.productID);
-			  }
-			} catch (error) {
-			  console.error("Error getting product document:", error);
+			const q = query(
+				collection(db, 'Bookings'),
+				where('renterID', '==', auth.currentUser.uid),
+				where('bookingStatus', '==', 'Requested')
+			);
+			const querySnapshot = await getDocs(q);
+
+			const allUserRequestListings = [];
+			for (const docr of querySnapshot.docs) {
+				const docData = docr.data();
+				console.log('Product data:', docr.id);
+
+				try {
+					const productDocRef = doc(db, 'Products', docData.productID);
+					const productDoc = await getDoc(productDocRef);
+					console.log('Booking Id:', docr.id);
+
+					if (productDoc.exists()) {
+						const productData = productDoc.data();
+
+						const itemWithBookingID = {
+							id: docr.id,
+							...productData,
+						};
+						console.log('Document data:', itemWithBookingID);
+						allUserRequestListings.push(itemWithBookingID);
+					} else {
+						console.log('No such document for product ID:', docData.productID);
+					}
+				} catch (error) {
+					console.error('Error getting product document:', error);
+				}
 			}
-		  }
-	  
-		  setUserRequestListings(allUserRequestListings);
+
+			setUserRequestListings(allUserRequestListings);
 		} catch (error) {
-		  console.error("Error fetching data from Firestore:", error);
+			console.error('Error fetching data from Firestore:', error);
 		} finally {
-		  setLoading(false);
+			setLoading(false);
 		}
-	  };
-	  
+	};
+
 	const chatClicked = (bookingRequestId) => {
-		console.log("Chat",bookingRequestId)
+		console.log('Chat', bookingRequestId);
 		// alert(bookingRequestId)
-		navigation.navigate("Chat",{
-			chatId:bookingRequestId
-		})
-	}
+		navigation.navigate('Chat', {
+			chatId: bookingRequestId,
+		});
+	};
 
 	return (
 		<>
-			
 			<View style={spacing.container}>
 				{loading ? (
 					<ActivityIndicator
@@ -131,58 +127,77 @@ const Messages = ({ navigation,route }) => {
 						<SwipeListView
 							data={userRequestListings}
 							renderItem={({ item, index }) => (
-								<View style={index === userRequestListings.length - 1 && styles.lastItem}>
+								<View
+									style={
+										index === userRequestListings.length - 1 && styles.lastItem
+									}
+								>
 									<Card style={styles.card}>
-									<Card.Content style={{ flexDirection: 'column' }}>
-										<View style={{ flexDirection: 'row' }}>
-											<Image
-												source={{ uri: item['productPhoto'] }}
-												style={styles.profileImage}
-											/>
-											<View style={{ flex: 1 }}>
-												<Card.Title
-													title={item.name}
-													titleNumberOfLines={2}
-													titleStyle={[typography.bodyHeading, { color: secondaryColor }]}
-													style={{ marginLeft: 0 }}
-													subtitle={item.pickUpAddress}
-													subtitleNumberOfLines={2}
-													subtitleStyle={[
-														typography.caption,
-														{ marginTop: 5, color: tertiaryColor },
-													]}
-							
+										<Card.Content style={{ flexDirection: 'column' }}>
+											<View style={{ flexDirection: 'row' }}>
+												<Image
+													source={{ uri: item['productPhoto'] }}
+													style={styles.profileImage}
 												/>
-												<Card.Content>
-													<Text style={[typography.body, styles.text]}>
-														Status: {item.status}
-													</Text>
-													<Text style={[typography.captionHeading, styles.text]}>
-														Price: CAD {item.price}
-													</Text>
-												</Card.Content>
-												
+												<View style={{ flex: 1 }}>
+													<Card.Title
+														title={item.name}
+														titleNumberOfLines={2}
+														titleStyle={[
+															typography.bodyHeading,
+															{ color: secondaryColor },
+															Platform.OS === 'android' && styles.androidTitle,
+														]}
+														style={{ marginLeft: 0 }}
+														subtitle={item.pickUpAddress}
+														subtitleNumberOfLines={2}
+														subtitleStyle={[
+															typography.caption,
+															{ marginTop: 5, color: tertiaryColor },
+															Platform.OS === 'android' &&
+																styles.androidSubtitle,
+														]}
+													/>
+													<Card.Content>
+														<Text
+															style={[
+																typography.body,
+																{ marginBottom: 5 },
+																Platform.OS === 'android' &&
+																	styles.androidSubtitle,
+															]}
+														>
+															Status: {item.status}
+														</Text>
+														<Text style={[typography.captionHeading]}>
+															Price: CAD {item.price}
+														</Text>
+													</Card.Content>
+												</View>
 											</View>
-										</View>
 
-										<View style={styles.buttonContainer}>
-										<TouchableOpacity 
-											style={{ 
-													// flex: 1,
-													textAlign: 'center',
-													// marginTop: 10,
-													alignContent:'center',
-													paddingVertical: 10, 
-													padding:10
+											<View style={styles.buttonContainer}>
+												<TouchableOpacity
+													style={{
+														// flex: 1,
+														textAlign: 'center',
+														// marginTop: 10,
+														alignContent: 'center',
+														paddingVertical: 5,
 													}}
-													onPress={()=>{chatClicked(item.id)}}>
-												<Icon name="chatbubbles" size={30} style={{color: primaryColor,}} /> 
-											</TouchableOpacity>
-											
-											
-										</View>
-									</Card.Content>
-								</Card>
+													onPress={() => {
+														chatClicked(item.id);
+													}}
+												>
+													<Icon
+														name="chatbubbles"
+														size={30}
+														style={{ color: primaryColor }}
+													/>
+												</TouchableOpacity>
+											</View>
+										</Card.Content>
+									</Card>
 								</View>
 							)}
 							renderHiddenItem={({ item }) => (
@@ -191,7 +206,7 @@ const Messages = ({ navigation,route }) => {
 										name="trash-outline"
 										color={lightTheme.colors.error}
 										size={30}
-										onPress={() => alert("Remove")}
+										onPress={() => alert('Remove')}
 									/>
 								</View>
 							)}
@@ -209,9 +224,10 @@ const Messages = ({ navigation,route }) => {
 
 const styles = StyleSheet.create({
 	image: {
-		width: 100,
-		height: 100,
+		width: '20%',
+		height: 'auto',
 	},
+
 	container: {
 		width: '100%',
 		flex: 1,
@@ -219,6 +235,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'flex-start',
 		paddingBottom: 30,
 	},
+
 	emptyWishlist: {
 		flex: 1,
 		justifyContent: 'center',
@@ -228,12 +245,14 @@ const styles = StyleSheet.create({
 	lastItem: {
 		marginBottom: 20,
 	},
+
 	rowBack: {
 		flex: 1,
 		alignItems: 'flex-end',
 		justifyContent: 'center',
 		padding: 20,
 	},
+
 	card: {
 		marginTop: 15,
 		borderRadius: 8,
@@ -244,7 +263,7 @@ const styles = StyleSheet.create({
 	profileImage: {
 		width: 120,
 		borderRadius: 5,
-		height:120,
+		height: 120,
 	},
 
 	textContainer: {
@@ -253,14 +272,19 @@ const styles = StyleSheet.create({
 		paddingBottom: 5,
 	},
 
+	androidTitle: {
+		fontSize: 16,
+	},
+
+	androidSubtitle: {
+		fontSize: 13,
+	},
+
 	buttonContainer: {
 		flexDirection: 'row',
 		flex: 1,
 		justifyContent: 'space-between',
-		// marginTop: 15,
 	},
 });
 
 export default Messages;
-
-
