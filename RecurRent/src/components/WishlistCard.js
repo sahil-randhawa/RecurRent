@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-	View,
-	Text,
-	Image,
-	TouchableOpacity,
-	StyleSheet,
-} from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { Card } from 'react-native-paper';
 import {
 	lightTheme,
@@ -28,17 +22,18 @@ const WishlistCard = ({ item, handlePress, handleRemove }) => {
 						<Card.Title
 							title={item.name}
 							titleNumberOfLines={2}
-							titleStyle={[typography.bodyHeading, { color: secondaryColor }]}
+							titleStyle={[typography.bodyHeading, { color: secondaryColor }, Platform.OS === 'android' && styles.androidTitle]}
 							subtitle={item.pickUpAddress}
 							subtitleNumberOfLines={2}
 							subtitleStyle={[
 								typography.caption,
 								{ marginTop: 5, color: tertiaryColor },
+								Platform.OS === 'android' && styles.androidSubTitle
 							]}
 							style={{ marginLeft: 0 }}
 						/>
 						<Card.Content>
-							<Text style={[typography.body, styles.text]}>
+							<Text style={[typography.body, styles.text, Platform.OS === 'android' && styles.androidSubTitle]}>
 								Status: {item.status}
 							</Text>
 							<Text style={[typography.captionHeading, styles.text]}>
@@ -63,6 +58,14 @@ const styles = StyleSheet.create({
 	image: {
 		width: 100,
 		borderRadius: 5,
+	},
+
+	androidTitle: {
+		fontSize: 16,
+	},
+
+	androidSubTitle: {
+		fontSize: 12,
 	},
 
 	text: {
