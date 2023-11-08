@@ -30,11 +30,16 @@ const RequestCard = ({ rowData, handleConfirm, handleDecline, handleChat }) => {
 							<Card.Title
 								title={rowData.item.name}
 								titleNumberOfLines={2}
-								titleStyle={[typography.bodyHeading, { color: secondaryColor }, ]}
+								titleStyle={[
+									typography.bodyHeading,
+									{ color: secondaryColor },
+									Platform.OS === 'android' && styles.androidBodyHeading,
+								]}
 								subtitle={`Renter: ${rowData.item.renterName}`}
 								subtitleStyle={[
 									typography.caption,
 									{ color: tertiaryColor, marginBottom: 10 },
+									Platform.OS === 'android' && styles.androidSubHeading,
 								]}
 								style={{ marginLeft: 0 }}
 							/>
@@ -74,6 +79,7 @@ const RequestCard = ({ rowData, handleConfirm, handleDecline, handleChat }) => {
 								marginTop: 10,
 								alignContent: 'center',
 								paddingVertical: 10,
+								paddingVertical: Platform.OS === 'android' && 3,
 								padding: 10,
 							}}
 							onPress={handleChat}
@@ -95,6 +101,7 @@ const RequestCard = ({ rowData, handleConfirm, handleDecline, handleChat }) => {
 								borderRadius: 10,
 								backgroundColor: 'transparent',
 								paddingVertical: 10,
+								paddingVertical: Platform.OS === 'android' && 3,
 								marginRight: 5,
 							}}
 						/>
@@ -109,6 +116,7 @@ const RequestCard = ({ rowData, handleConfirm, handleDecline, handleChat }) => {
 								borderRadius: 10,
 								backgroundColor: primaryColor,
 								paddingVertical: 10,
+								paddingVertical: Platform.OS === 'android' && 3,  
 							}}
 						/>
 					</View>
@@ -131,6 +139,14 @@ const styles = StyleSheet.create({
 		borderRadius: 5,
 	},
 
+	androidBodyHeading: {
+		fontSize: 16,
+	},
+
+	androidSubHeading: {
+		fontSize: 12,
+	},
+
 	textContainer: {
 		flexDirection: 'row',
 		alignItems: 'center',
@@ -142,6 +158,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: 'space-between',
 		marginTop: 15,
+		marginTop: Platform.OS === 'android' && 7,
 	},
 });
 
