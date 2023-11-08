@@ -10,6 +10,7 @@ import {
 	FlatList,
 	ScrollView,
 	ActivityIndicator,
+	Image,
 } from "react-native";
 import {
 	primaryColor,
@@ -74,6 +75,9 @@ const HomeTab = ({ navigation, route }) => {
 
 			setProductsListings(resultsFromFirestore);
 			setIsLoading(false); // Hide loader after fetching data
+
+			// Reset the search bar to an empty string, in case "Refresh" button is pressed
+			setSearchQuery("");
 		} catch (err) {
 			console.log(err);
 		}
@@ -161,8 +165,8 @@ const HomeTab = ({ navigation, route }) => {
 					/>
 
 					{isLoading ? (
-						<ActivityIndicator size="large" color={primaryColor} style={styles.loader} />
-					) : (
+						<ActivityIndicator size="large" color={primaryColor} style={styles.commonContainerStyle} />
+					) : productsListings.length > 0 ? (
 						<FlatList
 							data={productsListings}
 							horizontal={true}
@@ -185,6 +189,17 @@ const HomeTab = ({ navigation, route }) => {
 								padding: 5,
 							}}
 						/>
+					) : (
+						// Display a message when no results are found
+						<View style={styles.commonContainerStyle}>
+						<Image
+							source={require('../../../assets/images/no-wishlist.png')}
+							style={styles.image}
+						/>
+						<Text style={[typography.bodyHeading, { textAlign: 'center' }]}>
+							Oops! No matched products.{'\n'}Try another search.
+						</Text>
+						</View>
 					)}
 
 					{/* create item listing button */}
@@ -218,8 +233,20 @@ const HomeTab = ({ navigation, route }) => {
 };
 
 const styles = StyleSheet.create({
-	loader: {
-		marginTop: 20,
+	image: {
+		width: 200,
+		height: 200,
+	},
+	commonContainerStyle: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+		width: 300,
+		height: 400,
+		marginTop: 30,
+		marginRight: 10,
+		borderRadius: 10,
+		padding: 10,
 	},
 });
 export default HomeTab;
