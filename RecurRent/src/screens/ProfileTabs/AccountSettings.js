@@ -1,10 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, Alert, Image, ActivityIndicator } from 'react-native';
+import {
+	View,
+	Text,
+	StyleSheet,
+	ImageBackground,
+	TouchableOpacity,
+	Alert,
+	Image,
+	ActivityIndicator,
+	Platform,
+} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { db, auth, firebase } from '../../../firebaseConfig';
 import { collection, doc, getDoc, updateDoc } from 'firebase/firestore';
 import * as FileSystem from 'expo-file-system';
-import { List, Button, Avatar, IconButton } from 'react-native-paper';
+import { List, Button, Avatar } from 'react-native-paper';
 import Input from '../../components/Input';
 import Toast from 'react-native-toast-message';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -15,10 +25,12 @@ import Btn, {
 } from '../../components/Button';
 import {
 	backgroundColor,
+	lightTheme,
 	primaryColor,
 	spacing,
 	typography,
 } from '../../styles/GlobalStyles';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const AccountSettingsScreen = () => {
 	const fields = [
@@ -50,7 +62,6 @@ const AccountSettingsScreen = () => {
 		getUser();
 	}, []);
 
-
 	const getUser = async () => {
 		try {
 			const user = await getDoc(doc(db, 'userProfiles', auth.currentUser.uid));
@@ -61,7 +72,6 @@ const AccountSettingsScreen = () => {
 				setUser(user.data());
 				// setProfileUrl(user.data().imageUrl ? user.data().imageUrl : `https://ui-avatars.com/api/?name=${user.data().name}&size=128&length=1`);
 				setProfileUrl(user.data().imageUrl ? user.data().imageUrl : null);
-
 			}
 		} catch (e) {
 			console.log('Error in fetching user: ' + e);
@@ -72,8 +82,9 @@ const AccountSettingsScreen = () => {
 		console.log('Picking image...');
 		try {
 			setImageToUpload(null);
-			const result = await ImagePicker.launchImageLibraryAsync({  // launchCameraAsync
-				mediaTypes: ImagePicker.MediaTypeOptions.Images,  // All, Images, Videos
+			const result = await ImagePicker.launchImageLibraryAsync({
+				// launchCameraAsync
+				mediaTypes: ImagePicker.MediaTypeOptions.Images, // All, Images, Videos
 				// mediaTypes: ImagePicker.MediaTypeOptions.All,
 				allowsEditing: true,
 				aspect: [3, 3],
@@ -119,7 +130,9 @@ const AccountSettingsScreen = () => {
 				xhr.send(null);
 			});
 
-			const filename = imageToUpload.substring(imageToUpload.lastIndexOf('/') + 1);
+			const filename = imageToUpload.substring(
+				imageToUpload.lastIndexOf('/') + 1
+			);
 
 			// const ref = firebase.storage().ref().child(uuid.v4());
 			const ref = firebase.storage().ref().child(filename);
@@ -177,6 +190,8 @@ const AccountSettingsScreen = () => {
 		const [isEditing, setIsEditing] = fieldStates[field.key];
 		const [newValue, setNewValue] = useState(field.initialValue);
 
+		
+
 		return (
 			<View
 				key={field.key}
@@ -191,7 +206,7 @@ const AccountSettingsScreen = () => {
 								<Input
 									value={newValue}
 									onChangeText={setNewValue}
-									style={[{ width: '70%', marginRight: 2, marginTop: 0 }]}
+									style={[styles.input, { marginRight: 2 }]}
 								/>
 								<Btn
 									title="Save"
@@ -238,100 +253,98 @@ const AccountSettingsScreen = () => {
 	};
 
 	return (
-		<View style={[spacing.container, {
-			justifyContent: 'flex-start',
-		}]}>
+		<View
+			style={[
+				spacing.container,
+				{
+					justifyContent: 'flex-start',
+				},
+			]}
+		>
 			{/* profile image edit */}
-			<View style={[styles.rowData, {
-				justifyContent: 'space-around',
-			}]}>
-				<View style={{
-					marginTop: 35,
-					marginBottom: 20,
-				}}>
+			<View
+				style={[
+					styles.rowData,
+					{
+						justifyContent: 'space-around',
+					},
+				]}
+			>
+				<View
+					style={{
+						marginTop: 35,
+						marginBottom: 20,
+					}}
+				>
 					<TouchableOpacity
-						style={{
-							width: 120,
-							height: 120,
-							borderRadius: 100,
-							overflow: 'hidden',
-							borderWidth: 1,
-							borderColor: '#707070',
-						}}
+						style={styles.profileImageTouchable}
 						onPress={() => {
 							pickImage();
-						}}>
+						}}
+					>
 						<ImageBackground
-							style={{
-								width: 120,
-								height: 120,
-								alignItems: 'center',
-								justifyContent: 'center',
-							}}
+							style={styles.profileImageBackground}
 							imageStyle={{ borderRadius: 50 }} // to make it circular
 							// source={{ uri: imageToUpload ? imageToUpload : profileUrl }}
-							source={profileUrl ? { uri: imageToUpload ? imageToUpload : profileUrl } : (imageToUpload ? { uri: imageToUpload } : require('../../../assets/images/profile_placeholder.png'))}
+							source={
+								profileUrl
+									? { uri: imageToUpload ? imageToUpload : profileUrl }
+									: imageToUpload
+									? { uri: imageToUpload }
+									: require('../../../assets/images/profile_placeholder.png')
+							}
 						>
-							{uploading ? (<ActivityIndicator
-								size="large"
-								color="#fff"
-								animating={true}
-							/>) : (<View style={{
-								flex: 1,
-								width: '100%',
-								flexDirection: 'column',
-								justifyContent: 'center',
-								alignItems: 'center',
-							}}>
-								<View style={{
-									flex: 2,
-								}}></View>
+							{uploading ? (
+								<ActivityIndicator
+									size="large"
+									color="#fff"
+									animating={true}
+								/>
+							) : (
 								<View
 									style={{
 										flex: 1,
 										width: '100%',
+										flexDirection: 'column',
 										justifyContent: 'center',
 										alignItems: 'center',
-										// borderBottomLeftRadius: 100,
-										// borderBottomRightRadius: 100,
-										marginTop: 5,
-										backgroundColor: 'rgba(0,0,0,0.5)',
 									}}
 								>
-									{/* <Text style={{
-								color: '#fff',
-								fontSize: 12,
-								fontWeight: 'bold',
-							}}>Edit</Text> */}
-									<IconButton
-										icon="pencil"
-										color="#fff"
-										size={20}
-									/>
+									<View
+										style={{
+											flex: 2,
+										}}
+									></View>
+									<View style={styles.bgColor}>
+										<Icon
+											name="pencil"
+											size={20}
+											color={backgroundColor}
+										/>
+									</View>
 								</View>
-							</View>)}
+							)}
 						</ImageBackground>
 					</TouchableOpacity>
 				</View>
-				{imageToUpload &&
+				{imageToUpload && (
 					<TouchableOpacity
-						style={{
-							borderRadius: 5,
-							marginTop: 5,
-							paddingVertical: 15,
-							paddingHorizontal: 20,
-							backgroundColor: primaryColor,
-						}}
+						style={styles.uploadImg}
 						onPress={() => {
 							uploadImage();
-						}}>
-						<Text style={{
-							color: '#fff',
-							fontSize: 12,
-							fontWeight: 'bold',
-						}}>Save Image</Text>
+						}}
+					>
+						<Text
+							style={{
+								color: '#fff',
+								fontSize: 12,
+								fontWeight: 'bold',
+							}}
+						>
+							Save Image
+						</Text>
 					</TouchableOpacity>
-				}
+				)}
 			</View>
 
 			{/* user details edit*/}
@@ -341,18 +354,55 @@ const AccountSettingsScreen = () => {
 };
 
 const styles = StyleSheet.create({
+	profileImageTouchable: {
+		width: 120,
+		height: 120,
+		borderRadius: 100,
+		overflow: 'hidden',
+		borderWidth: 1,
+		borderColor: backgroundColor,
+	},
+
+	uploadImg: {
+		borderRadius: 5,
+		marginTop: 5,
+		paddingVertical: 15,
+		paddingHorizontal: 20,
+		backgroundColor: primaryColor,
+	},
+
+	profileImageBackground: {
+		width: 120,
+		height: 120,
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+
+	bgColor: {
+		flex: 1,
+		width: '100%',
+		justifyContent: 'center',
+		alignItems: 'center',
+		marginTop: 5,
+		backgroundColor: 'rgba(31, 31, 31, 0.5)',
+	},
+
 	infoRow: {
 		flexDirection: 'column',
 		justifyContent: 'space-between',
 		alignItems: 'center',
 		marginBottom: 10,
+		
 	},
+
 	rowData: {
 		width: '100%',
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		alignItems: 'center',
+		
 	},
+
 	inputRow: {
 		width: '100%',
 		paddingTop: 10,
@@ -360,6 +410,11 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between',
 		alignItems: 'center',
 	},
+
+	input: {
+    flex: 1,
+    marginRight: 2,
+  },
 });
 
 export default AccountSettingsScreen;
