@@ -81,7 +81,7 @@ const RequestCard = ({ rowData, handleConfirm, handleDecline,handleChat }) => {
 						</TouchableOpacity>
 						<Btn
 							title="DECLINE"
-							onPress={() => alert('Declined')}
+							onPress={handleDecline}
 							mode="outlined"
 							style={{
 								flex: 1,
@@ -95,7 +95,7 @@ const RequestCard = ({ rowData, handleConfirm, handleDecline,handleChat }) => {
 						/>
 						<Btn
 							title="CONFIRM"
-							onPress={() => alert('Confirmed')}
+							onPress={handleConfirm}
 							mode="contained"
 							style={{
 								flex: 1,
