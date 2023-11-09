@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet,TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { Card } from 'react-native-paper';
 import {
 	lightTheme,
@@ -16,7 +16,7 @@ import Btn, {
 } from '../components/Button';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const RequestCard = ({ rowData, handleConfirm, handleDecline,handleChat }) => {
+const RequestCard = ({ rowData, handleConfirm, handleDecline, handleChat }) => {
 	return (
 		<>
 			<Card style={styles.card}>
@@ -30,11 +30,16 @@ const RequestCard = ({ rowData, handleConfirm, handleDecline,handleChat }) => {
 							<Card.Title
 								title={rowData.item.name}
 								titleNumberOfLines={2}
-								titleStyle={[typography.bodyHeading, { color: secondaryColor }]}
+								titleStyle={[
+									typography.bodyHeading,
+									{ color: secondaryColor },
+									Platform.OS === 'android' && styles.androidBodyHeading,
+								]}
 								subtitle={`Renter: ${rowData.item.renterName}`}
 								subtitleStyle={[
 									typography.caption,
 									{ color: tertiaryColor, marginBottom: 10 },
+									Platform.OS === 'android' && styles.androidSubHeading,
 								]}
 								style={{ marginLeft: 0 }}
 							/>
@@ -67,21 +72,27 @@ const RequestCard = ({ rowData, handleConfirm, handleDecline,handleChat }) => {
 					</View>
 
 					<View style={styles.buttonContainer}>
-					<TouchableOpacity 
-						style={{ 
-							    // flex: 1,
+						<TouchableOpacity
+							style={{
+								// flex: 1,
 								textAlign: 'center',
 								marginTop: 10,
-								alignContent:'center',
-								paddingVertical: 10, 
-								padding:10
-								}}
-								onPress={handleChat}>
-							<Icon name="chatbubbles" size={40} style={{color: primaryColor,}} /> 
+								alignContent: 'center',
+								paddingVertical: 10,
+								paddingVertical: Platform.OS === 'android' && 3,
+								padding: 10,
+							}}
+							onPress={handleChat}
+						>
+							<Icon
+								name="chatbubbles"
+								size={40}
+								style={{ color: primaryColor }}
+							/>
 						</TouchableOpacity>
 						<Btn
 							title="DECLINE"
-							onPress={() => alert('Declined')}
+							onPress={handleDecline}
 							mode="outlined"
 							style={{
 								flex: 1,
@@ -90,12 +101,13 @@ const RequestCard = ({ rowData, handleConfirm, handleDecline,handleChat }) => {
 								borderRadius: 10,
 								backgroundColor: 'transparent',
 								paddingVertical: 10,
+								paddingVertical: Platform.OS === 'android' && 3,
 								marginRight: 5,
 							}}
 						/>
 						<Btn
 							title="CONFIRM"
-							onPress={() => alert('Confirmed')}
+							onPress={handleConfirm}
 							mode="contained"
 							style={{
 								flex: 1,
@@ -104,6 +116,7 @@ const RequestCard = ({ rowData, handleConfirm, handleDecline,handleChat }) => {
 								borderRadius: 10,
 								backgroundColor: primaryColor,
 								paddingVertical: 10,
+								paddingVertical: Platform.OS === 'android' && 3,  
 							}}
 						/>
 					</View>
@@ -126,6 +139,14 @@ const styles = StyleSheet.create({
 		borderRadius: 5,
 	},
 
+	androidBodyHeading: {
+		fontSize: 16,
+	},
+
+	androidSubHeading: {
+		fontSize: 12,
+	},
+
 	textContainer: {
 		flexDirection: 'row',
 		alignItems: 'center',
@@ -137,6 +158,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: 'space-between',
 		marginTop: 15,
+		marginTop: Platform.OS === 'android' && 7,
 	},
 });
 

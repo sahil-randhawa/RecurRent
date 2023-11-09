@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, ActivityIndicator, FlatList, Alert } from 'react-native';
+import {
+	View,
+	Text,
+	Image,
+	TouchableOpacity,
+	StyleSheet,
+	ActivityIndicator,
+	FlatList,
+	Alert,
+} from 'react-native';
 import { Card } from 'react-native-paper';
 import {
 	lightTheme,
@@ -9,7 +18,7 @@ import {
 	tertiaryColor,
 	spacing,
 } from '../styles/GlobalStyles';
-import { auth, db } from "../../firebaseConfig";
+import { auth, db } from '../../firebaseConfig';
 import {
 	collection,
 	addDoc,
@@ -19,16 +28,12 @@ import {
 	runTransaction,
 	doc,
 	getDoc,
-} from "firebase/firestore";
+} from 'firebase/firestore';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Toast from 'react-native-toast-message';
-import Btn, {
-	primaryBtnStyle,
-	secondaryBtnStyle,
-} from "../components/Button";
+import Btn, { primaryBtnStyle, secondaryBtnStyle } from '../components/Button';
 
 const NotificationsScreen = () => {
-
 	const [notificationsList, setNotificationsList] = useState([]);
 	const [loading, setLoading] = useState(true);
 
@@ -42,36 +47,48 @@ const NotificationsScreen = () => {
 			const docRef = doc(db, 'userProfiles', auth.currentUser.uid);
 			const docSnap = await getDoc(docRef);
 			if (docSnap.exists) {
-				const notifications = docSnap.data().notifications;
-				console.log(JSON.stringify(notifications, null, 2));
-				// sort the notifications by date in descending order
-				notifications.sort((a, b) => b.notificationDate.toDate() - a.notificationDate.toDate());
-				setNotificationsList(notifications);
+				if (docSnap.data().notifications) {
+					const notifications = docSnap.data().notifications;
+					console.log(JSON.stringify(notifications, null, 2));
+					// sort the notifications by date in descending order
+					notifications.sort(
+						(a, b) => b.notificationDate.toDate() - a.notificationDate.toDate()
+					);
+					setNotificationsList(notifications);
+				} else {
+					console.log('No notifications found');
+				}
 				setLoading(false);
 			} else {
-				console.log('No such document!');
+				console.log('No such user document!');
 			}
 		} catch (error) {
-			console.log("Error getting document:", error);
+			console.log('Error getting document:', error);
 		}
-	}
+	};
 
 	const handleRemove = async (item) => {
 		// popup to confirm
-		Alert.alert('Delete Notification', 'Are you sure you want to remove this notification?', [
-			{
-				text: 'Cancel',
-				onPress: () => console.log('Cancel Pressed'),
-				style: 'cancel'
-			},
-			{
-				text: 'OK', onPress: () => {
-					console.log('OK Pressed');
-					removeNotification(item);
-				}
-			},], { cancelable: false }
+		Alert.alert(
+			'Delete Notification',
+			'Are you sure you want to remove this notification?',
+			[
+				{
+					text: 'Cancel',
+					onPress: () => console.log('Cancel Pressed'),
+					style: 'cancel',
+				},
+				{
+					text: 'OK',
+					onPress: () => {
+						console.log('OK Pressed');
+						removeNotification(item);
+					},
+				},
+			],
+			{ cancelable: false }
 		);
-	}
+	};
 
 	const removeNotification = async (item) => {
 		console.log('removing notification');
@@ -80,19 +97,23 @@ const NotificationsScreen = () => {
 			await runTransaction(db, async (transaction) => {
 				const docSnap = await transaction.get(docRef);
 				if (!docSnap.exists()) {
-					throw "Document does not exist!";
+					throw 'Document does not exist!';
 				}
 				const notifications = docSnap.data().notifications;
-				const newNotifications = notifications.filter((notification) => notification.notificationID !== item.notificationID);
+				const newNotifications = notifications.filter(
+					(notification) => notification.notificationID !== item.notificationID
+				);
 				transaction.update(docRef, { notifications: newNotifications });
 				// sort the notifications by date in descending order
-				newNotifications.sort((a, b) => b.notificationDate.toDate() - a.notificationDate.toDate());
+				newNotifications.sort(
+					(a, b) => b.notificationDate.toDate() - a.notificationDate.toDate()
+				);
 				setNotificationsList(newNotifications);
 			});
 		} catch (error) {
-			console.log("Transaction failed: ", error);
+			console.log('Transaction failed: ', error);
 		}
-	}
+	};
 
 	const handleMarkRead = async (item) => {
 		console.log('Marking notification as read');
@@ -101,7 +122,7 @@ const NotificationsScreen = () => {
 			await runTransaction(db, async (transaction) => {
 				const docSnap = await transaction.get(docRef);
 				if (!docSnap.exists()) {
-					throw "Document does not exist!";
+					throw 'Document does not exist!';
 				}
 				const notifications = docSnap.data().notifications;
 				const newNotifications = notifications.map((notification) => {
@@ -109,11 +130,12 @@ const NotificationsScreen = () => {
 						notification.notificationUnreadStatus = false;
 					}
 					return notification;
-				}
-				);
+				});
 				transaction.update(docRef, { notifications: newNotifications });
 				// sort the notifications by date in descending order
-				newNotifications.sort((a, b) => b.notificationDate.toDate() - a.notificationDate.toDate());
+				newNotifications.sort(
+					(a, b) => b.notificationDate.toDate() - a.notificationDate.toDate()
+				);
 				setNotificationsList(newNotifications);
 			});
 			console.log('Marked as read : ' + JSON.stringify(item, null, 2));
@@ -126,9 +148,9 @@ const NotificationsScreen = () => {
 				autoHide: true,
 			});
 		} catch (error) {
-			console.log("Transaction failed: ", error);
+			console.log('Transaction failed: ', error);
 		}
-	}
+	};
 
 	// function to create 3 dummy entries in the notifications array
 	// const createDummyEntries = async () => {
@@ -184,24 +206,28 @@ const NotificationsScreen = () => {
 
 	return (
 		<>
-			<View style={[
-				spacing.container,
-				{
-					marginHorizontal: 0,
-					paddingHorizontal: 0,
-				}
-			]}>
+			<View
+				style={[
+					spacing.container,
+					{
+						marginHorizontal: 0,
+						paddingHorizontal: 0,
+					},
+				]}
+			>
 				{loading ? (
 					<ActivityIndicator
 						size="large"
 						color={primaryColor}
 					/>
 				) : notificationsList.length === 0 ? (
-					<View style={{
-						flex: 1,
-						justifyContent: 'center',
-						alignItems: 'center',
-					}}>
+					<View
+						style={{
+							flex: 1,
+							justifyContent: 'center',
+							alignItems: 'center',
+						}}
+					>
 						<Image
 							source={require('../../assets/images/notification.png')}
 							style={styles.image}
@@ -226,40 +252,57 @@ const NotificationsScreen = () => {
 					<FlatList
 						data={notificationsList}
 						keyExtractor={(item) => item.notificationID}
+						contentContainerStyle={styles.flatListContainer}
 						renderItem={({ item }) => (
 							<Card style={styles.card}>
 								<Card.Content>
 									<View style={styles.cardContent}>
 										<View style={styles.cardText}>
 											{/* heading */}
-											<Text style={typography.bodyHeading}>
+											<Text
+												style={[
+													typography.bodyHeading,
+													{ marginBottom: 5 },
+													Platform.OS === 'android' && styles.androidHeading,
+												]}
+											>
 												{item.notificationType}
 											</Text>
+
 											{/* subheading */}
-											<Text style={typography.bodyText}>
+											<Text
+												style={[
+													typography.bodyText,
+													{ width: '95%', marginBottom: 5 },
+													Platform.OS === 'android' && styles.androidSubHeading,
+												]}
+												numberOfLines={2}
+											>
 												{item.notificationMessage}
 											</Text>
+
 											{/* date */}
 											<Text style={typography.caption}>
 												{item.notificationDate.toDate().toDateString()}
 											</Text>
 										</View>
-										<View>
-											{item.notificationUnreadStatus ?
+
+										<View style={{ marginRight: 5 }}>
+											{item.notificationUnreadStatus ? (
 												<Icon
 													name="star"
 													color={lightTheme.colors.info}
 													size={30}
 													onPress={() => handleMarkRead(item)}
 												/>
-												:
+											) : (
 												<Icon
 													name="minuscircleo"
 													color={lightTheme.colors.errorContainer}
 													size={30}
 													onPress={() => handleRemove(item)}
 												/>
-											}
+											)}
 										</View>
 									</View>
 								</Card.Content>
@@ -273,24 +316,32 @@ const NotificationsScreen = () => {
 };
 
 const styles = StyleSheet.create({
-	image: {
-		width: 150,
-		height: 150,
+	flatListContainer: {
+		paddingVertical: 10,
 	},
+
 	card: {
 		maxWidth: '100%',
 		margin: 10,
 	},
+
 	cardContent: {
-		width: '100%',
+		maxWidth: '100%',
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		alignItems: 'center',
 	},
+
 	cardText: {
-		// flexDirection: 'column',
-		// justifyContent: 'flex-start',
-		// alignItems: 'flex-start',
+		paddingHorizontal: 5,
+	},
+
+	androidHeading: {
+		fontSize: 16,
+	},
+
+	androidSubHeading: {
+		fontSize: 12,
 	},
 });
 
