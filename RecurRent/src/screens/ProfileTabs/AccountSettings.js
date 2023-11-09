@@ -392,13 +392,17 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between',
 		alignItems: 'center',
 		marginBottom: 10,
+		
 	},
+
 	rowData: {
 		width: '100%',
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		alignItems: 'center',
+		
 	},
+
 	inputRow: {
 		width: '100%',
 		paddingTop: 10,
@@ -406,6 +410,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between',
 		alignItems: 'center',
 	},
+
 	input: {
     flex: 1,
     marginRight: 2,
