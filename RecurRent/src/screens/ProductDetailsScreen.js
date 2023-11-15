@@ -208,6 +208,10 @@ const ProductDetailsScreen = ({ navigation, route }) => {
 			icon: "checkmark-circle-outline",
 			color: lightTheme.colors.success,
 		},
+		"Confirm": {
+			icon: "checkmark-circle-outline",
+			color: lightTheme.colors.success,
+		},
 	};
 
 	const status = selectedProduct.item.status;
@@ -344,6 +348,35 @@ const ProductDetailsScreen = ({ navigation, route }) => {
 										<Text style={[typography.body, { color: textColor }]}>
 											{selectedProduct.item.pickUpAddress}
 										</Text>
+									</Text>
+								</View>
+							</View>
+
+							<View>
+								<View style={styles.productInfo}>
+									<Icon
+										name="today-outline"
+										size={24}
+										color={primaryColor}
+										style={{ marginRight: 8 }}
+									/>
+									<Text
+										style={[typography.bodyHeading, { color: primaryColor }]}
+									>
+										Next Available Date :{" "}
+										{selectedProduct.item.nextAvailableDate ?(
+											<Text style={[typography.body, { color: textColor }]}>
+												{selectedProduct.item.nextAvailableDate}
+											</Text>
+										)
+										:(
+											<Text style={[typography.body, { color: textColor }]}>
+												Immidatily
+											</Text>
+										)
+										
+									    }
+										
 									</Text>
 								</View>
 							</View>
