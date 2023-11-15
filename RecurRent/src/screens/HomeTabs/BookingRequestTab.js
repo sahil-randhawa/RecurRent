@@ -1,4 +1,4 @@
-import React, { useState, useEffect ,useLayoutEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import {
 	StyleSheet,
 	Text,
@@ -51,11 +51,11 @@ const BookingRequestTab = ({ navigation, route }) => {
 		getRequestedProductListings();
 	}, []);
 
-	useLayoutEffect(()=>{
-        
-        getRequestedProductListings()
-        // console.log("messages on load",messages)
-    },[route])
+	useLayoutEffect(() => {
+
+		getRequestedProductListings()
+		// console.log("messages on load",messages)
+	}, [route])
 
 	const [ownerRequestsListings, setOwnerRequestsListings] = useState([]);
 	// const [ownerInfo, setOwnerInfo] = useState()
@@ -126,90 +126,134 @@ const BookingRequestTab = ({ navigation, route }) => {
 
 	const getRequestedProductListings = async () => {
 		try {
-		  const q = query(
-			collection(db, 'Bookings'),
-			where('ownerID', '==', auth.currentUser.uid),
-			where("bookingStatus", "==" ,"Requested")
-		  );
-		  const querySnapshot = await getDocs(q);
-		  const resultsFromFirestore = [];
-	  
-		  const fetchPromises = querySnapshot.docs.map(async (docc) => {
-			const currentDoc = docc.data();
-			const documentRef = doc(db, 'Products', currentDoc.productID);
-			const documentRefRenter = doc(db, 'userProfiles', currentDoc.renterID);
-	  
-			const [docSnapshot, docSnapshotRenter] = await Promise.all([
-			  getDoc(documentRef),
-			  getDoc(documentRefRenter),
-			]);
-	  
-			if (docSnapshot.exists() && docSnapshotRenter.exists()) {
-			  const renter = docSnapshotRenter.data();
-			  const itemToAdd = {
-				renterName: renter.name,
-				renterEmail: renter.email,
-				renterMobileNumber: renter.mobileNumber,
-				id: docc.id,
-				...docSnapshot.data(),
-			  };
-			  resultsFromFirestore.push(itemToAdd);
-			}
-		  });
-	  
-		  await Promise.all(fetchPromises);
-	  
-		  setOwnerRequestsListings(resultsFromFirestore);
+			const q = query(
+				collection(db, "Bookings"),
+				where("ownerID", "==", auth.currentUser.uid),
+				where("bookingStatus", "==", "Requested")
+			);
+			const querySnapshot = await getDocs(q);
+			const resultsFromFirestore = [];
+
+			const fetchPromises = querySnapshot.docs.map(async (docc) => {
+				const currentDoc = docc.data();
+				const documentRef = doc(db, "Products", currentDoc.productID);
+				const documentRefRenter = doc(db, "userProfiles", currentDoc.renterID);
+
+				const [docSnapshot, docSnapshotRenter] = await Promise.all([
+					getDoc(documentRef),
+					getDoc(documentRefRenter),
+				]);
+
+				if (docSnapshot.exists() && docSnapshotRenter.exists()) {
+					const renter = docSnapshotRenter.data();
+					const itemToAdd = {
+						renterName: renter.name,
+						renterEmail: renter.email,
+						renterMobileNumber: renter.mobileNumber,
+						id: docc.id,
+						...docSnapshot.data(),
+					};
+					resultsFromFirestore.push(itemToAdd);
+				}
+			});
+
+			await Promise.all(fetchPromises);
+
+			setOwnerRequestsListings(resultsFromFirestore);
 		} catch (err) {
-		  console.log(err);
+			console.log(err);
 		} finally {
-		  setLoading(false);
+			setLoading(false);
 		}
-	  };
-	  
+	};
+
 
 	const chatClicked = (bookingRequestId) => {
-		console.log("Chat",bookingRequestId)
-		navigation.navigate("Chat",{
-			chatId:bookingRequestId
+		console.log("Chat", bookingRequestId)
+		navigation.navigate("Chat", {
+			chatId: bookingRequestId
 		})
 	}
 
-	const declineClicked = (item) =>{
-		
+	// create a notification entry for the requester
+	const createRenterNotification = async (renterId, productName, status) => {
+		// in the userprofiles collection, get the userprofile document for the owner, add a notification entry to the notifications array
+
+		console.log('.\nCreating Notification for Renter...\n\n ...');
+
+
+		// const bookingRequestDocRef = doc(db, "Bookings", bookingRequestId);
+		// console.log("bookingRequestDocRef : ", JSON.stringify(bookingRequestDocRef, null, 2));
+		const renterDocRef = doc(db, "userProfiles", renterId);
+		// console.log("renterDocRef : ", JSON.stringify(renterDocRef, null, 2));
+		const decision = status ? "Accepted" : "Declined";
+
+		try {
+			const newNotification = await runTransaction(
+				db,
+				async (transaction) => {
+					const renterDoc = await transaction.get(renterDocRef);
+					if (!renterDoc.exists()) {
+						throw "Renter document does not exist!";
+					} else {
+						transaction.update(renterDocRef, {
+							notifications: [
+								...renterDoc.data().notifications ? renterDoc.data().notifications : [],
+								{
+									notificationID: `${renterDoc.data().notifications ? renterDoc.data().notifications.length + 1 : 1}`,
+									notificationType: `${decision}! Booking Request`,
+									notificationUnreadStatus: true,
+									notificationMessage: `Your booking request for \n${productName} has been ${decision}`,
+									notificationDate: new Date(),
+								},
+							],
+						});
+					}
+				}
+			);
+			console.log("Notification added to user's profile");
+		} catch (error) {
+			console.log("Error in updating notifications: ", error);
+			alert(`Error : ${error}`);
+		}
+	};
+
+	const declineClicked = (item) => {
+
 		Alert.alert('Decline Request', 'Are you sure you want to decline this request?', [
 			{
 				text: 'Cancel',
 				onPress: () => {
-					declineAction(item,"Cancel")
+					declineAction(item, "Cancel")
 				},
 				style: 'cancel'
 			},
 			{
-				text: 'OK', 
+				text: 'OK',
 				onPress: () => {
-					declineAction(item,"Ok")
+					declineAction(item, "Ok")
 				}
 			},], { cancelable: false }
 		);
 	}
 
-	const declineAction = async(item,actionStatus) =>{
-		console.log('Decline Action: ' + JSON.stringify(item, null, 2));
+	const declineAction = async (item, actionStatus) => {
+		console.log('Decline Action item: ' + JSON.stringify(item, null, 2));
 		const idDocRef = doc(db, "Bookings", item.id);
 		const productDocRef = doc(db, "Products", item.productId);
-		console.log("update id", JSON.stringify(idDocRef, null, 2));
-		console.log(" product update id", JSON.stringify(productDocRef, null, 2));
+		// console.log("update id", JSON.stringify(idDocRef, null, 2));
+		// console.log("product update id", JSON.stringify(productDocRef, null, 2));
 		try {
 			const newStatus = await runTransaction(
 				db,
 				async (transaction) => {
 					const idDoc = await transaction.get(idDocRef);
 					const productIdDoc = await transaction.get(productDocRef);
+					console.log("productIDDoc", productIdDoc.data().name)
 					if (!idDoc.exists() && !productIdDoc.exists()) {
 						throw "Document does not exist!";
 					} else {
-						if(actionStatus == "Ok"){
+						if (actionStatus == "Ok") {
 							transaction.update(idDocRef, {
 								bookingStatus: "Decline",
 							});
@@ -224,8 +268,9 @@ const BookingRequestTab = ({ navigation, route }) => {
 								visibilityTime: 3000,
 								autoHide: true,
 							});
+							createRenterNotification(idDoc.data().renterID, productIdDoc.data().name, false);
 						}
-						else if(actionStatus == "Cancel"){
+						else if (actionStatus == "Cancel") {
 							// Display a toast
 							Toast.show({
 								type: 'info',
@@ -235,7 +280,7 @@ const BookingRequestTab = ({ navigation, route }) => {
 								autoHide: true,
 							});
 						}
-						
+
 					}
 				}
 			);
@@ -247,25 +292,25 @@ const BookingRequestTab = ({ navigation, route }) => {
 		}
 	}
 
-	const confirmClicked = (item) =>{
-		
+	const confirmClicked = (item) => {
+
 		Alert.alert('Confirm Request', 'Are you sure you want to confirm this request?', [
 			{
 				text: 'Cancel',
 				onPress: () => {
-					confirmAction(item,"Cancel")
+					confirmAction(item, "Cancel")
 				},
 				style: 'cancel'
 			},
 			{
-				text: 'OK', 
+				text: 'OK',
 				onPress: () => {
-					confirmAction(item,"Ok")
+					confirmAction(item, "Ok")
 				}
 			},], { cancelable: false }
 		);
 	}
-	const confirmAction = async(item,actionStatus) =>{
+	const confirmAction = async (item, actionStatus) => {
 		console.log('Confirm Action: ' + JSON.stringify(item, null, 2));
 		const durationString = item.duration;
 		const parts = durationString.split(" "); // Split the string by space
@@ -273,18 +318,18 @@ const BookingRequestTab = ({ navigation, route }) => {
 
 		const duartionTime = parts[1];
 
-				// Get today's date
+		// Get today's date
 		const today = new Date();
 		let addingDays = 0
 
-		if(duartionTime == "weeks" || duartionTime == "week"){
+		if (duartionTime == "weeks" || duartionTime == "week") {
 			addingDays = durationNumber * 7;
 
 		}
-		else if(duartionTime == "months" || duartionTime == "month"){
+		else if (duartionTime == "months" || duartionTime == "month") {
 			addingDays = durationNumber * 30.44;
 		}
-		else if(duartionTime == "days" || duartionTime == "day"){
+		else if (duartionTime == "days" || duartionTime == "day") {
 			addingDays = durationNumber
 		}
 
@@ -293,7 +338,7 @@ const BookingRequestTab = ({ navigation, route }) => {
 
 		// Format the new date as a string (e.g., YYYY-MM-DD)
 		const newAvailableFormatted = newAvailableDate.toISOString().split('T')[0];
-		
+
 
 
 		const idDocRef = doc(db, "Bookings", item.id);
@@ -309,14 +354,14 @@ const BookingRequestTab = ({ navigation, route }) => {
 					if (!idDoc.exists() && !productIdDoc.exists()) {
 						throw "Document does not exist!";
 					} else {
-						if(actionStatus == "Ok"){
+						if (actionStatus == "Ok") {
 							transaction.update(idDocRef, {
 								bookingStatus: "Confirm",
 
 							});
 							transaction.update(productDocRef, {
 								status: "Confirm",
-								nextAvailableDate: newAvailableFormatted 
+								nextAvailableDate: newAvailableFormatted
 							});
 							// Display a toast
 							Toast.show({
@@ -326,8 +371,9 @@ const BookingRequestTab = ({ navigation, route }) => {
 								visibilityTime: 3000,
 								autoHide: true,
 							});
+							createRenterNotification(idDoc.data().renterID, productIdDoc.data().name, true);
 						}
-						else if(actionStatus == "Cancel"){
+						else if (actionStatus == "Cancel") {
 							// Display a toast
 							Toast.show({
 								type: 'info',
@@ -337,7 +383,7 @@ const BookingRequestTab = ({ navigation, route }) => {
 								autoHide: true,
 							});
 						}
-						
+
 					}
 				}
 			);
@@ -359,13 +405,12 @@ const BookingRequestTab = ({ navigation, route }) => {
 				<View style={styles.listContainer}>
 					<FlatList
 						data={ownerRequestsListings}
-						renderItem={(rowData) => <RequestCard rowData={rowData} 
-						handleChat={()=>
-							{chatClicked(rowData.item.id)}
-						}
-						handleDecline={()=>{declineClicked(rowData.item)}}
-						handleConfirm={()=>{confirmClicked(rowData.item)}}
-							/>}
+						renderItem={(rowData) => <RequestCard rowData={rowData}
+							handleChat={() => { chatClicked(rowData.item.id) }
+							}
+							handleDecline={() => { declineClicked(rowData.item) }}
+							handleConfirm={() => { confirmClicked(rowData.item) }}
+						/>}
 						contentContainerStyle={{ paddingVertical: 10 }}
 					/>
 				</View>
