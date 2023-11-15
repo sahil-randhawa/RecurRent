@@ -108,11 +108,11 @@ const ProductDetailsScreen = ({ navigation, route }) => {
 							bookingRequestToInsert
 						);
 
-						const docChatRef= await addDoc(collection(db,"chats"),{
-							chatId:docRef.id	
+						const docChatRef = await addDoc(collection(db, "chats"), {
+							chatId: docRef.id
 						});
 
-						console.log("Chat added:",docChatRef.id)
+						console.log("Chat added:", docChatRef.id)
 
 						const idDocRef = doc(db, "Products", selectedProduct.item.id);
 						console.log("update id", idDocRef);
@@ -158,9 +158,9 @@ const ProductDetailsScreen = ({ navigation, route }) => {
 											notifications: [
 												...ownerDoc.data().notifications ? ownerDoc.data().notifications : [],
 												{
-													notificationID: docRef.id,
+													notificationID: `${renterDoc.data().notifications ? renterDoc.data().notifications.length + 1 : 1}`,
 													notificationType: "Booking Request",
-													notificationUnreadStatus: false,
+													notificationUnreadStatus: true,
 													notificationMessage: "New Booking Request for your product : " + selectedProduct.item.name,
 													notificationDate: new Date(),
 												},
