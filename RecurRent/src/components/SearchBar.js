@@ -1,12 +1,13 @@
 import React from "react";
-import { View } from "react-native";
-import { Searchbar } from "react-native-paper";
+import { View,TouchableOpacity } from "react-native";
+import { Searchbar,IconButton } from "react-native-paper";
 import { lightTheme, primaryColor } from "../styles/GlobalStyles";
+import Icon from 'react-native-vector-icons/Ionicons';
 
-const Search = ({ placeholder, value, onChangeText, onSubmit }) => {
+const Search = ({ placeholder, value, onChangeText, onSubmit,onFilterPress  }) => {
 	return (
 		<>
-			<View style={{ width: "100%", marginTop: 10, }}>
+			<View style={{ width: "100%", marginTop: 10,}}>
 				<Searchbar
 					placeholder={placeholder}
 					value={value}
@@ -15,9 +16,15 @@ const Search = ({ placeholder, value, onChangeText, onSubmit }) => {
 					onSubmitEditing={onSubmit}
 					style={{
 						backgroundColor: lightTheme.colors.primaryContainer, 
-						color: primaryColor, 
+						color: primaryColor,
+						flexDirection: 'row',
+						
 					}}
+					
+					
 				/>
+				 <IconButton icon="filter" onPress={onFilterPress} color="#5B81FA" />
+			
 			</View> 
 		</>
 	);
