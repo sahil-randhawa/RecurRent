@@ -14,7 +14,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { db, auth, firebase } from '../../../firebaseConfig';
 import { collection, doc, getDoc, updateDoc } from 'firebase/firestore';
 import * as FileSystem from 'expo-file-system';
-import { List, Button, Avatar } from 'react-native-paper';
+import { List, Button, Avatar, TextInput } from 'react-native-paper';
 import Input from '../../components/Input';
 import Toast from 'react-native-toast-message';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -33,30 +33,16 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const AccountSettingsScreen = () => {
-	const fields = [
-		{ key: 'name', label: 'NAME', initialValue: 'John Doe' },
-		{ key: 'email', label: 'EMAIL', initialValue: 'johndoe@example.com' },
-		{ key: 'password', label: 'PASSWORD', initialValue: '********' },
-		{
-			key: 'mobileNumber',
-			label: 'MOBILE NUMBER',
-			initialValue: '123-456-7890',
-		},
-	];
-
-	const [editingField, setEditingField] = useState(null);
-	const fieldStates = {};
-
-	fields.forEach((field) => {
-		fieldStates[field.key] = useState(false);
-	});
-
 	const [imageToUpload, setImageToUpload] = useState(null);
 	const [uploading, setUploading] = useState(false);
 
 	// get logged in user details from the db
 	const [user, setUser] = useState(null);
 	const [profileUrl, setProfileUrl] = useState(null);
+	const [name, setName] = useState(null);
+	const [email, setEmail] = useState(null);
+	const [password, setPassword] = useState(null);
+	const [mobile, setMobile] = useState(null);
 
 	useEffect(() => {
 		getUser();
@@ -70,8 +56,23 @@ const AccountSettingsScreen = () => {
 			} else {
 				console.log('User profile data:', JSON.stringify(user.data(), null, 2));
 				setUser(user.data());
+
 				// setProfileUrl(user.data().imageUrl ? user.data().imageUrl : `https://ui-avatars.com/api/?name=${user.data().name}&size=128&length=1`);
 				setProfileUrl(user.data().imageUrl ? user.data().imageUrl : null);
+
+				// setName
+				setName(user.data().name ? user.data().name : 'Invalid format');
+
+				// setEmail
+				setEmail(user.data().email ? user.data().email : 'Invalid format');
+
+				// TODO: setPassword
+				setName(user.data().name ? user.data().name : 'Invalid format');
+
+				// setMobile
+				setMobile(
+					user.data().mobileNumber ? user.data().mobileNumber : 'Invalid format'
+				);
 			}
 		} catch (e) {
 			console.log('Error in fetching user: ' + e);
@@ -169,97 +170,30 @@ const AccountSettingsScreen = () => {
 		}
 	};
 
-	const handleSaveChanges = (fieldKey) => {
-		// Implement saving changes here for the specific field
-		// Update user's information with the new values
-		fieldStates[fieldKey][1](false); // Turn off editing for the specific field
-	};
+	// Save user edited info to the db
+	const saveChanges = async () => {
+		try {
+			// Update user data in the database
+			await updateDoc(doc(db, 'userProfiles', auth.currentUser.uid), {
+				name: name,
+				email: email,
+				mobileNumber: mobile,
+			});
 
-	const handleEditClick = (fieldKey) => {
-		// Close the previously open edit field
-		if (editingField) {
-			fieldStates[editingField][1](false);
+			console.log('User data updated successfully!');
+		} catch (e) {
+			console.log('Error in updating user data: ' + e);
 		}
-
-		// Open the edit field for the clicked item
-		setEditingField(fieldKey);
-		fieldStates[fieldKey][1](true);
-	};
-
-	const renderField = (field) => {
-		const [isEditing, setIsEditing] = fieldStates[field.key];
-		const [newValue, setNewValue] = useState(field.initialValue);
-
-		
-
-		return (
-			<View
-				key={field.key}
-				style={styles.infoRow}
-			>
-				<List.Item
-					title={field.label}
-					titleStyle={typography.captionHeading}
-					description={
-						isEditing ? (
-							<View style={styles.inputRow}>
-								<Input
-									value={newValue}
-									onChangeText={setNewValue}
-									style={[styles.input, { marginRight: 2 }]}
-								/>
-								<Btn
-									title="Save"
-									titleStyle={typography.caption}
-									onPress={() => {
-										handleSaveChanges(field.key);
-									}}
-									mode="contained"
-									style={{
-										textAlign: 'center',
-										margin: 0,
-										borderRadius: 5,
-										backgroundColor: primaryColor,
-										padding: 0,
-										width: '30%',
-									}}
-								/>
-							</View>
-						) : (
-							<View style={styles.rowData}>
-								<Text>{newValue}</Text>
-								<Btn
-									title="Edit"
-									onPress={() => {
-										handleEditClick(field.key);
-									}}
-									mode="contained"
-									style={{
-										textAlign: 'center',
-										width: '25%',
-										margin: 0,
-										borderRadius: 5,
-										backgroundColor: primaryColor,
-										paddingVertical: 1,
-									}}
-								/>
-							</View>
-						)
-					}
-					descriptionStyle={styles.rowData}
-				/>
-			</View>
-		);
 	};
 
 	return (
 		<View
-			style={[
-				spacing.container,
-				{
-					justifyContent: 'flex-start',
-				},
-			]}
+			style={{
+				flex: 1,
+				justifyContent: 'flex-start',
+				paddingHorizontal: 20,
+				backgroundColor: backgroundColor,
+			}}
 		>
 			{/* profile image edit */}
 			<View
@@ -347,8 +281,131 @@ const AccountSettingsScreen = () => {
 				)}
 			</View>
 
-			{/* user details edit*/}
-			{fields.map((field) => renderField(field))}
+			{/* Edit info */}
+			<View style={{ flex: 1, paddingTop: 50 }}>
+				{/* Name */}
+				<View
+					style={{
+						flexDirection: 'column',
+						marginBottom: 10,
+					}}
+				>
+					<Text
+						style={[
+							typography.bodyHeading,
+							{ color: lightTheme.colors.secondary, marginBottom: 10 },
+						]}
+					>
+						Name
+					</Text>
+					<View style={styles.txtInput}>
+						<TextInput
+							mode="outlined"
+							value={name}
+							onChangeText={(value) => setName(value)}
+							editable={true}
+							style={[typography.body, { marginBottom: 10 }]}
+							activeOutlineColor="#374D96"
+						/>
+					</View>
+				</View>
+
+				{/* Email */}
+				<View
+					style={{
+						flexDirection: 'column',
+						marginBottom: 10,
+					}}
+				>
+					<Text
+						style={[
+							typography.bodyHeading,
+							{ color: lightTheme.colors.secondary, marginBottom: 10 },
+						]}
+					>
+						Email
+					</Text>
+					<View style={styles.txtInput}>
+						<TextInput
+							mode="outlined"
+							value={email}
+							onChangeText={(value) => setEmail(value)}
+							editable={true}
+							style={[typography.body, { marginBottom: 10 }]}
+							activeOutlineColor="#374D96"
+						/>
+					</View>
+				</View>
+
+				{/* Password */}
+				{/* <View
+					style={{
+						flexDirection: 'column',
+						marginBottom: 10,
+					}}
+				>
+					<Text
+						style={[
+							typography.bodyHeading,
+							{ color: lightTheme.colors.secondary, marginBottom: 10 },
+						]}
+					>
+						Password
+					</Text>
+					<View style={styles.txtInput}>
+						<TextInput
+							mode="outlined"
+							value={password}
+							onChangeText={(value) => setPassword(value)}
+							editable={true}
+							style={[typography.body, { marginBottom: 10 }]}
+							activeOutlineColor="#374D96"
+						/>
+					</View>
+				</View> */}
+
+				{/* Mobile Number */}
+				<View
+					style={{
+						flexDirection: 'column',
+						marginBottom: 10,
+					}}
+				>
+					<Text
+						style={[
+							typography.bodyHeading,
+							{ color: lightTheme.colors.secondary, marginBottom: 10 },
+						]}
+					>
+						Mobile Number
+					</Text>
+					<View style={styles.txtInput}>
+						<TextInput
+							mode="outlined"
+							value={mobile}
+							onChangeText={(value) => setMobile(value)}
+							editable={true}
+							style={[typography.body, { marginBottom: 10 }]}
+							activeOutlineColor="#374D96"
+						/>
+					</View>
+				</View>
+			</View>
+
+			<View
+				style={{
+					flexDirection: 'row',
+					justifyContent: 'flex-end',
+					marginBottom: 20,
+				}}
+			>
+				<Btn
+					title="Save Changes"
+					onPress={saveChanges}
+					mode="contained"
+					style={[primaryBtnStyle, { flex: 1, textAlign: 'center' }]}
+				/>
+			</View>
 		</View>
 	);
 };
@@ -392,7 +449,6 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between',
 		alignItems: 'center',
 		marginBottom: 10,
-		
 	},
 
 	rowData: {
@@ -400,7 +456,6 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		alignItems: 'center',
-		
 	},
 
 	inputRow: {
@@ -412,9 +467,19 @@ const styles = StyleSheet.create({
 	},
 
 	input: {
-    flex: 1,
-    marginRight: 2,
-  },
+		flex: 1,
+		marginRight: 2,
+	},
+
+	txtInput: {
+		height: 44,
+		width: '100%',
+		borderColor: lightTheme.colors.surface,
+		borderWidth: 1,
+		borderRadius: 4,
+		marginVertical: 6,
+		justifyContent: 'center',
+	},
 });
 
 export default AccountSettingsScreen;
