@@ -29,6 +29,7 @@ import Btn, {
 } from "../../components/Button";
 import { StatusBar } from "expo-status-bar";
 import { auth, db } from "../../../firebaseConfig";
+import Icon from 'react-native-vector-icons/Fontisto';
 import { signOut } from "firebase/auth";
 import {
 	collection,
@@ -46,7 +47,8 @@ const HomeTab = ({ navigation, route }) => {
 	const [productsListings, setProductsListings] = useState([]);
 	const [searchQuery, setSearchQuery] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
-
+	const [isCategoryActive, setCategoryActive] = useState(false);
+	const [isFilterActive, setFilterActive] = useState(false);
 	useEffect(() => {
 		getProductListings();
 	}, []);
@@ -128,6 +130,69 @@ const HomeTab = ({ navigation, route }) => {
 
 	const handleSearch = (searchText) => {
 		setSearchQuery(searchText);
+		if(isCategoryActive == true){
+		// 	const q = query(collection(db, "category"));
+		// 	let categoryId=""
+		// 	setIsLoading(true); 
+		// 	getDocs(q)
+		//   .then((querySnapshot) => {
+			
+		// 	querySnapshot.forEach((doc) => {
+		// 	  const category = doc.data();
+		// 	  if (
+		// 		category.name.toLowerCase().includes(searchText.toLowerCase())
+		// 	  ) {
+		// 		categoryId = doc.id
+		// 		return;
+		// 	  }
+		// 	});
+		// 	const productQuery = query(collection(db, "Products"),where("categoryID" ,"==", categoryId));
+		// 	getDocs(productQuery)
+		// 	.then((querySnapshot) => {
+		// 	  const filteredResults = [];
+		// 	  querySnapshot.forEach((doc) => {
+		// 		const product = doc.data();
+			   
+		// 		  filteredResults.push({ id: doc.id, ...product });
+				
+		// 	  });
+		// 	  setProductsListings(filteredResults);
+		// 	  setIsLoading(false); // Hide loader after searching
+		// 	})
+		// 	.catch((error) => {
+		// 	  console.error("Error filtering products category wise:", error);
+		// 	  setIsLoading(false); // Hide loader on error
+		// 	});
+			
+		//   })
+		//   .catch((error) => {
+		// 	console.error("Error filtering category ID:", error);
+		// 	 // Hide loader on error
+		//   });
+		const q = query(collection(db, "Products"));
+		setIsLoading(true); // Show loader while searching
+	
+		getDocs(q)
+		  .then((querySnapshot) => {
+			const filteredResults = [];
+			querySnapshot.forEach((doc) => {
+			  const product = doc.data();
+			  if (
+				product.category.toLowerCase().includes(searchText.toLowerCase())
+			  ) {
+				filteredResults.push({ id: doc.id, ...product });
+			  }
+			});
+			setProductsListings(filteredResults);
+			setIsLoading(false); // Hide loader after searching
+		  })
+		  .catch((error) => {
+			console.error("Error filtering products:", error);
+			setIsLoading(false); // Hide loader on error
+		  });
+		}
+		else
+		{
 		const q = query(collection(db, "Products"));
 		setIsLoading(true); // Show loader while searching
 	
@@ -150,7 +215,18 @@ const HomeTab = ({ navigation, route }) => {
 			console.error("Error filtering products:", error);
 			setIsLoading(false); // Hide loader on error
 		  });
+		}
 	};
+
+	const handleCategoryPress = () => {
+		setCategoryActive(!isCategoryActive);
+	  };
+	  
+	const handleFilterPress = () => {
+		setFilterActive(!isFilterActive);
+		// Add your logic here for handling the category press
+	
+	  };
 
 	return (
 		<>
@@ -158,11 +234,41 @@ const HomeTab = ({ navigation, route }) => {
 				style={{ paddingVertical: 10, backgroundColor: backgroundColor }}
 			>
 				<View style={[spacing.container, { justifyContent: "space-evenly" }]}>
+					
 					<Search
 						placeholder={"Search here"}
 						value={searchQuery}
 						onChangeText={(text) => handleSearch(text)}
+						onFilterPress={handleFilterPress}
 					/>
+
+					{ isFilterActive && 
+					(<View>
+						<TouchableOpacity
+							style={{
+								// flex: 1,
+								textAlign: 'center',
+								marginTop: 10,
+								alignContent:'flex-start',
+								paddingVertical: 10,
+								paddingVertical: Platform.OS === 'android' && 3,
+								padding: 10,
+								flexDirection:"row"
+							}}
+							onPress={handleCategoryPress}
+						>
+							<Icon
+								name={isCategoryActive ? 'checkbox-active' : 'checkbox-passive'}
+								size={20}
+								style={{ color: "black" }}
+							/> 
+							<Text style={{marginLeft:10}}>Catergory</Text>
+						</TouchableOpacity>
+						
+					</View>)
+					}
+						
+				
 
 					{isLoading ? (
 						<ActivityIndicator size="large" color={primaryColor} style={styles.commonContainerStyle} />

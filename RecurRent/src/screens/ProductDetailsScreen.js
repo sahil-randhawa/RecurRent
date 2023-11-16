@@ -108,11 +108,11 @@ const ProductDetailsScreen = ({ navigation, route }) => {
 							bookingRequestToInsert
 						);
 
-						const docChatRef= await addDoc(collection(db,"chats"),{
-							chatId:docRef.id	
+						const docChatRef = await addDoc(collection(db, "chats"), {
+							chatId: docRef.id
 						});
 
-						console.log("Chat added:",docChatRef.id)
+						console.log("Chat added:", docChatRef.id)
 
 						const idDocRef = doc(db, "Products", selectedProduct.item.id);
 						console.log("update id", idDocRef);
@@ -158,9 +158,9 @@ const ProductDetailsScreen = ({ navigation, route }) => {
 											notifications: [
 												...ownerDoc.data().notifications ? ownerDoc.data().notifications : [],
 												{
-													notificationID: docRef.id,
+													notificationID: `${renterDoc.data().notifications ? renterDoc.data().notifications.length + 1 : 1}`,
 													notificationType: "Booking Request",
-													notificationUnreadStatus: false,
+													notificationUnreadStatus: true,
 													notificationMessage: "New Booking Request for your product : " + selectedProduct.item.name,
 													notificationDate: new Date(),
 												},
@@ -205,6 +205,10 @@ const ProductDetailsScreen = ({ navigation, route }) => {
 			color: lightTheme.colors.error,
 		},
 		Approved: {
+			icon: "checkmark-circle-outline",
+			color: lightTheme.colors.success,
+		},
+		"Confirm": {
 			icon: "checkmark-circle-outline",
 			color: lightTheme.colors.success,
 		},
@@ -344,6 +348,35 @@ const ProductDetailsScreen = ({ navigation, route }) => {
 										<Text style={[typography.body, { color: textColor }]}>
 											{selectedProduct.item.pickUpAddress}
 										</Text>
+									</Text>
+								</View>
+							</View>
+
+							<View>
+								<View style={styles.productInfo}>
+									<Icon
+										name="today-outline"
+										size={24}
+										color={primaryColor}
+										style={{ marginRight: 8 }}
+									/>
+									<Text
+										style={[typography.bodyHeading, { color: primaryColor }]}
+									>
+										Next Available Date :{" "}
+										{selectedProduct.item.nextAvailableDate ?(
+											<Text style={[typography.body, { color: textColor }]}>
+												{selectedProduct.item.nextAvailableDate}
+											</Text>
+										)
+										:(
+											<Text style={[typography.body, { color: textColor }]}>
+												Immidatily
+											</Text>
+										)
+										
+									    }
+										
 									</Text>
 								</View>
 							</View>
