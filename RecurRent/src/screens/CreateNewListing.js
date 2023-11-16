@@ -9,6 +9,7 @@ import {
 	Touchable,
 	TouchableOpacity,
 	Image,
+	ActivityIndicator,
 } from "react-native";
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
@@ -30,6 +31,7 @@ import Btn, { primaryBtnStyle } from "../components/Button";
 import { auth, db, firebase } from "../../firebaseConfig";
 import { collection, addDoc, doc, getDocs, query, where, updateDoc } from "firebase/firestore";
 import * as Location from "expo-location";
+import Toast from 'react-native-toast-message';
 
 const CreateNewListing = ({ navigation, route }) => {
 	const [name, setName] = useState("Lawn Grass Seeds");
@@ -64,7 +66,7 @@ const CreateNewListing = ({ navigation, route }) => {
 				mediaTypes: ImagePicker.MediaTypeOptions.Images, // All, Images, Videos
 				// mediaTypes: ImagePicker.MediaTypeOptions.All,
 				allowsEditing: true,
-				aspect: [3, 3],
+				aspect: [4, 3],
 				quality: 1,
 			});
 			// console.log('Selected result :' + JSON.stringify(result));
@@ -74,13 +76,12 @@ const CreateNewListing = ({ navigation, route }) => {
 				console.log('Image selected!' + JSON.stringify(result, null, 2));
 			}
 		} catch (e) {
-			console.log(e);
+			console.error(e);
 		}
 	};
 
 	const uploadImage = async (productDocId) => {
 		try {
-			setUploading(true);
 			// delete the old image from firebase storage - skip for now
 
 			// upload the new image to firebase storage
@@ -117,7 +118,6 @@ const CreateNewListing = ({ navigation, route }) => {
 			await updateDoc(productDocRef, { productPhoto: url });
 			console.log('Successfully updated product image url!\n url: ', url);
 			setProdImage(url);
-			setUploading(false);
 		} catch (e) {
 			console.log(e);
 		}
@@ -176,6 +176,7 @@ const CreateNewListing = ({ navigation, route }) => {
 			console.log("Listing to be saved: ", listingToBeSaved);
 
 			try {
+				setUploading(true);
 				const collectionRef = collection(db, "Products");
 				const docRef = await addDoc(collectionRef, listingToBeSaved);
 
@@ -186,10 +187,19 @@ const CreateNewListing = ({ navigation, route }) => {
 				await updateDoc(docRef, { productId: productId });
 
 				// upload product image
-				uploadImage(productId);
+				if (imageToUpload) uploadImage(productId);
+				setUploading(false);
 
 				console.log("New Listing Document written with ID: ", docRef.id);
-				alert("Listing created successfully!");
+				// alert("Listing created successfully!");
+				// show toast
+				Toast.show({
+					type: 'success',
+					position: 'bottom',
+					text1: 'Listing created successfully!',
+					visibilityTime: 3000,
+					autoHide: true,
+				});
 				navigation.navigate("HomeScreen");
 			} catch (e) {
 				console.error("Error adding listing document: ", e);
@@ -203,6 +213,25 @@ const CreateNewListing = ({ navigation, route }) => {
 
 	return (
 		<>
+			{uploading && (
+				<View
+					style={{
+						position: "absolute",
+						top: 0,
+						left: 0,
+						right: 0,
+						bottom: 0,
+						width: "100%",
+						height: "100%",
+						zIndex: 10,
+						justifyContent: "center",
+						alignItems: "center",
+						backgroundColor: "rgba(0,0,0,0.2)",
+					}}
+				>
+					<ActivityIndicator size="large" color={primaryColor} />
+				</View>
+			)}
 			<ScrollView>
 				<View style={styles.container}>
 					<View style={formStyles.fieldContainer}>

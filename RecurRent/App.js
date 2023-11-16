@@ -22,6 +22,7 @@ import { typography } from './src/styles/GlobalStyles';
 import Toast from 'react-native-toast-message';
 import ChatScreen from './src/screens/ChatScreen';
 import EditListing from './src/screens/EditListing';
+import { StatusBar } from 'expo-status-bar';
 
 const Stack = createStackNavigator();
 
@@ -44,6 +45,7 @@ const App = () => {
 	return (
 		<>
 			<NavigationContainer>
+				<StatusBar style="auto" />
 				{hideSplashScreen ? (
 					<Stack.Navigator
 						screenOptions={{ headerShown: false }}
