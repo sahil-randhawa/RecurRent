@@ -18,6 +18,9 @@ jobs:
       with:
         node-version: 14
 
+    - name: Change working directory
+      run: cd RecurRent
+
     - name: Install dependencies
       run: |
         cd ./RecurRent/
