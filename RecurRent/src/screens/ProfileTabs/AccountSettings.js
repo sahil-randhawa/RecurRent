@@ -9,10 +9,11 @@ import {
 	Image,
 	ActivityIndicator,
 	Platform,
+	ScrollView,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { db, auth, firebase } from '../../../firebaseConfig';
-import { collection, doc, getDoc, updateDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, updateDoc, setDoc } from 'firebase/firestore';
 import * as FileSystem from 'expo-file-system';
 import { List, Button, Avatar } from 'react-native-paper';
 import Input from '../../components/Input';
@@ -29,32 +30,21 @@ import {
 	primaryColor,
 	spacing,
 	typography,
+	formStyles,
 } from '../../styles/GlobalStyles';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const AccountSettingsScreen = () => {
-	const fields = [
-		{ key: 'name', label: 'NAME', initialValue: 'John Doe' },
-		{ key: 'email', label: 'EMAIL', initialValue: 'johndoe@example.com' },
-		{ key: 'password', label: 'PASSWORD', initialValue: '********' },
-		{
-			key: 'mobileNumber',
-			label: 'MOBILE NUMBER',
-			initialValue: '123-456-7890',
-		},
-	];
-
-	const [editingField, setEditingField] = useState(null);
-	const fieldStates = {};
-
-	fields.forEach((field) => {
-		fieldStates[field.key] = useState(false);
-	});
+	const [name, setName] = useState("UserName");
+	const [email, setEmail] = useState(
+		"UserEmail"
+	);
+	// const [password, setPassword] = useState("UserPassword");
+	const [mobileNum, setMobileNum] = useState("UserMobile");
 
 	const [imageToUpload, setImageToUpload] = useState(null);
 	const [uploading, setUploading] = useState(false);
 
-	// get logged in user details from the db
 	const [user, setUser] = useState(null);
 	const [profileUrl, setProfileUrl] = useState(null);
 
@@ -68,7 +58,10 @@ const AccountSettingsScreen = () => {
 			if (!user.exists) {
 				console.log('No such user!');
 			} else {
-				console.log('User profile data:', JSON.stringify(user.data(), null, 2));
+				// console.log('User profile data:', JSON.stringify(user.data(), null, 2));
+				setName(user.data().name)
+				setEmail(user.data().email)
+				setMobileNum(user.data().mobileNumber)
 				setUser(user.data());
 				// setProfileUrl(user.data().imageUrl ? user.data().imageUrl : `https://ui-avatars.com/api/?name=${user.data().name}&size=128&length=1`);
 				setProfileUrl(user.data().imageUrl ? user.data().imageUrl : null);
@@ -169,111 +162,41 @@ const AccountSettingsScreen = () => {
 		}
 	};
 
-	const handleSaveChanges = (fieldKey) => {
-		// Implement saving changes here for the specific field
-		// Update user's information with the new values
-		fieldStates[fieldKey][1](false); // Turn off editing for the specific field
-	};
-
-	const handleEditClick = (fieldKey) => {
-		// Close the previously open edit field
-		if (editingField) {
-			fieldStates[editingField][1](false);
+	const updateButtonHandler = async () => {
+		const docRef = doc(db, "userProfiles", auth.currentUser.uid);
+	  
+		const updatedData = {
+		  name: name,
+		  email: email,
+		  mobileNumber: mobileNum
+		};
+	  
+		try {
+		  await setDoc(docRef, updatedData, { merge: true });
+		  console.log("Document updated successfully");
+		  alert("Profile updated successfully!");
+		} catch (error) {
+		  console.error("Error updating document: ", error);
 		}
-
-		// Open the edit field for the clicked item
-		setEditingField(fieldKey);
-		fieldStates[fieldKey][1](true);
-	};
-
-	const renderField = (field) => {
-		const [isEditing, setIsEditing] = fieldStates[field.key];
-		const [newValue, setNewValue] = useState(field.initialValue);
-
-		
-
-		return (
-			<View
-				key={field.key}
-				style={styles.infoRow}
-			>
-				<List.Item
-					title={field.label}
-					titleStyle={typography.captionHeading}
-					description={
-						isEditing ? (
-							<View style={styles.inputRow}>
-								<Input
-									value={newValue}
-									onChangeText={setNewValue}
-									style={[styles.input, { marginRight: 2 }]}
-								/>
-								<Btn
-									title="Save"
-									titleStyle={typography.caption}
-									onPress={() => {
-										handleSaveChanges(field.key);
-									}}
-									mode="contained"
-									style={{
-										textAlign: 'center',
-										margin: 0,
-										borderRadius: 5,
-										backgroundColor: primaryColor,
-										padding: 0,
-										width: '30%',
-									}}
-								/>
-							</View>
-						) : (
-							<View style={styles.rowData}>
-								<Text>{newValue}</Text>
-								<Btn
-									title="Edit"
-									onPress={() => {
-										handleEditClick(field.key);
-									}}
-									mode="contained"
-									style={{
-										textAlign: 'center',
-										width: '25%',
-										margin: 0,
-										borderRadius: 5,
-										backgroundColor: primaryColor,
-										paddingVertical: 1,
-									}}
-								/>
-							</View>
-						)
-					}
-					descriptionStyle={styles.rowData}
-				/>
-			</View>
-		);
 	};
 
 	return (
-		<View
-			style={[
-				spacing.container,
-				{
-					justifyContent: 'flex-start',
-				},
-			]}
-		>
+		<>
+		<ScrollView style={styles.container}>
 			{/* profile image edit */}
 			<View
-				style={[
-					styles.rowData,
-					{
-						justifyContent: 'space-around',
-					},
-				]}
+				style={{
+					width: '100%',
+					flexDirection: 'row',
+					justifyContent: 'space-around',
+					alignItems: 'center',
+				}}
 			>
 				<View
 					style={{
 						marginTop: 35,
 						marginBottom: 20,
+						alignItems: 'center',
 					}}
 				>
 					<TouchableOpacity
@@ -348,12 +271,62 @@ const AccountSettingsScreen = () => {
 			</View>
 
 			{/* user details edit*/}
-			{fields.map((field) => renderField(field))}
-		</View>
+			<View style={styles.container}>
+				<View style={formStyles.fieldContainer}>
+					<Text style={formStyles.label}>User Name</Text>
+					<Input
+						placeholder="UserName"
+						onChangeText={(text) => setName(text)}
+						value={name}
+						style={formStyles.input}
+					/>
+				</View>
+
+				<View style={formStyles.fieldContainer}>
+					<Text style={formStyles.label}>Email Address</Text>
+					<Input
+						placeholder="Email Address"
+						onChangeText={(text) => setEmail(text)}
+						value={email}
+						style={formStyles.input}
+					/>
+				</View>
+
+				<View style={formStyles.fieldContainer}>
+					<Text style={formStyles.label}>Mobile Number</Text>
+					<Input
+						placeholder="Mobile Number"
+						onChangeText={(text) => setMobileNum(text)}
+						value={mobileNum}
+						style={formStyles.input}
+					/>
+				</View>
+
+				<Btn
+					title="Save Details"
+					onPress={updateButtonHandler}
+					mode="contained"
+					style={[
+						primaryBtnStyle,
+						{
+							textAlign: "center",
+							marginTop: 20
+						},
+					]}
+				/>
+			</View>
+		</ScrollView>
+		</>
 	);
 };
 
 const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		padding: 20,
+		backgroundColor: backgroundColor,
+	},
+
 	profileImageTouchable: {
 		width: 120,
 		height: 120,
@@ -386,35 +359,6 @@ const styles = StyleSheet.create({
 		marginTop: 5,
 		backgroundColor: 'rgba(31, 31, 31, 0.5)',
 	},
-
-	infoRow: {
-		flexDirection: 'column',
-		justifyContent: 'space-between',
-		alignItems: 'center',
-		marginBottom: 10,
-		
-	},
-
-	rowData: {
-		width: '100%',
-		flexDirection: 'row',
-		justifyContent: 'space-between',
-		alignItems: 'center',
-		
-	},
-
-	inputRow: {
-		width: '100%',
-		paddingTop: 10,
-		flexDirection: 'row',
-		justifyContent: 'space-between',
-		alignItems: 'center',
-	},
-
-	input: {
-    flex: 1,
-    marginRight: 2,
-  },
 });
 
 export default AccountSettingsScreen;
