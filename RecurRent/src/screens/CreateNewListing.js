@@ -6,7 +6,12 @@ import {
 	TextInput,
 	ScrollView,
 	StyleSheet,
+	Touchable,
+	TouchableOpacity,
+	Image,
 } from "react-native";
+import * as ImagePicker from 'expo-image-picker';
+import * as FileSystem from 'expo-file-system';
 import RNPickerSelect from "react-native-picker-select";
 import {
 	primaryColor,
@@ -22,30 +27,101 @@ import {
 } from "../styles/GlobalStyles";
 import Input from "../components/Input";
 import Btn, { primaryBtnStyle } from "../components/Button";
-import { auth, db } from "../../firebaseConfig";
-import { collection, addDoc, getDocs, query, where, updateDoc } from "firebase/firestore";
+import { auth, db, firebase } from "../../firebaseConfig";
+import { collection, addDoc, doc, getDocs, query, where, updateDoc } from "firebase/firestore";
 import * as Location from "expo-location";
 
 const CreateNewListing = ({ navigation, route }) => {
-	const [name, setName] = useState("StudyTable");
+	const [name, setName] = useState("Lawn Grass Seeds");
 	const [description, setDescription] = useState(
-		"Good condition study table from IKEA. Color: Black."
+		"Garden grass seeds for sale."
 	);
 	const [price, setPrice] = useState("30");
 	const [pickUpAddress, setpickUpAddress] = useState(
-		"1 Younge Street, Toronto, Canada"
+		"512 Davenport Drive, Toronto, Canada"
 	);
 	const [duration, setDuration] = useState("");
 	const [category, setCategory] = useState("");
-	const [image, setImage] = useState("table");
+	const [prodImage, setProdImage] = useState("");
 
 	const [coordinates, setCoordinates] = useState({ lat: 0, lng: 0 });
+
+	const [imageToUpload, setImageToUpload] = useState(null);
+	const [uploading, setUploading] = useState(false);
 
 	useEffect(() => {
 		// get location
 		console.log("Getting location...");
 		getLocationPermissions();
 	}, []);
+
+	const pickImage = async () => {
+		console.log('Picking image...');
+		try {
+			// setImageToUpload(null);
+			const result = await ImagePicker.launchImageLibraryAsync({
+				// launchCameraAsync
+				mediaTypes: ImagePicker.MediaTypeOptions.Images, // All, Images, Videos
+				// mediaTypes: ImagePicker.MediaTypeOptions.All,
+				allowsEditing: true,
+				aspect: [3, 3],
+				quality: 1,
+			});
+			// console.log('Selected result :' + JSON.stringify(result));
+			if (!result.canceled) {
+				// setImage(result.uri);
+				setImageToUpload(result.assets[0].uri);
+				console.log('Image selected!' + JSON.stringify(result, null, 2));
+			}
+		} catch (e) {
+			console.log(e);
+		}
+	};
+
+	const uploadImage = async (productDocId) => {
+		try {
+			setUploading(true);
+			// delete the old image from firebase storage - skip for now
+
+			// upload the new image to firebase storage
+			const { uri } = await FileSystem.getInfoAsync(imageToUpload);
+			const blob = await new Promise((resolve, reject) => {
+				const xhr = new XMLHttpRequest();
+				xhr.onload = function () {
+					resolve(xhr.response);
+				};
+				xhr.onerror = function (e) {
+					console.log(e);
+					reject(new TypeError('Network request failed'));
+				};
+				xhr.responseType = 'blob';
+				xhr.open('GET', uri, true);
+				xhr.send(null);
+			});
+
+			const filename = imageToUpload.substring(
+				imageToUpload.lastIndexOf('/') + 1
+			);
+
+			// const ref = firebase.storage().ref().child(uuid.v4());
+			const ref = firebase.storage().ref().child(filename);
+
+			const snapshot = await ref.put(blob);
+
+			blob.close();
+			const url = await snapshot.ref.getDownloadURL();
+			console.log('Successfully uploaded! Image url : ', url);
+
+			// update the image url for the new document
+			const productDocRef = doc(db, "Products", productDocId);
+			await updateDoc(productDocRef, { productPhoto: url });
+			console.log('Successfully updated product image url!\n url: ', url);
+			setProdImage(url);
+			setUploading(false);
+		} catch (e) {
+			console.log(e);
+		}
+	};
 
 	const getLocationPermissions = async () => {
 		let { status } = await Location.requestForegroundPermissionsAsync();
@@ -65,62 +141,65 @@ const CreateNewListing = ({ navigation, route }) => {
 
 	const createButtonHandler = async () => {
 		if (pickUpAddress == "") {
-		  alert("Please enter a pickup location");
-		  return;
+			alert("Please enter a pickup location");
+			return;
 		} else if (duration == "") {
-		  alert("Please select a duration to rent");
-		  return;
+			alert("Please select a duration to rent");
+			return;
 		}
 		const geoCodedLocation = await Location.geocodeAsync(pickUpAddress);
 		const location = geoCodedLocation[0];
 		if (location === undefined) {
-		  alert("Location not found, Please provide a valid address!");
-		  return;
+			alert("Location not found, Please provide a valid address!");
+			return;
 		}
 		setCoordinates({ lat: location.latitude, lng: location.longitude });
-	  
+
 		console.log("Coordinates: ", coordinates);
 		console.log("Creating new listing...");
-	  
+
 		if (coordinates.lat !== 0 && coordinates.lng !== 0) {
-		  const listingToBeSaved = {
-			name: name,
-			description: description,
-			price: price,
-			pickUpAddress: pickUpAddress,
-			duration: duration,
-			category: category,
-			productPhoto: "https://source.unsplash.com/600x500/?" + name,
-			coordinates: coordinates,
-			owner: auth.currentUser.email,
-			status: "Available",
-			userID: auth.currentUser.uid,
-		  };
-	  
-		  console.log("Listing to be saved: ", listingToBeSaved);
-	  
-		  try {
-			const collectionRef = collection(db, "Products");
-			const docRef = await addDoc(collectionRef, listingToBeSaved);
-	  
-			// Retrieve the document ID from the reference
-			const productId = docRef.id;
-	  
-			// Now, update the document with the actual productId field
-			await updateDoc(docRef, { productId: productId });
-	  
-			console.log("New Listing Document written with ID: ", docRef.id);
-			alert("Listing created successfully!");
-			navigation.navigate("HomeScreen");
-		  } catch (e) {
-			console.error("Error adding listing document: ", e);
-		  }
+			const listingToBeSaved = {
+				name: name,
+				description: description,
+				price: price,
+				pickUpAddress: pickUpAddress,
+				duration: duration,
+				category: category,
+				productPhoto: prodImage,
+				coordinates: coordinates,
+				owner: auth.currentUser.email,
+				status: "Available",
+				userID: auth.currentUser.uid,
+			};
+
+			console.log("Listing to be saved: ", listingToBeSaved);
+
+			try {
+				const collectionRef = collection(db, "Products");
+				const docRef = await addDoc(collectionRef, listingToBeSaved);
+
+				// Retrieve the document ID from the reference
+				const productId = docRef.id;
+
+				// Now, update the document with the actual productId field
+				await updateDoc(docRef, { productId: productId });
+
+				// upload product image
+				uploadImage(productId);
+
+				console.log("New Listing Document written with ID: ", docRef.id);
+				alert("Listing created successfully!");
+				navigation.navigate("HomeScreen");
+			} catch (e) {
+				console.error("Error adding listing document: ", e);
+			}
 		} else {
-		  alert("Invalid Location, Please provide a valid address!");
-		  return;
+			alert("Invalid Location, Please provide a valid address!");
+			return;
 		}
-	  };
-	  
+	};
+
 
 	return (
 		<>
@@ -286,12 +365,39 @@ const CreateNewListing = ({ navigation, route }) => {
 
 					<View style={formStyles.fieldContainer}>
 						<Text style={formStyles.label}>Image</Text>
-						<Input
-							placeholder="eg.Fan"
-							onChangeText={(text) => setImage(text)}
-							value={image}
-							style={formStyles.input}
-						/>
+						<TouchableOpacity
+							// style={formStyles.input}
+							onPress={pickImage}
+						>
+							{!imageToUpload && (
+								<Text
+									style={{
+										marginVertical: 8,
+										backgroundColor: "#fff",
+										padding: 10,
+										fontSize: 16,
+										borderRadius: 5,
+										height: 40,
+										borderColor: primaryColor,
+										borderWidth: 1,
+									}}
+								>
+									{imageToUpload ? imageToUpload : "Select item image"}
+								</Text>
+							)}
+							{imageToUpload && (
+								<Image
+									source={{ uri: imageToUpload }}
+									style={{
+										width: 80,
+										height: 80,
+										marginVertical: 8,
+									}}
+								/>
+							)}
+						</TouchableOpacity>
+
+
 
 						{/* <TextInput
 							style={formStyles.input}
