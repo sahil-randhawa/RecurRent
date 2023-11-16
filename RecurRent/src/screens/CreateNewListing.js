@@ -42,7 +42,7 @@ const CreateNewListing = ({ navigation, route }) => {
 	);
 	const [duration, setDuration] = useState("");
 	const [category, setCategory] = useState("");
-	const [prodImage, setProdImage] = useState("");
+	const [prodImage, setProdImage] = useState("https://ui-avatars.com/api/?name=NA&length=2&size=512");
 
 	const [coordinates, setCoordinates] = useState({ lat: 0, lng: 0 });
 
