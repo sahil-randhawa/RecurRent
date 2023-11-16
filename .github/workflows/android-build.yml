@@ -20,6 +20,7 @@ jobs:
 
     - name: Install dependencies
       run: |
+        cd ./RecurRent/
         npm ci
 
     - name: Build Expo app
