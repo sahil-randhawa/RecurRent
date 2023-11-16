@@ -1,0 +1,35 @@
+name: Build Expo App
+
+on:
+  push:
+    branches:
+      - 'release-android'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 14
+
+    - name: Install dependencies
+      run: |
+        npm ci
+
+    - name: Build Expo app
+      run: |
+        npm run build
+
+    - name: Archive artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: expo-build
+        path: ./build
+
+# Add additional steps as needed, such as deploying the build artifacts
