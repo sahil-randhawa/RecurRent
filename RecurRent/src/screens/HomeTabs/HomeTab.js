@@ -42,6 +42,7 @@ import {
 } from "firebase/firestore";
 import Search from "../../components/SearchBar";
 import ProductCard from "../../components/ProductCard";
+import { useFocusEffect } from "@react-navigation/native";
 
 const HomeTab = ({ navigation, route }) => {
 	const [productsListings, setProductsListings] = useState([]);
@@ -49,10 +50,18 @@ const HomeTab = ({ navigation, route }) => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [isCategoryActive, setCategoryActive] = useState(false);
 	const [isFilterActive, setFilterActive] = useState(false);
+
 	useEffect(() => {
 		getProductListings();
 	}, []);
 
+	// Use useFocusEffect to refresh data when the tab screen is focused
+	useFocusEffect(
+		React.useCallback(() => {
+		  getProductListings();
+		}, [])
+	  );
+	  
 	const getProductListings = async () => {
 		setIsLoading(true); // Show loader while fetching data
 		try {
