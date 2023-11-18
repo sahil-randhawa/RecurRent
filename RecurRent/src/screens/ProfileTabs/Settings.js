@@ -27,7 +27,7 @@ import Btn, {
 } from "../../components/Button";
 import { StatusBar } from "expo-status-bar";
 import { auth, db } from "../../../firebaseConfig";
-import { signOut } from "firebase/auth";
+import { signOut,sendPasswordResetEmail } from "firebase/auth";
 import {
 	collection,
 	getDocs,
@@ -39,10 +39,39 @@ import {
 } from "firebase/firestore";
 
 const Settings = ({ navigation }) => {
+
+	const changePassword = () =>{
+		
+		sendPasswordResetEmail(auth, auth.currentUser.email)
+		.then(() => {
+			// Password reset email sent!
+			console.log("Password Link sent successfully!")
+			alert("Password Link sent successfully. Please check your emial!")
+		})
+		.catch((error) => {
+			const errorCode = error.code;
+			const errorMessage = error.message;
+			// ..
+		});
+
+	}
 	return (
 		<>
 			<View style={spacing.container}>
-				<Text>Settings</Text>
+			<Btn
+						title="Change Password"
+						onPress={changePassword}
+						mode="contained"
+						style={[
+							primaryBtnStyle,
+							{
+								width: "100%",
+								alignSelf: "center",
+								marginBottom: 15,
+								color: lightTheme.colors.onPrimary,
+							},
+						]}
+					/>
 			</View>
 		</>
 	);

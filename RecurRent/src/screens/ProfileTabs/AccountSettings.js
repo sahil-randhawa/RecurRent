@@ -399,7 +399,7 @@ const AccountSettingsScreen = () => {
 					marginBottom: 20,
 				}}
 			>
-				<Btn
+			<Btn
 					title="Save Changes"
 					onPress={saveChanges}
 					mode="contained"
