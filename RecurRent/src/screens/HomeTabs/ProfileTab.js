@@ -29,6 +29,7 @@ import { auth, db } from "../../../firebaseConfig";
 import { collection, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { useState, useEffect } from "react";
 import Icon from "react-native-vector-icons/Ionicons";
+// import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 const ProfileTab = ({ navigation, route }) => {
 	const [isLoading, setIsLoading] = useState(true);
@@ -106,6 +107,13 @@ const ProfileTab = ({ navigation, route }) => {
 			description: "View app settings",
 			iconName: "settings-outline",
 			navigateTo: "Settings",
+		},
+		{
+			key: "change-password",
+			title: "Change Password",
+			description: "Change your Password",
+			iconName: "key-outline",
+			navigateTo: "Change Password",
 		},
 	];
 

@@ -23,7 +23,11 @@ const firebaseConfig = {
 
 // Initialize Firebase
 // if (!firebase.apps.length) {
-const app = firebase.initializeApp(firebaseConfig);
+
+const app = !firebase.apps.length
+  ? firebase.initializeApp(firebaseConfig)
+  : firebase.app();
+// const app = firebase.initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
 const auth = initializeAuth(app, {
