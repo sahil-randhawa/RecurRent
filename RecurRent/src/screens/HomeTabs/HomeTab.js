@@ -167,6 +167,45 @@ const HomeTab = ({ navigation, route }) => {
 	const handleSearch = (searchText) => {
 		setSearchQuery(searchText);
 
+		// 	const q = query(collection(db, "category"));
+			// 	let categoryId=""
+			// 	setIsLoading(true);
+			// 	getDocs(q)
+			//   .then((querySnapshot) => {
+
+			// 	querySnapshot.forEach((doc) => {
+			// 	  const category = doc.data();
+			// 	  if (
+			// 		category.name.toLowerCase().includes(searchText.toLowerCase())
+			// 	  ) {
+			// 		categoryId = doc.id
+			// 		return;
+			// 	  }
+			// 	});
+			// 	const productQuery = query(collection(db, "Products"),where("categoryID" ,"==", categoryId));
+			// 	getDocs(productQuery)
+			// 	.then((querySnapshot) => {
+			// 	  const filteredResults = [];
+			// 	  querySnapshot.forEach((doc) => {
+			// 		const product = doc.data();
+
+			// 		  filteredResults.push({ id: doc.id, ...product });
+
+			// 	  });
+			// 	  setProductsListings(filteredResults);
+			// 	  setIsLoading(false); // Hide loader after searching
+			// 	})
+			// 	.catch((error) => {
+			// 	  console.error("Error filtering products category wise:", error);
+			// 	  setIsLoading(false); // Hide loader on error
+			// 	});
+
+			//   })
+			//   .catch((error) => {
+			// 	console.error("Error filtering category ID:", error);
+			// 	 // Hide loader on error
+			//   });
+
 		const q = query(collection(db, 'Products'));
 		setIsLoading(true);
 
