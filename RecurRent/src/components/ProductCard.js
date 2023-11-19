@@ -25,6 +25,7 @@ import Toast from 'react-native-toast-message';
 const ProductCard = ({
 	coverUri,
 	title,
+	price,
 	duration,
 	productId,
 	buttonLabel,
@@ -132,12 +133,25 @@ const ProductCard = ({
 
 	return (
 		<>
-			<Card style={[styles.card, Platform.OS === 'android' && styles.androidCard]}>
-				<Card.Cover source={{ uri: coverUri }} style={[styles.cover, Platform.OS === 'android' && styles.androidCover ]} />
+			<Card
+				style={[styles.card, Platform.OS === 'android' && styles.androidCard]}
+			>
+				<Card.Cover
+					source={{ uri: coverUri }}
+					style={[
+						styles.cover,
+						Platform.OS === 'android' && styles.androidCover,
+					]}
+				/>
 
 				<Card.Title
 					title={title}
-					titleStyle={[typography.heading, styles.title, Platform.OS === 'android' && styles.androidTitle]}
+					titleStyle={[
+						typography.heading,
+						styles.title,
+						Platform.OS === 'android' && styles.androidTitle,
+						{},
+					]}
 					titleNumberOfLines={3}
 					right={(props) => (
 						<IconButton
@@ -157,18 +171,36 @@ const ProductCard = ({
 					)}
 				/>
 
-				<Card.Content>
-					<Text style={{ fontSize: 14, marginBottom: 15 }}>
-						Duration: {duration}
-					</Text>
-				</Card.Content>
+				<View
+					style={{
+						flexDirection: 'row',
+						justifyContent: 'space-between',
+						marginBottom: 10,
+					}}
+				>
+					<Card.Content>
+						<Text style={[typography.bodyHeading, { fontSize: 14 }]}>
+							Price: C${price}
+						</Text>
+					</Card.Content>
+
+					<Card.Content>
+						<Text style={[typography.bodyHeading, { fontSize: 14 }]}>
+							Duration: {duration}
+						</Text>
+					</Card.Content>
+				</View>
 
 				<Card.Actions>
 					<Btn
 						title={buttonLabel}
 						onPress={onPressAction}
 						mode="outlined"
-						style={[secondaryBtnStyle, styles.button, Platform.OS === 'android' && styles.androidButton]}
+						style={[
+							secondaryBtnStyle,
+							styles.button,
+							Platform.OS === 'android' && styles.androidButton,
+						]}
 					/>
 				</Card.Actions>
 			</Card>
@@ -178,8 +210,8 @@ const ProductCard = ({
 
 const styles = {
 	card: {
-		width: 300,
-		height: 400,
+		width: 350,
+		height: 350,
 		marginTop: 20,
 		marginRight: 10,
 		borderRadius: 10,
@@ -188,8 +220,8 @@ const styles = {
 	},
 
 	androidCard: {
-		width: 280,
-		height: 400,
+		width: 370,
+		height: 370,
 	},
 
 	cover: {
@@ -197,7 +229,7 @@ const styles = {
 	},
 
 	androidCover: {
-		height: '45%',
+		height: '50%',
 	},
 
 	heartIcon: {
@@ -207,8 +239,10 @@ const styles = {
 	},
 
 	title: {
+		margin: 0,
 		fontSize: 18,
-		paddingTop: 20,
+		paddingTop: 15,
+		marginBottom: 0,
 	},
 
 	androidTitle: {
@@ -225,9 +259,7 @@ const styles = {
 		textAlign: 'center',
 		paddingVertical: 2,
 		marginBottom: 10,
-
 	},
-
 };
 
 export default ProductCard;

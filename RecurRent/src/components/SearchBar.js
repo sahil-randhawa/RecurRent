@@ -2,11 +2,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Searchbar, IconButton } from 'react-native-paper';
 import {
-	backgroundColor,
 	lightTheme,
-	primaryColor,
-	secondaryColor,
-	tertiaryColor,
 	textColor,
 } from '../styles/GlobalStyles';
 import Icon from 'react-native-vector-icons/Ionicons';

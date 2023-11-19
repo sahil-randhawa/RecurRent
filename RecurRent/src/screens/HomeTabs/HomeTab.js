@@ -42,6 +42,7 @@ import {
 	documentId,
 } from 'firebase/firestore';
 import Search from '../../components/SearchBar';
+import Category from '../../components/Category';
 import ProductCard from '../../components/ProductCard';
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -52,17 +53,40 @@ const HomeTab = ({ navigation, route }) => {
 	const [isCategoryActive, setCategoryActive] = useState(false);
 	const [isFilterActive, setFilterActive] = useState(false);
 
+	const [categories, setCategories] = useState([]);
+	const [selectedCategory, setSelectedCategory] = useState('');
+
 	useEffect(() => {
 		getProductListings();
+
+		const fetchCategories = async () => {
+			try {
+				const categoriesQuery = query(collection(db, 'Products'));
+				const categoriesSnapshot = await getDocs(categoriesQuery);
+				const uniqueCategories = new Set();
+
+				categoriesSnapshot.forEach((doc) => {
+					const product = doc.data();
+					uniqueCategories.add(product.category);
+				});
+
+				setCategories(Array.from(uniqueCategories));
+			} catch (error) {
+				console.error('Error fetching categories:', error);
+			}
+		};
+
+		fetchCategories();
 	}, []);
 
-	// Use useFocusEffect to refresh data when the tab screen is focused
+	// useFocusEffect: refresh data when the tab screen is focused
 	useFocusEffect(
 		React.useCallback(() => {
 			getProductListings();
 		}, [])
 	);
 
+	// getProductListings: fetches product listings from the Firestore database
 	const getProductListings = async () => {
 		setIsLoading(true); // Show loader while fetching data
 		try {
@@ -95,6 +119,7 @@ const HomeTab = ({ navigation, route }) => {
 		}
 	};
 
+	// moreDetailsClicked: more information on selected product
 	const moreDetailsClicked = async (selectedProductData) => {
 		// alert(`Product : ${selectedProductData.item.name}`)
 		try {
@@ -138,72 +163,15 @@ const HomeTab = ({ navigation, route }) => {
 		// navigation.navigate("ProductDetails",{combinedData:combinedData})
 	};
 
+	// handleSearch: based on the entered searchText
 	const handleSearch = (searchText) => {
 		setSearchQuery(searchText);
+
+		const q = query(collection(db, 'Products'));
+		setIsLoading(true);
+
 		if (isCategoryActive == true) {
-			// 	const q = query(collection(db, "category"));
-			// 	let categoryId=""
-			// 	setIsLoading(true);
-			// 	getDocs(q)
-			//   .then((querySnapshot) => {
-
-			// 	querySnapshot.forEach((doc) => {
-			// 	  const category = doc.data();
-			// 	  if (
-			// 		category.name.toLowerCase().includes(searchText.toLowerCase())
-			// 	  ) {
-			// 		categoryId = doc.id
-			// 		return;
-			// 	  }
-			// 	});
-			// 	const productQuery = query(collection(db, "Products"),where("categoryID" ,"==", categoryId));
-			// 	getDocs(productQuery)
-			// 	.then((querySnapshot) => {
-			// 	  const filteredResults = [];
-			// 	  querySnapshot.forEach((doc) => {
-			// 		const product = doc.data();
-
-			// 		  filteredResults.push({ id: doc.id, ...product });
-
-			// 	  });
-			// 	  setProductsListings(filteredResults);
-			// 	  setIsLoading(false); // Hide loader after searching
-			// 	})
-			// 	.catch((error) => {
-			// 	  console.error("Error filtering products category wise:", error);
-			// 	  setIsLoading(false); // Hide loader on error
-			// 	});
-
-			//   })
-			//   .catch((error) => {
-			// 	console.error("Error filtering category ID:", error);
-			// 	 // Hide loader on error
-			//   });
-			const q = query(collection(db, 'Products'));
-			setIsLoading(true); // Show loader while searching
-
-			getDocs(q)
-				.then((querySnapshot) => {
-					const filteredResults = [];
-					querySnapshot.forEach((doc) => {
-						const product = doc.data();
-						if (
-							product.category.toLowerCase().includes(searchText.toLowerCase())
-						) {
-							filteredResults.push({ id: doc.id, ...product });
-						}
-					});
-					setProductsListings(filteredResults);
-					setIsLoading(false); // Hide loader after searching
-				})
-				.catch((error) => {
-					console.error('Error filtering products:', error);
-					setIsLoading(false); // Hide loader on error
-				});
-		} else {
-			const q = query(collection(db, 'Products'));
-			setIsLoading(true); // Show loader while searching
-
+			// Case 1: User typed in the search bar
 			getDocs(q)
 				.then((querySnapshot) => {
 					const filteredResults = [];
@@ -225,10 +193,32 @@ const HomeTab = ({ navigation, route }) => {
 					console.error('Error filtering products:', error);
 					setIsLoading(false); // Hide loader on error
 				});
+		} else if (selectedCategory) {
+			// Case 2: User selected a category
+			getDocs(query(q, where('category', '==', selectedCategory)))
+				.then((querySnapshot) => {
+					const filteredResults = [];
+					querySnapshot.forEach((doc) => {
+						const product = doc.data();
+						filteredResults.push({ id: doc.id, ...product });
+					});
+					setProductsListings(filteredResults);
+					setIsLoading(false); // Hide loader after searching
+				})
+				.catch((error) => {
+					console.error('Error filtering products by category:', error);
+					setIsLoading(false); // Hide loader on error
+				});
+		} else {
+			// No search text or category selected, reset the product listings
+			setProductsListings([]);
+			setIsLoading(false);
 		}
 	};
 
-	const handleCategoryPress = () => {
+	// Category Press
+	const handleCategoryPress = (category) => {
+		setSelectedCategory(category);
 		setCategoryActive(!isCategoryActive);
 	};
 
@@ -266,14 +256,29 @@ const HomeTab = ({ navigation, route }) => {
 									}}
 									onPress={handleCategoryPress}
 								>
-									<Icon
+									<ScrollView
+										horizontal
+										showsHorizontalScrollIndicator={false}
+										contentContainerStyle={{ paddingHorizontal: 0, paddingBottom: 8,}}
+									>
+										{categories.map((category) => (
+											<Category
+												key={category}
+												name={category}
+												onPress={() => handleCategoryPress(category)}
+												isActive={selectedCategory === category}
+											/>
+										))}
+									</ScrollView>
+
+									{/* <Icon
 										name={
 											isCategoryActive ? 'checkbox-active' : 'checkbox-passive'
 										}
 										size={20}
 										style={{ color: tertiaryColor }}
 									/>
-									<Text style={{ marginLeft: 10 }}>Category</Text>
+									<Text style={{ marginLeft: 10 }}>Category</Text> */}
 								</TouchableOpacity>
 							</View>
 						)}
@@ -284,36 +289,44 @@ const HomeTab = ({ navigation, route }) => {
 						<ActivityIndicator
 							size="large"
 							color={primaryColor}
-							style={styles.commonContainerStyle}
+							style={styles.productContainer}
 						/>
 					) : productsListings.length > 0 ? (
-						<ScrollView contentContainerStyle={{}}>
+						<View style={{marginBottom: Platform.OS === 'ios' ? 320 : 300,}}>
 							<FlatList
-								data={productsListings}
-								horizontal={true}
-								renderItem={(rowData) => {
-									return (
+							data={productsListings.filter((product) =>
+								isCategoryActive
+									? product.category.toLowerCase() ===
+									  selectedCategory.toLowerCase()
+									: true
+							)}
+							contentContainerStyle={{
+								padding: 5,
+							}}
+							vertical={true}
+							showsVerticalScrollIndicator={false}
+							renderItem={(rowData) => {
+								return (
+									<View style={{ flex: 1, paddingHorizontal: 5 }}>
 										<ProductCard
 											coverUri={rowData.item['productPhoto']}
 											title={rowData.item.name}
+											price={rowData.item.price}
 											duration={rowData.item.duration}
 											productId={rowData.item.id}
 											buttonLabel={'More Details'}
-											// if onPress function is added it pops up too much of alert messages.
 											onPressAction={() => {
 												moreDetailsClicked(rowData);
 											}}
 										/>
-									);
-								}}
-								contentContainerStyle={{
-									padding: 5,
-								}}
-							/>
-						</ScrollView>
+									</View>
+								);
+							}}
+						/>
+						</View>
 					) : (
 						// Display a message when no results are found
-						<View style={styles.commonContainerStyle}>
+						<View style={styles.imgContainer}>
 							<Image
 								source={require('../../../assets/images/no-wishlist.png')}
 								style={styles.image}
@@ -358,23 +371,22 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		justifyContent: 'flex-start',
-		paddingHorizontal: 20,
+		paddingHorizontal: 10,
 		backgroundColor: backgroundColor,
+	},
+	productContainer: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
 	},
 	image: {
 		width: 200,
 		height: 200,
 	},
-	commonContainerStyle: {
-		flex: 1,
+	imgContainer: {
+		paddingTop: 70,
 		justifyContent: 'center',
 		alignItems: 'center',
-		width: 300,
-		height: 400,
-		marginTop: 30,
-		marginRight: 10,
-		borderRadius: 10,
-		padding: 10,
 	},
 });
 export default HomeTab;
