@@ -29,6 +29,7 @@ import { auth, db } from "../../../firebaseConfig";
 import { collection, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { useState, useEffect } from "react";
 import Icon from "react-native-vector-icons/Ionicons";
+import { useFocusEffect } from "@react-navigation/native";
 
 const ProfileTab = ({ navigation, route }) => {
 	const [isLoading, setIsLoading] = useState(true);
@@ -38,6 +39,12 @@ const ProfileTab = ({ navigation, route }) => {
 	useEffect(() => {
 		fetchFromDB();
 	}, []);
+
+	useFocusEffect(
+		React.useCallback(() => {
+			fetchFromDB();
+		}, [])
+	);
 
 	const fetchFromDB = async () => {
 		console.log("Fetching from db: " + auth.currentUser.email);
