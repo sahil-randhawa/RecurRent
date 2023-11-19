@@ -152,13 +152,17 @@ const HomeScreen = ({ navigation, route }) => {
 										style={{
 											alignItems: 'center',
 											justifyContent: 'center',
-											backgroundColor: focused ? lightTheme.colors.onPrimaryContainer : primaryColor,
+											backgroundColor: focused
+												? lightTheme.colors.onPrimaryContainer
+												: primaryColor,
 											height: Platform.OS == 'ios' ? 60 : 65,
 											width: Platform.OS == 'ios' ? 60 : 65,
 											top: Platform.OS == 'ios' ? -20 : -25,
 											borderRadius: Platform.OS == 'ios' ? 30 : 35,
 											borderWidth: 2,
-											borderColor: focused ? lightTheme.colors.onPrimaryContainer : primaryColor,
+											borderColor: focused
+												? lightTheme.colors.onPrimaryContainer
+												: primaryColor,
 										}}
 									>
 										<Icon

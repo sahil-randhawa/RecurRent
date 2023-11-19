@@ -304,7 +304,7 @@ const AccountSettingsScreen = () => {
 							value={name}
 							onChangeText={(value) => setName(value)}
 							editable={true}
-							style={[typography.body, { marginBottom: 10 }]}
+							style={[typography.body, { marginBottom: 10, lineHeight: 0 }]}
 							activeOutlineColor="#374D96"
 						/>
 					</View>
@@ -320,7 +320,11 @@ const AccountSettingsScreen = () => {
 					<Text
 						style={[
 							typography.bodyHeading,
-							{ color: lightTheme.colors.secondary, marginBottom: 10 },
+							{
+								color: lightTheme.colors.secondary,
+								marginBottom: 10,
+								lineHeight: 0,
+							},
 						]}
 					>
 						Email
@@ -331,7 +335,7 @@ const AccountSettingsScreen = () => {
 							value={email}
 							onChangeText={(value) => setEmail(value)}
 							editable={true}
-							style={[typography.body, { marginBottom: 10 }]}
+							style={[typography.body, { marginBottom: 10, lineHeight: 0 }]}
 							activeOutlineColor="#374D96"
 						/>
 					</View>
@@ -358,7 +362,7 @@ const AccountSettingsScreen = () => {
 							value={password}
 							onChangeText={(value) => setPassword(value)}
 							editable={true}
-							style={[typography.body, { marginBottom: 10 }]}
+							style={[typography.body, { marginBottom: 10, lineHeight: 0  }]}
 							activeOutlineColor="#374D96"
 						/>
 					</View>
@@ -385,7 +389,7 @@ const AccountSettingsScreen = () => {
 							value={mobile}
 							onChangeText={(value) => setMobile(value)}
 							editable={true}
-							style={[typography.body, { marginBottom: 10 }]}
+							style={[typography.body, { marginBottom: 10, lineHeight: 0 }]}
 							activeOutlineColor="#374D96"
 						/>
 					</View>
@@ -396,7 +400,7 @@ const AccountSettingsScreen = () => {
 				style={{
 					flexDirection: 'row',
 					justifyContent: 'flex-end',
-					marginBottom: 20,
+					marginBottom: 25,
 				}}
 			>
 				<Btn
@@ -442,13 +446,6 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		marginTop: 5,
 		backgroundColor: 'rgba(31, 31, 31, 0.5)',
-	},
-
-	infoRow: {
-		flexDirection: 'column',
-		justifyContent: 'space-between',
-		alignItems: 'center',
-		marginBottom: 10,
 	},
 
 	rowData: {
