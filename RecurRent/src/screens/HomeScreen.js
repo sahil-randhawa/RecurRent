@@ -80,8 +80,13 @@ const HomeScreen = ({ navigation, route }) => {
 								/>
 							);
 						},
-						tabBarLabelStyle: {
-							fontSize: 12,
+						tabBarLabel: ({ focused, color }) => {
+							if (focused) {
+								return (
+									<Text style={{ color: primaryColor, fontSize: 12 }}>{route.name}</Text>
+								);
+							}
+							return null; // Hide label when not focused
 						},
 						tabBarStyle: {
 							position: 'absolute',
@@ -143,7 +148,7 @@ const HomeScreen = ({ navigation, route }) => {
 
 					{/* Create Listing */}
 					<Tab.Screen
-						name="Create"
+						name=" "
 						component={CreateNewListing}
 						options={{
 							tabBarIcon: ({ focused }) => {
@@ -155,10 +160,10 @@ const HomeScreen = ({ navigation, route }) => {
 											backgroundColor: focused
 												? lightTheme.colors.onPrimaryContainer
 												: primaryColor,
-											height: Platform.OS == 'ios' ? 60 : 65,
-											width: Platform.OS == 'ios' ? 60 : 65,
-											top: Platform.OS == 'ios' ? -20 : -25,
-											borderRadius: Platform.OS == 'ios' ? 30 : 35,
+											height: Platform.OS == 'ios' ? 70 : 65,
+											width: Platform.OS == 'ios' ? 70 : 65,
+											top: -20,
+											borderRadius: Platform.OS == 'ios' ? 40 : 35,
 											borderWidth: 2,
 											borderColor: focused
 												? lightTheme.colors.onPrimaryContainer
