@@ -150,6 +150,13 @@ const AccountSettingsScreen = () => {
 
 			setUploading(false);
 			setImageToUpload(null);
+			Toast.show({
+				type: 'success',
+				position: 'bottom',
+				text1: 'Profile image updated successfully.',
+				visibilityTime: 3000,
+				autoHide: true,
+			});
 			// Alert.alert('Success', 'Image uploaded successfully');
 			// return url;
 		} catch (e) {
