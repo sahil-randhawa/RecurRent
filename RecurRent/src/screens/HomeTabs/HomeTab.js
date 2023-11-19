@@ -325,7 +325,7 @@ const HomeTab = ({ navigation, route }) => {
 						style={[{ textAlign: "center", color: primaryColor }]}
 					/>
 
-					<Btn
+					{/* <Btn
 						title="Create New Listing"
 						onPress={() => {
 							navigation.navigate("CreateNewListing");
@@ -340,7 +340,7 @@ const HomeTab = ({ navigation, route }) => {
 								color: lightTheme.colors.onPrimary,
 							},
 						]}
-					/>
+					/> */}
 				</View>
 			</ScrollView>
 		</>
