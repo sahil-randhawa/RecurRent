@@ -22,6 +22,7 @@ import {
 	border,
 	lightTheme,
 	darkTheme,
+	tertiaryColor,
 } from '../../styles/GlobalStyles';
 import Btn, {
 	primaryBtnStyle,
@@ -238,44 +239,47 @@ const HomeTab = ({ navigation, route }) => {
 
 	return (
 		<>
-			<ScrollView
-				style={{ paddingVertical: 10, backgroundColor: backgroundColor }}
-			>
-				<View style={[spacing.container, { justifyContent: 'space-evenly' }]}>
-					<Search
-						placeholder={'Search here'}
-						value={searchQuery}
-						onChangeText={(text) => handleSearch(text)}
-						onFilterPress={handleFilterPress}
-					/>
+			<View style={styles.container}>
+				<View>
+					{/* Search and Filter View */}
+					<View>
+						<Search
+							placeholder={'Search here'}
+							value={searchQuery}
+							onChangeText={(text) => handleSearch(text)}
+							onFilterPress={handleFilterPress}
+							style={{ flex: 1 }}
+						/>
 
-					{isFilterActive && (
-						<View>
-							<TouchableOpacity
-								style={{
-									// flex: 1,
-									textAlign: 'center',
-									marginTop: 10,
-									alignContent: 'flex-start',
-									paddingVertical: 10,
-									paddingVertical: Platform.OS === 'android' && 3,
-									padding: 10,
-									flexDirection: 'row',
-								}}
-								onPress={handleCategoryPress}
-							>
-								<Icon
-									name={
-										isCategoryActive ? 'checkbox-active' : 'checkbox-passive'
-									}
-									size={20}
-									style={{ color: 'black' }}
-								/>
-								<Text style={{ marginLeft: 10 }}>Catergory</Text>
-							</TouchableOpacity>
-						</View>
-					)}
+						{isFilterActive && (
+							<View>
+								<TouchableOpacity
+									style={{
+										// flex: 1,
+										textAlign: 'center',
+										marginTop: 10,
+										alignContent: 'flex-start',
+										paddingVertical: 10,
+										paddingVertical: Platform.OS === 'android' && 3,
+										padding: 10,
+										flexDirection: 'row',
+									}}
+									onPress={handleCategoryPress}
+								>
+									<Icon
+										name={
+											isCategoryActive ? 'checkbox-active' : 'checkbox-passive'
+										}
+										size={20}
+										style={{ color: tertiaryColor }}
+									/>
+									<Text style={{ marginLeft: 10 }}>Category</Text>
+								</TouchableOpacity>
+							</View>
+						)}
+					</View>
 
+					{/* Product Listings ScrollView */}
 					{isLoading ? (
 						<ActivityIndicator
 							size="large"
@@ -283,28 +287,30 @@ const HomeTab = ({ navigation, route }) => {
 							style={styles.commonContainerStyle}
 						/>
 					) : productsListings.length > 0 ? (
-						<FlatList
-							data={productsListings}
-							horizontal={true}
-							renderItem={(rowData) => {
-								return (
-									<ProductCard
-										coverUri={rowData.item['productPhoto']}
-										title={rowData.item.name}
-										duration={rowData.item.duration}
-										productId={rowData.item.id}
-										buttonLabel={'More Details'}
-										// if onPress function is added it pops up too much of alert messages.
-										onPressAction={() => {
-											moreDetailsClicked(rowData);
-										}}
-									/>
-								);
-							}}
-							contentContainerStyle={{
-								padding: 5,
-							}}
-						/>
+						<ScrollView contentContainerStyle={{}}>
+							<FlatList
+								data={productsListings}
+								horizontal={true}
+								renderItem={(rowData) => {
+									return (
+										<ProductCard
+											coverUri={rowData.item['productPhoto']}
+											title={rowData.item.name}
+											duration={rowData.item.duration}
+											productId={rowData.item.id}
+											buttonLabel={'More Details'}
+											// if onPress function is added it pops up too much of alert messages.
+											onPressAction={() => {
+												moreDetailsClicked(rowData);
+											}}
+										/>
+									);
+								}}
+								contentContainerStyle={{
+									padding: 5,
+								}}
+							/>
+						</ScrollView>
 					) : (
 						// Display a message when no results are found
 						<View style={styles.commonContainerStyle}>
@@ -343,12 +349,18 @@ const HomeTab = ({ navigation, route }) => {
 						]}
 					/> */}
 				</View>
-			</ScrollView>
+			</View>
 		</>
 	);
 };
 
 const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		justifyContent: 'flex-start',
+		paddingHorizontal: 20,
+		backgroundColor: backgroundColor,
+	},
 	image: {
 		width: 200,
 		height: 200,
