@@ -72,8 +72,8 @@ const styles = StyleSheet.create({
 	},
 
 	logo: {
-		width: 350,
-		height: 350,
+		width: 250,
+		height: 250,
 	},
 
 	textContainer: {

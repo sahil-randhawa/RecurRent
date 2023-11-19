@@ -68,7 +68,7 @@ const HomeScreen = ({ navigation, route }) => {
 							} else if (route.name === 'Explore') {
 								iconName = focused ? 'map' : 'map-outline';
 							} else if (route.name === 'Requests') {
-								iconName = focused ? 'list' : 'list-outline';
+								iconName = focused ? 'chatbubble-ellipses' : 'chatbubble-ellipses-outline';
 							}
 							return (
 								<Icon
