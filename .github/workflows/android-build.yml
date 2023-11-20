@@ -8,9 +8,6 @@ jobs:
   update:
     name: EAS Update
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: RecurRent
     steps:
       - name: Check for EXPO_TOKEN
         run: |
@@ -36,15 +33,19 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: Install dependencies
+        working-directory: ./RecurRent
         run: npm install
 
       - name: Build AAB file
+        working-directory: ./RecurRent
         run: eas build --platform android --non-interactive --profile release --clear-cache
 
       - name: Get build URL
+        working-directory: ./RecurRent
         run: eas build:list --limit 1 --json --non-interactive --platform android | jq -r '.[0].artifacts.buildUrl'
 
       - name: Store AAB url in env variable
+        working-directory: ./RecurRent
         run: |
           echo "AAB_URL=$(eas build:list --limit 1 --json --non-interactive --platform android | jq -r '.[0].artifacts.buildUrl')" >> $GITHUB_ENV
 
