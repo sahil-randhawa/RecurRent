@@ -1,6 +1,7 @@
 {
   "expo": {
     "name": "RecurRent",
+    "owner": "sahil-r",
     "slug": "RecurRent",
     "plugins": [
       [
