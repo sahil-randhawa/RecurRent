@@ -18,14 +18,14 @@ jobs:
 
       - name: LIST DIR before checkout
         run: 
-          ls -R
+          ls -Rla
           
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: LIST DIR after checkout
-        run: 
-          ls -R
+        run: |
+          ls -Rla
           exit 1
 
       - name: Setup Node
