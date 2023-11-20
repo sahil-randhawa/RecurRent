@@ -17,13 +17,13 @@ jobs:
           fi
 
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Setup Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
-          node-version: 16.x
-          cache: yarn
+          node-version: 16
+          cache: npm
 
       - name: Setup Expo
         uses: expo/expo-github-action@v7
@@ -33,7 +33,7 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: Install dependencies
-        run: yarn install
+        run: npm install
 
       - name: Build AAB file
         run: eas build --platform android --non-interactive --profile release --clear-cache
