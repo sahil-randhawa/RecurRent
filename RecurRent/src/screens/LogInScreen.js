@@ -25,7 +25,7 @@ import {
 	baseFontSize,
 } from "../styles/GlobalStyles";
 import { auth, db } from "../../firebaseConfig";
-import { signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { signInWithEmailAndPassword, signOut,sendPasswordResetEmail } from "firebase/auth";
 import { getDoc, doc } from "firebase/firestore";
 
 const LogInScreen = ({ navigation, route }) => {

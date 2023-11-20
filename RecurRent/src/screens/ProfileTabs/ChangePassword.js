@@ -53,7 +53,13 @@ const ChangePassword = ({ navigation }) => {
 	const user = auth.currentUser;
 
     if (!user) {
-      // Handle if the user is not logged in
+		Toast.show({
+			type: 'info',
+			position: 'bottom',
+			text1: `User not Logged in Properly.`,
+			visibilityTime: 3000,
+			autoHide: true,
+		});
       return;
     }
 
@@ -98,7 +104,7 @@ const ChangePassword = ({ navigation }) => {
             Toast.show({
                 type: 'info',
                 position: 'bottom',
-                text1: `Error: ${error}`,
+                text1: `Error: Old password might be worng. Please check it.`,
                 visibilityTime: 3000,
                 autoHide: true,
             });
@@ -107,10 +113,14 @@ const ChangePassword = ({ navigation }) => {
 	}
 	return (
 		<>
-			<View style={spacing.container}>
+			<View style={[
+					spacing.container,
+					{ justifyContent:'flex-start' },
+				]}>
                 <View style={styles.formContainer}>					
                     <View style={styles.inputContainer}>
 						<View>
+							<Text style={[typography.bodyHeading,{marginLeft:40}]}>You can change your password here!</Text>
 							<Input
 							secureTextEntry={true}
 								label="Old Password"
