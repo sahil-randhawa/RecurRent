@@ -19,10 +19,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: LIST DIR after checkout
-        run: |
-          ls -la
-          exit 1
+      - name: Change directory to RecurRent
+        run: cd ./RecurRent/
+
+      - name: List dir
+        run: ls -l
 
       - name: Setup Node
         uses: actions/setup-node@v4
