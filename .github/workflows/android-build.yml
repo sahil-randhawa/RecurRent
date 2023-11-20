@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./RecurRent
+        working-directory: RecurRent
     steps:
       - name: Check for EXPO_TOKEN
         run: |
