@@ -38,7 +38,7 @@ jobs:
 
       - name: Build AAB file
         working-directory: ./RecurRent
-        run: eas build --platform android --non-interactive --profile release --clear-cache
+        run: eas build --platform android --non-interactive --clear-cache
 
       - name: Get build URL
         working-directory: ./RecurRent
