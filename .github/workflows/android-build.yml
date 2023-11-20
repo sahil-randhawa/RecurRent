@@ -1,7 +1,7 @@
 name: Build Expo App
 
 on:
-  push:
+  workflow_dispatch:
     branches:
       - 'release-android'
 
