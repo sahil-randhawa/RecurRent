@@ -29,6 +29,7 @@ import { auth, db } from "../../../firebaseConfig";
 import { collection, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { useState, useEffect } from "react";
 import Icon from "react-native-vector-icons/Ionicons";
+import { useFocusEffect } from "@react-navigation/native";
 
 const ProfileTab = ({ navigation, route }) => {
 	const [isLoading, setIsLoading] = useState(true);
@@ -38,6 +39,12 @@ const ProfileTab = ({ navigation, route }) => {
 	useEffect(() => {
 		fetchFromDB();
 	}, []);
+
+	useFocusEffect(
+		React.useCallback(() => {
+			fetchFromDB();
+		}, [])
+	);
 
 	const fetchFromDB = async () => {
 		console.log("Fetching from db: " + auth.currentUser.email);
@@ -72,6 +79,13 @@ const ProfileTab = ({ navigation, route }) => {
 
 	const data = [
 		{
+			key: "account-settings",
+			title: "Account Settings",
+			description: "Update profile image and details",
+			iconName: "person-circle-outline",
+			navigateTo: "AccountSettings",
+		},
+		{
 			key: "messages",
 			title: "Messages",
 			description: "View and manage your messages",
@@ -88,17 +102,9 @@ const ProfileTab = ({ navigation, route }) => {
 		{
 			key: "listings",
 			title: "Your Listings",
-			description: "View or create your listings",
+			description: "View or edit your listings",
 			iconName: "reader-outline",
 			navigateTo: "Listings",
-		},
-
-		{
-			key: "account-settings",
-			title: "Account Settings",
-			description: "Contact information, passwords",
-			iconName: "person-circle-outline",
-			navigateTo: "AccountSettings",
 		},
 		{
 			key: "settings",
