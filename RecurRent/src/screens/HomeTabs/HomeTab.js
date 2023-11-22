@@ -169,7 +169,7 @@ const HomeTab = ({ navigation, route }) => {
 		if (searchType == "category"){
 			setSelectedCategory(searchText);
 		}
-
+		
 		// 	const q = query(collection(db, "category"));
 			// 	let categoryId=""
 			// 	setIsLoading(true);
@@ -214,6 +214,7 @@ const HomeTab = ({ navigation, route }) => {
 		console.log("category selected", selectedCategory)
 
 		if (searchType == "name") {
+			setFilterActive(false)
 			setSearchQuery(searchText);
 			// Case 1: User typed in the search bar
 			getDocs(q)
@@ -255,7 +256,8 @@ const HomeTab = ({ navigation, route }) => {
 					console.error('Error filtering products by category:', error);
 					setIsLoading(false); // Hide loader on error
 				});
-		} else {
+		} 
+		else {
 			// No search text or category selected, reset the product listings
 			setProductsListings([]);
 			setIsLoading(false);
@@ -264,13 +266,22 @@ const HomeTab = ({ navigation, route }) => {
 
 	// Category Press
 	const handleCategoryPress = (category) => {
-		selectedCategory(category)
-		// setCategoryActive(!isCategoryActive);
-		handleSearch("","category");
+		// selectedCategory(category)
+		// // setCategoryActive(!isCategoryActive);
+		// handleSearch("","category");
+
+		if (selectedCategory === category) {
+			setSelectedCategory(''); // Deselect the category if it's already selected
+			handleSearch('', 'category'); // Perform search with an empty category string
+		} else {
+			setSelectedCategory(category); // Select the category
+			handleSearch(category, 'category'); // Perform search with the selected category
+		}
 	};
 
 	const handleFilterPress = () => {
 		setFilterActive(!isFilterActive);
+		
 		// Add your logic here for handling the category press
 	};
 
@@ -283,7 +294,7 @@ const HomeTab = ({ navigation, route }) => {
 						<Search
 							placeholder={'Search here'}
 							value={searchQuery}
-							onChangeText={(text) => handleSearch(text)}
+							onChangeText={(text) => handleSearch(text, "name")}
 							onFilterPress={handleFilterPress}
 							style={{ flex: 1 }}
 						/>
@@ -301,7 +312,7 @@ const HomeTab = ({ navigation, route }) => {
 										padding: 10,
 										flexDirection: 'row',
 									}}
-									onPress={handleCategoryPress}
+									onPress={() => handleCategoryPress('')}
 								>
 									<ScrollView
 										horizontal
@@ -311,11 +322,12 @@ const HomeTab = ({ navigation, route }) => {
 											paddingBottom: 8,
 										}}
 									>
+										
 										{categories.map((category) => (
 											<Category
 												key={category}
 												name={category}
-												onPress={() => handleCategoryPress(category)}
+												onPress={() => handleSearch(category,"category")}
 												isActive={selectedCategory === category}
 											/>
 										))}
