@@ -9,10 +9,11 @@ import {
 	Image,
 	ActivityIndicator,
 	Platform,
+	ScrollView,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { db, auth, firebase } from '../../../firebaseConfig';
-import { collection, doc, getDoc, updateDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, updateDoc, setDoc } from 'firebase/firestore';
 import * as FileSystem from 'expo-file-system';
 import { List, Button, Avatar, TextInput } from 'react-native-paper';
 import Input from '../../components/Input';
@@ -29,6 +30,7 @@ import {
 	primaryColor,
 	spacing,
 	typography,
+	formStyles,
 } from '../../styles/GlobalStyles';
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -40,8 +42,7 @@ const AccountSettingsScreen = () => {
 	const [user, setUser] = useState(null);
 	const [profileUrl, setProfileUrl] = useState(null);
 	const [name, setName] = useState(null);
-	const [email, setEmail] = useState(null);
-	const [password, setPassword] = useState(null);
+	// const [email, setEmail] = useState(null);
 	const [mobile, setMobile] = useState(null);
 
 	useEffect(() => {
@@ -54,7 +55,7 @@ const AccountSettingsScreen = () => {
 			if (!user.exists) {
 				console.log('No such user!');
 			} else {
-				console.log('User profile data:', JSON.stringify(user.data(), null, 2));
+				// console.log('User profile data:', JSON.stringify(user.data(), null, 2));
 				setUser(user.data());
 
 				// setProfileUrl(user.data().imageUrl ? user.data().imageUrl : `https://ui-avatars.com/api/?name=${user.data().name}&size=128&length=1`);
@@ -63,16 +64,11 @@ const AccountSettingsScreen = () => {
 				// setName
 				setName(user.data().name ? user.data().name : 'Invalid format');
 
-				// setEmail
-				setEmail(user.data().email ? user.data().email : 'Invalid format');
-
-				// TODO: setPassword
-				setName(user.data().name ? user.data().name : 'Invalid format');
+				// setEmail - Changing email like this won't update it in Firestore Authentication
+				// setEmail(user.data().email ? user.data().email : 'Invalid format');
 
 				// setMobile
-				setMobile(
-					user.data().mobileNumber ? user.data().mobileNumber : 'Invalid format'
-				);
+				setMobile(user.data().mobileNumber ? user.data().mobileNumber : 'Invalid format');
 			}
 		} catch (e) {
 			console.log('Error in fetching user: ' + e);
@@ -172,42 +168,47 @@ const AccountSettingsScreen = () => {
 
 	// Save user edited info to the db
 	const saveChanges = async () => {
+		const docRef = doc(db, "userProfiles", auth.currentUser.uid);
+	  
+		const updatedData = {
+		  name: name,
+		//   email: email,
+		  mobileNumber: mobile
+		};
+	  
 		try {
-			// Update user data in the database
-			await updateDoc(doc(db, 'userProfiles', auth.currentUser.uid), {
-				name: name,
-				email: email,
-				mobileNumber: mobile,
+			await setDoc(docRef, updatedData, { merge: true });
+			console.log("Document updated successfully");
+			//alert("Profile updated successfully!");
+			Toast.show({
+				type: 'success',
+				position: 'bottom',
+				text1: 'Your profile is updated successfully.',
+				visibilityTime: 3000,
+				autoHide: true,
 			});
-
-			console.log('User data updated successfully!');
-		} catch (e) {
-			console.log('Error in updating user data: ' + e);
+		} catch (error) {
+		  console.error("Error updating document: ", error);
 		}
 	};
 
 	return (
-		<View
-			style={{
-				flex: 1,
-				justifyContent: 'flex-start',
-				paddingHorizontal: 20,
-				backgroundColor: backgroundColor,
-			}}
-		>
+		<>
+		<ScrollView style={styles.container}>
 			{/* profile image edit */}
 			<View
-				style={[
-					styles.rowData,
-					{
-						justifyContent: 'space-around',
-					},
-				]}
+				style={{
+					width: '100%',
+					flexDirection: 'row',
+					justifyContent: 'space-around',
+					alignItems: 'center',
+				}}
 			>
 				<View
 					style={{
 						marginTop: 35,
 						marginBottom: 20,
+						alignItems: 'center',
 					}}
 				>
 					<TouchableOpacity
@@ -280,6 +281,7 @@ const AccountSettingsScreen = () => {
 					</TouchableOpacity>
 				)}
 			</View>
+
 
 			{/* Edit info */}
 			<View style={{ flex: 1, paddingTop: 50 }}>
@@ -393,8 +395,38 @@ const AccountSettingsScreen = () => {
 							activeOutlineColor="#374D96"
 						/>
 					</View>
+
+			{/* user details edit*/}
+			<View style={styles.container}>
+				<View style={formStyles.fieldContainer}>
+					<Text style={formStyles.label}>User Name</Text>
+					<Input
+						onChangeText={(text) => setName(text)}
+						value={name}
+						style={formStyles.input}
+					/>
 				</View>
-			</View>
+
+				{/* <View style={formStyles.fieldContainer}>
+					<Text style={formStyles.label}>Email Address</Text>
+					<Input
+						placeholder=""
+						onChangeText={(text) => setEmail(text)}
+						value={email}
+						style={formStyles.input}
+					/>
+				</View> */}
+
+				<View style={formStyles.fieldContainer}>
+					<Text style={formStyles.label}>Mobile Number</Text>
+					<Input
+						onChangeText={(text) => setMobile(text)}
+						value={mobile}
+						style={formStyles.input}
+					/>
+
+				</View>
+
 
 			<View
 				style={{
@@ -403,18 +435,32 @@ const AccountSettingsScreen = () => {
 					marginBottom: 25,
 				}}
 			>
+
 				<Btn
-					title="Save Changes"
+					title="Save Details"
 					onPress={saveChanges}
 					mode="contained"
-					style={[primaryBtnStyle, { flex: 1, textAlign: 'center' }]}
+					style={[
+						primaryBtnStyle,
+						{
+							textAlign: "center",
+							marginTop: 20
+						},
+					]}
 				/>
 			</View>
-		</View>
+		</ScrollView>
+		</>
 	);
 };
 
 const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		padding: 20,
+		backgroundColor: backgroundColor,
+	},
+
 	profileImageTouchable: {
 		width: 120,
 		height: 120,
@@ -477,6 +523,7 @@ const styles = StyleSheet.create({
 		marginVertical: 6,
 		justifyContent: 'center',
 	},
+
 });
 
 export default AccountSettingsScreen;

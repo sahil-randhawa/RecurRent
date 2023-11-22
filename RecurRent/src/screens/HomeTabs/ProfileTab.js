@@ -28,8 +28,11 @@ import Btn, {
 import { signOut } from 'firebase/auth';
 import { auth, db } from '../../../firebaseConfig';
 import { collection, doc, getDoc, updateDoc } from 'firebase/firestore';
-import { useState, useEffect } from 'react';
-import Icon from 'react-native-vector-icons/Ionicons';
+
+import { useState, useEffect } from "react";
+import Icon from "react-native-vector-icons/Ionicons";
+import { useFocusEffect } from "@react-navigation/native";
+
 
 const ProfileTab = ({ navigation, route }) => {
 	const [isLoading, setIsLoading] = useState(true);
@@ -39,6 +42,12 @@ const ProfileTab = ({ navigation, route }) => {
 	useEffect(() => {
 		fetchFromDB();
 	}, []);
+
+	useFocusEffect(
+		React.useCallback(() => {
+			fetchFromDB();
+		}, [])
+	);
 
 	const fetchFromDB = async () => {
 		console.log('Fetching from db: ' + auth.currentUser.email);
@@ -75,11 +84,14 @@ const ProfileTab = ({ navigation, route }) => {
 
 	const data = [
 		{
-			key: 'messages',
-			title: 'Messages',
-			description: 'View and manage your messages',
-			iconName: 'chatbox-ellipses-outline',
-			navigateTo: 'Messages',
+
+		{
+			key: "messages",
+			title: "Messages",
+			description: "View and manage your messages",
+			iconName: "chatbox-ellipses-outline",
+			navigateTo: "Messages",
+
 		},
 		{
 			key: 'wishlist',
@@ -89,6 +101,7 @@ const ProfileTab = ({ navigation, route }) => {
 			navigateTo: 'Wishlist',
 		},
 		{
+
 			key: 'listings',
 			title: 'Your Listings',
 			description: 'View or create your listings',
@@ -103,6 +116,7 @@ const ProfileTab = ({ navigation, route }) => {
 			iconName: 'person-circle-outline',
 			navigateTo: 'AccountSettings',
 		},
+
 		{
 			key: 'settings',
 			title: 'Settings',
