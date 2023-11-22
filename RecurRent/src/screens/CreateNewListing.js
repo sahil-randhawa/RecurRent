@@ -34,13 +34,13 @@ import * as Location from "expo-location";
 import Toast from 'react-native-toast-message';
 
 const CreateNewListing = ({ navigation, route }) => {
-	const [name, setName] = useState("Lawn Grass Seeds");
+	const [name, setName] = useState("");
 	const [description, setDescription] = useState(
-		"Garden grass seeds for sale."
+		""
 	);
-	const [price, setPrice] = useState("30");
+	const [price, setPrice] = useState("");
 	const [pickUpAddress, setpickUpAddress] = useState(
-		"512 Davenport Drive, Toronto, Canada"
+		""
 	);
 	const [duration, setDuration] = useState("");
 	const [category, setCategory] = useState("");
@@ -232,7 +232,9 @@ const CreateNewListing = ({ navigation, route }) => {
 					<ActivityIndicator size="large" color={primaryColor} />
 				</View>
 			)}
-			<ScrollView>
+			<ScrollView style={{
+				marginBottom: 100,
+			}}>
 				<View style={styles.container}>
 					<View style={formStyles.fieldContainer}>
 						<Text style={formStyles.label}>Product Name</Text>
@@ -253,7 +255,7 @@ const CreateNewListing = ({ navigation, route }) => {
 					<View style={formStyles.fieldContainer}>
 						<Text style={formStyles.label}>Description</Text>
 						<Input
-							placeholder="eg. Good quality fan."
+							placeholder="Write a short description : color, size, condition, etc."
 							onChangeText={(text) => setDescription(text)}
 							value={description}
 							style={formStyles.input}
@@ -269,7 +271,7 @@ const CreateNewListing = ({ navigation, route }) => {
 					<View style={formStyles.fieldContainer}>
 						<Text style={formStyles.label}>Price ($)</Text>
 						<Input
-							placeholder="eg. 20."
+							placeholder="Rent price in CAD$"
 							onChangeText={(text) => setPrice(text)}
 							value={price}
 							style={formStyles.input}
@@ -285,7 +287,7 @@ const CreateNewListing = ({ navigation, route }) => {
 					<View style={formStyles.fieldContainer}>
 						<Text style={formStyles.label}>Pickup Location</Text>
 						<Input
-							placeholder="eg. 160 Kendal Ave."
+							placeholder="Enter pickup address"
 							onChangeText={(text) => setpickUpAddress(text)}
 							value={pickUpAddress}
 							style={formStyles.input}
@@ -309,7 +311,12 @@ const CreateNewListing = ({ navigation, route }) => {
 								{ label: "2 months", value: "2 months" },
 							]}
 							value={duration}
+							placeholder={{ label: "Select rent interval", value: null }}
 							style={{
+								placeholder: {
+									color: "#9E9E9E",
+									fontSize: 16,
+								},
 								inputIOS: {
 									marginTop: 8,
 									backgroundColor: "#fff",
@@ -343,7 +350,12 @@ const CreateNewListing = ({ navigation, route }) => {
 								{ label: "Electronics", value: "Electronics" },
 							]}
 							value={category}
+							placeholder={{ label: "Select a category", value: null }}
 							style={{
+								placeholder: {
+									color: "#9E9E9E",
+									fontSize: 16,
+								},
 								inputIOS: {
 									marginTop: 8,
 									backgroundColor: "#fff",
@@ -409,20 +421,42 @@ const CreateNewListing = ({ navigation, route }) => {
 										height: 40,
 										borderColor: primaryColor,
 										borderWidth: 1,
+										color: "#9E9E9E",
 									}}
 								>
 									{imageToUpload ? imageToUpload : "Select item image"}
 								</Text>
 							)}
 							{imageToUpload && (
-								<Image
-									source={{ uri: imageToUpload }}
-									style={{
-										width: 80,
-										height: 80,
-										marginVertical: 8,
-									}}
-								/>
+								<View style={{ position: 'relative' }}>
+									<Image
+										source={{ uri: imageToUpload }}
+										style={{
+											width: 80,
+											height: 80,
+											marginVertical: 8,
+										}}
+									/>
+									{/* discard image button X */}
+									<TouchableOpacity
+										onPress={() => setImageToUpload(null)}
+										style={{
+											position: 'absolute',
+											top: -5,
+											left: 65,
+											borderRadius: 50,
+											backgroundColor: 'rgba(91, 129, 250, 0.8)',
+											paddingHorizontal: 8,
+											paddingVertical: 5,
+										}}
+									>
+										<Text style={{
+											color: 'white',
+											fontSize: 16,
+											fontWeight: 'bold'
+										}}>X</Text>
+									</TouchableOpacity>
+								</View>
 							)}
 						</TouchableOpacity>
 
