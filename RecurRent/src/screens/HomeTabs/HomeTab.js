@@ -164,8 +164,11 @@ const HomeTab = ({ navigation, route }) => {
 	};
 
 	// handleSearch: based on the entered searchText
-	const handleSearch = (searchText) => {
-		setSearchQuery(searchText);
+	const handleSearch = (searchText,searchType) => {
+		
+		if (searchType == "category"){
+			setSelectedCategory(searchText);
+		}
 
 		// 	const q = query(collection(db, "category"));
 			// 	let categoryId=""
@@ -208,8 +211,10 @@ const HomeTab = ({ navigation, route }) => {
 
 		const q = query(collection(db, 'Products'));
 		setIsLoading(true);
+		console.log("category selected", selectedCategory)
 
-		if (isCategoryActive == true) {
+		if (searchType == "name") {
+			setSearchQuery(searchText);
 			// Case 1: User typed in the search bar
 			getDocs(q)
 				.then((querySnapshot) => {
@@ -232,9 +237,11 @@ const HomeTab = ({ navigation, route }) => {
 					console.error('Error filtering products:', error);
 					setIsLoading(false); // Hide loader on error
 				});
-		} else if (selectedCategory) {
+		} else if (searchType == "category") {
 			// Case 2: User selected a category
-			getDocs(query(q, where('category', '==', selectedCategory)))
+			setSearchQuery("")
+			
+			getDocs(query(q, where('category', '==', searchText)))
 				.then((querySnapshot) => {
 					const filteredResults = [];
 					querySnapshot.forEach((doc) => {
@@ -257,8 +264,9 @@ const HomeTab = ({ navigation, route }) => {
 
 	// Category Press
 	const handleCategoryPress = (category) => {
-		setSelectedCategory(category);
-		setCategoryActive(!isCategoryActive);
+		selectedCategory(category)
+		// setCategoryActive(!isCategoryActive);
+		handleSearch("","category");
 	};
 
 	const handleFilterPress = () => {
@@ -275,7 +283,7 @@ const HomeTab = ({ navigation, route }) => {
 						<Search
 							placeholder={'Search here'}
 							value={searchQuery}
-							onChangeText={(text) => handleSearch(text)}
+							onChangeText={(text) => handleSearch(text,"name")}
 							onFilterPress={handleFilterPress}
 							style={{ flex: 1 }}
 						/>
@@ -304,8 +312,9 @@ const HomeTab = ({ navigation, route }) => {
 											<Category
 												key={category}
 												name={category}
-												onPress={() => handleCategoryPress(category)}
-												isActive={selectedCategory === category}
+												// onPress={() => handleCategoryPress(category)}
+												onPress={() => handleSearch(category,"category")}
+												isActive={selectedCategory===category}
 											/>
 										))}
 									</ScrollView>

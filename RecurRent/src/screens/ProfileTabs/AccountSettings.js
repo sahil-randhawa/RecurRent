@@ -449,6 +449,9 @@ const AccountSettingsScreen = () => {
 					]}
 				/>
 			</View>
+			</View>
+			</View>
+			</View>
 		</ScrollView>
 		</>
 	);

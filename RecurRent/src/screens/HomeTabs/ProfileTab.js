@@ -83,7 +83,7 @@ const ProfileTab = ({ navigation, route }) => {
 	};
 
 	const data = [
-		{
+		
 
 		{
 			key: "messages",
