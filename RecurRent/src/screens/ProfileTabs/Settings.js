@@ -9,6 +9,7 @@ import {
 	Platform,
 	FlatList,
 	ScrollView,
+	Input
 } from "react-native";
 import {
 	primaryColor,
@@ -26,8 +27,10 @@ import Btn, {
 	secondaryBtnStyle,
 } from "../../components/Button";
 import { StatusBar } from "expo-status-bar";
-import { auth, db } from "../../../firebaseConfig";
-import { signOut } from "firebase/auth";
+import styles from "../../styles/AuthStyles";
+import { auth, db,firebase } from "../../../firebaseConfig";
+
+import { signOut,sendPasswordResetEmail,EmailAuthProvider,reauthenticateWithCredential,updatePassword } from "firebase/auth";
 import {
 	collection,
 	getDocs,
@@ -38,11 +41,13 @@ import {
 	documentId,
 } from "firebase/firestore";
 
+
 const Settings = ({ navigation }) => {
+	
 	return (
 		<>
 			<View style={spacing.container}>
-				<Text>Settings</Text>
+					<Text>Settings</Text>
 			</View>
 		</>
 	);

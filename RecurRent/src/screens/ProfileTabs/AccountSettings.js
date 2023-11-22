@@ -363,7 +363,9 @@ const AccountSettingsScreen = () => {
 				style={{
 					flexDirection: 'row',
 					justifyContent: 'flex-end',
+
 					marginBottom: 25,
+
 				}}
 			>
 				<Btn

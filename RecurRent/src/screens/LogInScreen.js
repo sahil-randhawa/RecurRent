@@ -25,7 +25,7 @@ import {
 	baseFontSize,
 } from "../styles/GlobalStyles";
 import { auth, db } from "../../firebaseConfig";
-import { signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { signInWithEmailAndPassword, signOut,sendPasswordResetEmail } from "firebase/auth";
 import { getDoc, doc } from "firebase/firestore";
 
 const LogInScreen = ({ navigation, route }) => {
@@ -69,6 +69,26 @@ const LogInScreen = ({ navigation, route }) => {
 			alert("Login failed!\n" + err.message);
 		}
 	};
+
+	const forgetPassword = () =>{
+		if(email == ""){
+			alert("Please enter email first and then click on Forget password!")
+		}
+		else{
+			sendPasswordResetEmail(auth, email)
+			.then(() => {
+				// Password forget email sent!
+				console.log("Password Link sent successfully!")
+				alert("Password Link sent successfully. Please check your emial!")
+			})
+			.catch((error) => {
+				const errorCode = error.code;
+				const errorMessage = error.message;
+				console.log(`Error in Change Password: ${errorCode} - ${errorMessage}`)
+				alert(errorMessage)
+			});
+		}
+	}
 
 	return (
 		<>
@@ -128,6 +148,15 @@ const LogInScreen = ({ navigation, route }) => {
 							]}
 						/>
 					</View>
+
+					<View style={{ flexDirection: "row", marginTop: 5, }}>
+					
+					<TouchableOpacity onPress={forgetPassword}>
+						<Text style={[typography.bodyHeading, { color: primaryColor }]}>
+							Forget Password ?
+						</Text>
+					</TouchableOpacity>
+				</View>
 				</View>
 
 				{/* TODO: Change onPress */}
