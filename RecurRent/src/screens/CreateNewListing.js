@@ -232,7 +232,9 @@ const CreateNewListing = ({ navigation, route }) => {
 					<ActivityIndicator size="large" color={primaryColor} />
 				</View>
 			)}
-			<ScrollView>
+			<ScrollView style={{
+				marginBottom: 100,
+			}}>
 				<View style={styles.container}>
 					<View style={formStyles.fieldContainer}>
 						<Text style={formStyles.label}>Product Name</Text>
@@ -415,14 +417,35 @@ const CreateNewListing = ({ navigation, route }) => {
 								</Text>
 							)}
 							{imageToUpload && (
-								<Image
-									source={{ uri: imageToUpload }}
-									style={{
-										width: 80,
-										height: 80,
-										marginVertical: 8,
-									}}
-								/>
+								<View style={{ position: 'relative' }}>
+									<Image
+										source={{ uri: imageToUpload }}
+										style={{
+											width: 80,
+											height: 80,
+											marginVertical: 8,
+										}}
+									/>
+									{/* discard image button X */}
+									<TouchableOpacity
+										onPress={() => setImageToUpload(null)}
+										style={{
+											position: 'absolute',
+											top: -5,
+											left: 65,
+											borderRadius: 50,
+											backgroundColor: 'rgba(91, 129, 250, 0.8)',
+											paddingHorizontal: 8,
+											paddingVertical: 5,
+										}}
+									>
+										<Text style={{
+											color: 'white',
+											fontSize: 16,
+											fontWeight: 'bold'
+										}}>X</Text>
+									</TouchableOpacity>
+								</View>
 							)}
 						</TouchableOpacity>
 
