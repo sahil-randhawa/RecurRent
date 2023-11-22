@@ -412,6 +412,7 @@ const BookingRequestTab = ({ navigation, route }) => {
 							handleConfirm={() => { confirmClicked(rowData.item) }}
 						/>}
 						contentContainerStyle={{ paddingVertical: 10 }}
+						showsVerticalScrollIndicator={false}
 					/>
 				</View>
 			)}

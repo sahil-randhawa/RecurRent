@@ -253,6 +253,7 @@ const NotificationsScreen = () => {
 						data={notificationsList}
 						keyExtractor={(item) => item.notificationID}
 						contentContainerStyle={styles.flatListContainer}
+						showsVerticalScrollIndicator={false}
 						renderItem={({ item }) => (
 							<Card style={styles.card}>
 								<Card.Content>

@@ -105,11 +105,13 @@ const Listings = ({ navigation }) => {
 				) : (
 					<FlatList
 					data={userListings}
+					showsVerticalScrollIndicator={false}
 					renderItem={({ item }) => (
 						<UserListingCard 
 							item={item} 
 							handlePress={handlePress}
 						/>
+						
 					)}
 					/>
 				)}

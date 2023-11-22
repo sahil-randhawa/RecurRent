@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
 	View,
 	Text,
@@ -8,27 +8,31 @@ import {
 	FlatList,
 	StyleSheet,
 	TouchableOpacity,
-} from "react-native";
-import { Avatar, List, Divider } from "react-native-paper";
+} from 'react-native';
+import { Avatar, List, Divider } from 'react-native-paper';
 import {
 	spacing,
 	primaryColor,
+	backgroundColor,
 	tertiaryColor,
 	textColor,
 	typography,
 	secondaryColor,
 	lightTheme,
-} from "../../styles/GlobalStyles";
+} from '../../styles/GlobalStyles';
 import Btn, {
 	primaryBtnStyle,
 	secondaryBtnStyle,
 	logoutBtnStyle,
-} from "../../components/Button";
-import { signOut } from "firebase/auth";
-import { auth, db } from "../../../firebaseConfig";
+} from '../../components/Button';
+import { signOut } from 'firebase/auth';
+import { auth, db } from '../../../firebaseConfig';
 import { collection, doc, getDoc, updateDoc } from 'firebase/firestore';
+
 import { useState, useEffect } from "react";
 import Icon from "react-native-vector-icons/Ionicons";
+import { useFocusEffect } from "@react-navigation/native";
+
 
 const ProfileTab = ({ navigation, route }) => {
 	const [isLoading, setIsLoading] = useState(true);
@@ -39,8 +43,14 @@ const ProfileTab = ({ navigation, route }) => {
 		fetchFromDB();
 	}, []);
 
+	useFocusEffect(
+		React.useCallback(() => {
+			fetchFromDB();
+		}, [])
+	);
+
 	const fetchFromDB = async () => {
-		console.log("Fetching from db: " + auth.currentUser.email);
+		console.log('Fetching from db: ' + auth.currentUser.email);
 		try {
 			// const q = query(
 			// 	collection(db, "userProfiles"),
@@ -50,7 +60,9 @@ const ProfileTab = ({ navigation, route }) => {
 			// querySnapshot.forEach((doc) => {
 			// 	setUser(doc.data());
 			// });
-			const userDoc = await getDoc(doc(db, 'userProfiles', auth.currentUser.uid));
+			const userDoc = await getDoc(
+				doc(db, 'userProfiles', auth.currentUser.uid)
+			);
 			setUser(userDoc.data());
 			setProfileUrl(userDoc.data().imageUrl ? userDoc.data().imageUrl : null);
 			setIsLoading(false);
@@ -63,7 +75,7 @@ const ProfileTab = ({ navigation, route }) => {
 	const onLogoutClicked = () => {
 		signOut(auth)
 			.then(() => {
-				navigation.navigate("OnBoardingScreen");
+				navigation.navigate('OnBoardingScreen');
 			})
 			.catch((error) => {
 				console.log(error);
@@ -71,57 +83,48 @@ const ProfileTab = ({ navigation, route }) => {
 	};
 
 	const data = [
+		
+
 		{
 			key: "messages",
 			title: "Messages",
 			description: "View and manage your messages",
 			iconName: "chatbox-ellipses-outline",
 			navigateTo: "Messages",
+
 		},
 		{
-			key: "wishlist",
-			title: "Wishlist",
-			description: "View saved listings",
-			iconName: "heart-outline",
-			navigateTo: "Wishlist",
+			key: 'wishlist',
+			title: 'Wishlist',
+			description: 'View saved listings',
+			iconName: 'heart-outline',
+			navigateTo: 'Wishlist',
 		},
 		{
-			key: "listings",
-			title: "Your Listings",
-			description: "View or create your listings",
-			iconName: "reader-outline",
-			navigateTo: "Listings",
+
+			key: 'listings',
+			title: 'Your Listings',
+			description: 'View or create your listings',
+			iconName: 'reader-outline',
+			navigateTo: 'Listings',
 		},
 
 		{
-			key: "account-settings",
-			title: "Account Settings",
-			description: "Contact information, passwords",
-			iconName: "person-circle-outline",
-			navigateTo: "AccountSettings",
+			key: 'account-settings',
+			title: 'Account Settings',
+			description: 'Contact information, passwords',
+			iconName: 'person-circle-outline',
+			navigateTo: 'AccountSettings',
 		},
+
 		{
-			key: "settings",
-			title: "Settings",
-			description: "View app settings",
-			iconName: "settings-outline",
-			navigateTo: "Settings",
+			key: 'settings',
+			title: 'Settings',
+			description: 'View app settings',
+			iconName: 'settings-outline',
+			navigateTo: 'Settings',
 		},
 	];
-
-	const listData = [
-		{
-			title: "Notification",
-			items: [
-				{
-					name: "Messages",
-					icon: "chatbox-ellipses-outline",
-					navigateTo: "Messages",
-				},
-			],
-		},
-	];
-
 
 	return (
 		// Profile Screen
@@ -140,7 +143,11 @@ const ProfileTab = ({ navigation, route }) => {
 						<View>
 							<Avatar.Image
 								size={60}
-								source={profileUrl ? { uri: profileUrl } : require("../../../assets/images/profile_placeholder.png")}
+								source={
+									profileUrl
+										? { uri: profileUrl }
+										: require('../../../assets/images/profile_placeholder.png')
+								}
 							/>
 						</View>
 						<View style={styles.textContainer}>
@@ -163,12 +170,19 @@ const ProfileTab = ({ navigation, route }) => {
 								<List.Item
 									title={item.title}
 									description={item.description}
-									descriptionStyle={[typography.caption, {
-										color: lightTheme.colors.onPrimaryContainer,
-										marginTop: 5,
-									}]}
+									descriptionStyle={[
+										typography.caption,
+										{
+											color: lightTheme.colors.onPrimaryContainer,
+											marginTop: 5,
+										},
+									]}
 									left={() => (
-										<Icon name={item.iconName} size={24} color={primaryColor} />
+										<Icon
+											name={item.iconName}
+											size={24}
+											color={primaryColor}
+										/>
 									)}
 									right={() => (
 										<Icon
@@ -191,20 +205,20 @@ const ProfileTab = ({ navigation, route }) => {
 
 					<View
 						style={{
-							marginBottom: 15,
-							flexDirection: "row",
+							flexDirection: 'row',
+							justifyContent: 'flex-end',
+							marginBottom: 25,
 						}}
 					>
 						<Btn
 							title="Sign Out"
 							onPress={onLogoutClicked}
 							mode="contained"
-							style={[
-								primaryBtnStyle,
-								{ flex: 1, textAlign: "center", marginTop: 10 },
-							]}
+							style={[primaryBtnStyle, { flex: 1, textAlign: 'center' }]}
 						/>
 					</View>
+
+					
 				</View>
 			)}
 		</View>
@@ -214,12 +228,12 @@ const ProfileTab = ({ navigation, route }) => {
 const styles = StyleSheet.create({
 	viewContainer: {
 		flex: 1,
-		justifyContent: "flex-start",
-		alignItems: "flex-start",
+		justifyContent: 'flex-start',
+		alignItems: 'flex-start',
 	},
 	header: {
-		flexDirection: "row",
-		alignItems: "center",
+		flexDirection: 'row',
+		alignItems: 'center',
 		paddingVertical: 20,
 	},
 	textContainer: {
@@ -230,9 +244,10 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 	},
 	listContainer: {
-		flex: 1,
-		flexDirection: "row",
-		justifyContent: "space-evenly",
+		// flex: 1,
+		flexDirection: 'row',
+		justifyContent: 'space-evenly',
+		paddingBottom: 80,
 	},
 	listItem: {
 		marginVertical: 2,

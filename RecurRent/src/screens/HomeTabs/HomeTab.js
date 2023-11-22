@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
 	StyleSheet,
 	Text,
@@ -11,7 +11,7 @@ import {
 	ScrollView,
 	ActivityIndicator,
 	Image,
-} from "react-native";
+} from 'react-native';
 import {
 	primaryColor,
 	secondaryColor,
@@ -22,15 +22,16 @@ import {
 	border,
 	lightTheme,
 	darkTheme,
-} from "../../styles/GlobalStyles";
+	tertiaryColor,
+} from '../../styles/GlobalStyles';
 import Btn, {
 	primaryBtnStyle,
 	secondaryBtnStyle,
-} from "../../components/Button";
-import { StatusBar } from "expo-status-bar";
-import { auth, db } from "../../../firebaseConfig";
+} from '../../components/Button';
+import { StatusBar } from 'expo-status-bar';
+import { auth, db } from '../../../firebaseConfig';
 import Icon from 'react-native-vector-icons/Fontisto';
-import { signOut } from "firebase/auth";
+import { signOut } from 'firebase/auth';
 import {
 	collection,
 	getDocs,
@@ -39,40 +40,64 @@ import {
 	doc,
 	getDoc,
 	documentId,
-} from "firebase/firestore";
-import Search from "../../components/SearchBar";
-import ProductCard from "../../components/ProductCard";
-import { useFocusEffect } from "@react-navigation/native";
+} from 'firebase/firestore';
+import Search from '../../components/SearchBar';
+import Category from '../../components/Category';
+import ProductCard from '../../components/ProductCard';
+import { useFocusEffect } from '@react-navigation/native';
 
 const HomeTab = ({ navigation, route }) => {
 	const [productsListings, setProductsListings] = useState([]);
-	const [searchQuery, setSearchQuery] = useState("");
+	const [searchQuery, setSearchQuery] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
 	const [isCategoryActive, setCategoryActive] = useState(false);
 	const [isFilterActive, setFilterActive] = useState(false);
 
+	const [categories, setCategories] = useState([]);
+	const [selectedCategory, setSelectedCategory] = useState('');
+
 	useEffect(() => {
 		getProductListings();
+
+		const fetchCategories = async () => {
+			try {
+				const categoriesQuery = query(collection(db, 'Products'));
+				const categoriesSnapshot = await getDocs(categoriesQuery);
+				const uniqueCategories = new Set();
+
+				categoriesSnapshot.forEach((doc) => {
+					const product = doc.data();
+					uniqueCategories.add(product.category);
+				});
+
+				setCategories(Array.from(uniqueCategories));
+			} catch (error) {
+				console.error('Error fetching categories:', error);
+			}
+		};
+
+		fetchCategories();
 	}, []);
 
-	// Use useFocusEffect to refresh data when the tab screen is focused
+	// useFocusEffect: refresh data when the tab screen is focused
 	useFocusEffect(
 		React.useCallback(() => {
-		  getProductListings();
+			getProductListings();
 		}, [])
-	  );
-	  
+	);
+
+	// getProductListings: fetches product listings from the Firestore database
 	const getProductListings = async () => {
 		setIsLoading(true); // Show loader while fetching data
 		try {
 			const q = query(
-				collection(db, "Products")
+				collection(db, 'Products')
 				// where("status", "==", "Available")
 			);
 			const querySnapshot = await getDocs(q);
 			const resultsFromFirestore = [];
 			querySnapshot.forEach((doc) => {
-				console.log(doc.id, " => ", doc.data());
+				console.log(doc.id, ' => ', doc.data());
 
 				const itemToAdd = {
 					id: doc.id,
@@ -88,22 +113,23 @@ const HomeTab = ({ navigation, route }) => {
 			setIsLoading(false); // Hide loader after fetching data
 
 			// Reset the search bar to an empty string, in case "Refresh" button is pressed
-			setSearchQuery("");
+			setSearchQuery('');
 		} catch (err) {
 			console.log(err);
 		}
 	};
 
+	// moreDetailsClicked: more information on selected product
 	const moreDetailsClicked = async (selectedProductData) => {
 		// alert(`Product : ${selectedProductData.item.name}`)
 		try {
 			const ownerID = selectedProductData.item.userID;
 			console.log(ownerID);
-			const docRef = doc(db, "userProfiles", ownerID);
+			const docRef = doc(db, 'userProfiles', ownerID);
 			const docSnap = await getDoc(docRef);
 
 			if (docSnap.exists()) {
-				console.log("Document data:", docSnap.data());
+				console.log('Document data:', docSnap.data());
 				// const data = docSnap.data();
 				//     // const documentId = ownerID; // Get the document ID
 
@@ -111,18 +137,18 @@ const HomeTab = ({ navigation, route }) => {
 					selectedProduct: selectedProductData,
 					ownerData: docSnap.data(),
 				};
-				console.log("combine", combinedData);
-				navigation.navigate("ProductDetails", { combinedData: combinedData });
+				console.log('combine', combinedData);
+				navigation.navigate('ProductDetails', { combinedData: combinedData });
 			} else {
 				// docSnap.data() will be undefined in this case
-				console.log("No such document!");
+				console.log('No such document!');
 				// setOwnerDetails(null)
 				const combinedData = {
 					selectedProduct: selectedProductData,
 					ownerData: {},
 				};
-				console.log("combine", combinedData);
-				navigation.navigate("ProductDetails", { combinedData: combinedData });
+				console.log('combine', combinedData);
+				navigation.navigate('ProductDetails', { combinedData: combinedData });
 			}
 		} catch (error) {
 			console.log(error);
@@ -137,15 +163,16 @@ const HomeTab = ({ navigation, route }) => {
 		// navigation.navigate("ProductDetails",{combinedData:combinedData})
 	};
 
+	// handleSearch: based on the entered searchText
 	const handleSearch = (searchText) => {
 		setSearchQuery(searchText);
-		if(isCategoryActive == true){
+
 		// 	const q = query(collection(db, "category"));
 		// 	let categoryId=""
-		// 	setIsLoading(true); 
+		// 	setIsLoading(true);
 		// 	getDocs(q)
 		//   .then((querySnapshot) => {
-			
+
 		// 	querySnapshot.forEach((doc) => {
 		// 	  const category = doc.data();
 		// 	  if (
@@ -161,9 +188,9 @@ const HomeTab = ({ navigation, route }) => {
 		// 	  const filteredResults = [];
 		// 	  querySnapshot.forEach((doc) => {
 		// 		const product = doc.data();
-			   
+
 		// 		  filteredResults.push({ id: doc.id, ...product });
-				
+
 		// 	  });
 		// 	  setProductsListings(filteredResults);
 		// 	  setIsLoading(false); // Hide loader after searching
@@ -172,148 +199,183 @@ const HomeTab = ({ navigation, route }) => {
 		// 	  console.error("Error filtering products category wise:", error);
 		// 	  setIsLoading(false); // Hide loader on error
 		// 	});
-			
+
 		//   })
 		//   .catch((error) => {
 		// 	console.error("Error filtering category ID:", error);
 		// 	 // Hide loader on error
 		//   });
-		const q = query(collection(db, "Products"));
-		setIsLoading(true); // Show loader while searching
-	
-		getDocs(q)
-		  .then((querySnapshot) => {
-			const filteredResults = [];
-			querySnapshot.forEach((doc) => {
-			  const product = doc.data();
-			  if (
-				product.category.toLowerCase().includes(searchText.toLowerCase())
-			  ) {
-				filteredResults.push({ id: doc.id, ...product });
-			  }
-			});
-			setProductsListings(filteredResults);
-			setIsLoading(false); // Hide loader after searching
-		  })
-		  .catch((error) => {
-			console.error("Error filtering products:", error);
-			setIsLoading(false); // Hide loader on error
-		  });
-		}
-		else
-		{
-		const q = query(collection(db, "Products"));
-		setIsLoading(true); // Show loader while searching
-	
-		getDocs(q)
-		  .then((querySnapshot) => {
-			const filteredResults = [];
-			querySnapshot.forEach((doc) => {
-			  const product = doc.data();
-			  if (
-				product.name.toLowerCase().includes(searchText.toLowerCase()) ||
-				product.description.toLowerCase().includes(searchText.toLowerCase())
-			  ) {
-				filteredResults.push({ id: doc.id, ...product });
-			  }
-			});
-			setProductsListings(filteredResults);
-			setIsLoading(false); // Hide loader after searching
-		  })
-		  .catch((error) => {
-			console.error("Error filtering products:", error);
-			setIsLoading(false); // Hide loader on error
-		  });
+
+		const q = query(collection(db, 'Products'));
+		setIsLoading(true);
+
+		if (isCategoryActive == true) {
+			// Case 1: User typed in the search bar
+			getDocs(q)
+				.then((querySnapshot) => {
+					const filteredResults = [];
+					querySnapshot.forEach((doc) => {
+						const product = doc.data();
+						if (
+							product.name.toLowerCase().includes(searchText.toLowerCase()) ||
+							product.description
+								.toLowerCase()
+								.includes(searchText.toLowerCase())
+						) {
+							filteredResults.push({ id: doc.id, ...product });
+						}
+					});
+					setProductsListings(filteredResults);
+					setIsLoading(false); // Hide loader after searching
+				})
+				.catch((error) => {
+					console.error('Error filtering products:', error);
+					setIsLoading(false); // Hide loader on error
+				});
+		} else if (selectedCategory) {
+			// Case 2: User selected a category
+			getDocs(query(q, where('category', '==', selectedCategory)))
+				.then((querySnapshot) => {
+					const filteredResults = [];
+					querySnapshot.forEach((doc) => {
+						const product = doc.data();
+						filteredResults.push({ id: doc.id, ...product });
+					});
+					setProductsListings(filteredResults);
+					setIsLoading(false); // Hide loader after searching
+				})
+				.catch((error) => {
+					console.error('Error filtering products by category:', error);
+					setIsLoading(false); // Hide loader on error
+				});
+		} else {
+			// No search text or category selected, reset the product listings
+			setProductsListings([]);
+			setIsLoading(false);
 		}
 	};
 
-	const handleCategoryPress = () => {
+	// Category Press
+	const handleCategoryPress = (category) => {
+		setSelectedCategory(category);
 		setCategoryActive(!isCategoryActive);
-	  };
-	  
+	};
+
 	const handleFilterPress = () => {
 		setFilterActive(!isFilterActive);
 		// Add your logic here for handling the category press
-	
-	  };
+	};
 
 	return (
 		<>
-			<ScrollView
-				style={{ paddingVertical: 10, backgroundColor: backgroundColor }}
-			>
-				<View style={[spacing.container, { justifyContent: "space-evenly" }]}>
-					
-					<Search
-						placeholder={"Search here"}
-						value={searchQuery}
-						onChangeText={(text) => handleSearch(text)}
-						onFilterPress={handleFilterPress}
-					/>
-
-					{ isFilterActive && 
-					(<View>
-						<TouchableOpacity
-							style={{
-								// flex: 1,
-								textAlign: 'center',
-								marginTop: 10,
-								alignContent:'flex-start',
-								paddingVertical: 10,
-								paddingVertical: Platform.OS === 'android' && 3,
-								padding: 10,
-								flexDirection:"row"
-							}}
-							onPress={handleCategoryPress}
-						>
-							<Icon
-								name={isCategoryActive ? 'checkbox-active' : 'checkbox-passive'}
-								size={20}
-								style={{ color: "black" }}
-							/> 
-							<Text style={{marginLeft:10}}>Catergory</Text>
-						</TouchableOpacity>
-						
-					</View>)
-					}
-						
-				
-
-					{isLoading ? (
-						<ActivityIndicator size="large" color={primaryColor} style={styles.commonContainerStyle} />
-					) : productsListings.length > 0 ? (
-						<FlatList
-							data={productsListings}
-							horizontal={true}
-							renderItem={(rowData) => {
-								return (
-									<ProductCard
-										coverUri={rowData.item["productPhoto"]}
-										title={rowData.item.name}
-										duration={rowData.item.duration}
-										productId={rowData.item.id}
-										buttonLabel={"More Details"}
-										// if onPress function is added it pops up too much of alert messages.
-										onPressAction={() => {
-											moreDetailsClicked(rowData);
-										}}
-									/>
-								);
-							}}
-							contentContainerStyle={{
-								padding: 5,
-							}}
+			<View style={{ flex: 1 }}>
+				<View style={styles.container}>
+					{/* Search and Filter View */}
+					<View>
+						<Search
+							placeholder={'Search here'}
+							value={searchQuery}
+							onChangeText={(text) => handleSearch(text)}
+							onFilterPress={handleFilterPress}
+							style={{ flex: 1 }}
 						/>
+
+						{isFilterActive && (
+							<View>
+								<TouchableOpacity
+									style={{
+										// flex: 1,
+										textAlign: 'center',
+										marginTop: 10,
+										alignContent: 'flex-start',
+										paddingVertical: 10,
+										paddingVertical: Platform.OS === 'android' && 3,
+										padding: 10,
+										flexDirection: 'row',
+									}}
+									onPress={handleCategoryPress}
+								>
+									<ScrollView
+										horizontal
+										showsHorizontalScrollIndicator={false}
+										contentContainerStyle={{
+											paddingHorizontal: 0,
+											paddingBottom: 8,
+										}}
+									>
+										{categories.map((category) => (
+											<Category
+												key={category}
+												name={category}
+												onPress={() => handleCategoryPress(category)}
+												isActive={selectedCategory === category}
+											/>
+										))}
+									</ScrollView>
+								</TouchableOpacity>
+							</View>
+						)}
+					</View>
+
+					{/* Product Listings ScrollView */}
+					{isLoading ? (
+						<ActivityIndicator
+							size="large"
+							color={primaryColor}
+							style={styles.productContainer}
+						/>
+					) : productsListings.length > 0 ? (
+						<View
+							style={{
+								flex: 1,
+								justifyContent: 'center',
+								alignItems: 'center',
+							}}
+						>
+							<FlatList
+								data={productsListings.filter((product) =>
+									isCategoryActive
+										? product.category.toLowerCase() ===
+										  selectedCategory.toLowerCase()
+										: true
+								)}
+								contentContainerStyle={{
+									marginLeft: 5,
+									paddingBottom: Platform.OS === 'ios' ? 200 : 180,
+									paddingHorizontal: 0,
+									justifyContent: 'center',
+								}}
+								vertical={true}
+								showsVerticalScrollIndicator={false}
+								renderItem={(rowData) => {
+									return (
+										<View style={{ flex: 1, paddingHorizontal: 5 }}>
+											<ProductCard
+												coverUri={rowData.item['productPhoto']}
+												title={rowData.item.name}
+												price={rowData.item.price}
+												duration={rowData.item.duration}
+												productId={rowData.item.id}
+												buttonLabel={'More Details'}
+												onPressAction={() => {
+													moreDetailsClicked(rowData);
+												}}
+											/>
+										</View>
+									);
+								}}
+							/>
+						</View>
 					) : (
 						// Display a message when no results are found
-						<View style={styles.commonContainerStyle}>
-						<Image
-							source={require('../../../assets/images/no-wishlist.png')}
-							style={styles.image}
-						/>
-						<Text style={[typography.bodyHeading, { textAlign: 'center' }]}>
-							Oops! No matched products.{'\n'}Try another search.
-						</Text>
+						<View style={styles.imgContainer}>
+							<Image
+								source={require('../../../assets/images/no-wishlist.png')}
+								style={styles.image}
+							/>
+							<Text style={[typography.bodyHeading, { textAlign: 'center' }]}>
+								Oops! No matched products.{'\n'}Try another search.
+							</Text>
 						</View>
 					)}
 
@@ -322,46 +384,34 @@ const HomeTab = ({ navigation, route }) => {
 						title="Refresh"
 						onPress={getProductListings}
 						mode="text"
-						style={[{ textAlign: "center", color: primaryColor }]}
-					/>
-
-					<Btn
-						title="Create New Listing"
-						onPress={() => {
-							navigation.navigate("CreateNewListing");
-						}}
-						mode="contained"
-						style={[
-							primaryBtnStyle,
-							{
-								width: "100%",
-								alignSelf: "center",
-								marginBottom: 15,
-								color: lightTheme.colors.onPrimary,
-							},
-						]}
+						style={[{ textAlign: 'center', color: primaryColor }]}
 					/>
 				</View>
-			</ScrollView>
+			</View>
 		</>
 	);
 };
 
 const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		justifyContent: 'flex-start',
+		paddingHorizontal: 10,
+		backgroundColor: backgroundColor,
+	},
+	productContainer: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
 	image: {
 		width: 200,
 		height: 200,
 	},
-	commonContainerStyle: {
-		flex: 1,
-		justifyContent: "center",
-		alignItems: "center",
-		width: 300,
-		height: 400,
-		marginTop: 30,
-		marginRight: 10,
-		borderRadius: 10,
-		padding: 10,
+	imgContainer: {
+		paddingTop: 70,
+		justifyContent: 'center',
+		alignItems: 'center',
 	},
 });
 export default HomeTab;

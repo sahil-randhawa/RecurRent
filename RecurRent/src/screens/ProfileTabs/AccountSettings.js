@@ -27,6 +27,7 @@ import {
 	backgroundColor,
 	lightTheme,
 	primaryColor,
+	secondaryColor,
 	spacing,
 	typography,
 } from '../../styles/GlobalStyles';
@@ -181,6 +182,24 @@ const AccountSettingsScreen = () => {
 			});
 
 			console.log('User data updated successfully!');
+
+			// Show toast message
+			let toastMessage = 'User data updated successfully.';
+    
+			if (name !== user.name) {
+				toastMessage = 'Name updated successfully.';
+			} else if (mobile !== user.mobileNumber) {
+				toastMessage = 'Mobile number updated successfully.';
+			}
+	
+			Toast.show({
+				type: 'success',
+				position: 'bottom',
+				text1: toastMessage,
+				visibilityTime: 3000,
+				autoHide: true,
+			});
+
 		} catch (e) {
 			console.log('Error in updating user data: ' + e);
 		}
@@ -304,65 +323,11 @@ const AccountSettingsScreen = () => {
 							value={name}
 							onChangeText={(value) => setName(value)}
 							editable={true}
-							style={[typography.body, { marginBottom: 10 }]}
-							activeOutlineColor="#374D96"
+							style={[typography.body, { marginBottom: 10, lineHeight: 0 }]}
+							activeOutlineColor={primaryColor}
 						/>
 					</View>
 				</View>
-
-				{/* Email */}
-				<View
-					style={{
-						flexDirection: 'column',
-						marginBottom: 10,
-					}}
-				>
-					<Text
-						style={[
-							typography.bodyHeading,
-							{ color: lightTheme.colors.secondary, marginBottom: 10 },
-						]}
-					>
-						Email
-					</Text>
-					<View style={styles.txtInput}>
-						<TextInput
-							mode="outlined"
-							value={email}
-							onChangeText={(value) => setEmail(value)}
-							editable={true}
-							style={[typography.body, { marginBottom: 10 }]}
-							activeOutlineColor="#374D96"
-						/>
-					</View>
-				</View>
-
-				{/* Password */}
-				{/* <View
-					style={{
-						flexDirection: 'column',
-						marginBottom: 10,
-					}}
-				>
-					<Text
-						style={[
-							typography.bodyHeading,
-							{ color: lightTheme.colors.secondary, marginBottom: 10 },
-						]}
-					>
-						Password
-					</Text>
-					<View style={styles.txtInput}>
-						<TextInput
-							mode="outlined"
-							value={password}
-							onChangeText={(value) => setPassword(value)}
-							editable={true}
-							style={[typography.body, { marginBottom: 10 }]}
-							activeOutlineColor="#374D96"
-						/>
-					</View>
-				</View> */}
 
 				{/* Mobile Number */}
 				<View
@@ -385,9 +350,11 @@ const AccountSettingsScreen = () => {
 							value={mobile}
 							onChangeText={(value) => setMobile(value)}
 							editable={true}
-							style={[typography.body, { marginBottom: 10 }]}
-							activeOutlineColor="#374D96"
+							style={[typography.body, { marginBottom: 10, lineHeight: 0 }]}
+							activeOutlineColor={primaryColor}
+							
 						/>
+						
 					</View>
 				</View>
 			</View>
@@ -396,7 +363,7 @@ const AccountSettingsScreen = () => {
 				style={{
 					flexDirection: 'row',
 					justifyContent: 'flex-end',
-					marginBottom: 20,
+					marginBottom: 25,
 				}}
 			>
 				<Btn
@@ -442,13 +409,6 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		marginTop: 5,
 		backgroundColor: 'rgba(31, 31, 31, 0.5)',
-	},
-
-	infoRow: {
-		flexDirection: 'column',
-		justifyContent: 'space-between',
-		alignItems: 'center',
-		marginBottom: 10,
 	},
 
 	rowData: {
