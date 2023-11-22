@@ -34,13 +34,13 @@ import * as Location from "expo-location";
 import Toast from 'react-native-toast-message';
 
 const CreateNewListing = ({ navigation, route }) => {
-	const [name, setName] = useState("Lawn Grass Seeds");
+	const [name, setName] = useState("");
 	const [description, setDescription] = useState(
-		"Garden grass seeds for sale."
+		""
 	);
-	const [price, setPrice] = useState("30");
+	const [price, setPrice] = useState("");
 	const [pickUpAddress, setpickUpAddress] = useState(
-		"512 Davenport Drive, Toronto, Canada"
+		""
 	);
 	const [duration, setDuration] = useState("");
 	const [category, setCategory] = useState("");
@@ -255,7 +255,7 @@ const CreateNewListing = ({ navigation, route }) => {
 					<View style={formStyles.fieldContainer}>
 						<Text style={formStyles.label}>Description</Text>
 						<Input
-							placeholder="eg. Good quality fan."
+							placeholder="Write a short description : color, size, condition, etc."
 							onChangeText={(text) => setDescription(text)}
 							value={description}
 							style={formStyles.input}
@@ -271,7 +271,7 @@ const CreateNewListing = ({ navigation, route }) => {
 					<View style={formStyles.fieldContainer}>
 						<Text style={formStyles.label}>Price ($)</Text>
 						<Input
-							placeholder="eg. 20."
+							placeholder="Rent price in CAD$"
 							onChangeText={(text) => setPrice(text)}
 							value={price}
 							style={formStyles.input}
@@ -287,7 +287,7 @@ const CreateNewListing = ({ navigation, route }) => {
 					<View style={formStyles.fieldContainer}>
 						<Text style={formStyles.label}>Pickup Location</Text>
 						<Input
-							placeholder="eg. 160 Kendal Ave."
+							placeholder="Enter pickup address"
 							onChangeText={(text) => setpickUpAddress(text)}
 							value={pickUpAddress}
 							style={formStyles.input}
@@ -311,7 +311,12 @@ const CreateNewListing = ({ navigation, route }) => {
 								{ label: "2 months", value: "2 months" },
 							]}
 							value={duration}
+							placeholder={{ label: "Select rent interval", value: null }}
 							style={{
+								placeholder: {
+									color: "#9E9E9E",
+									fontSize: 16,
+								},
 								inputIOS: {
 									marginTop: 8,
 									backgroundColor: "#fff",
@@ -345,7 +350,12 @@ const CreateNewListing = ({ navigation, route }) => {
 								{ label: "Electronics", value: "Electronics" },
 							]}
 							value={category}
+							placeholder={{ label: "Select a category", value: null }}
 							style={{
+								placeholder: {
+									color: "#9E9E9E",
+									fontSize: 16,
+								},
 								inputIOS: {
 									marginTop: 8,
 									backgroundColor: "#fff",
@@ -411,6 +421,7 @@ const CreateNewListing = ({ navigation, route }) => {
 										height: 40,
 										borderColor: primaryColor,
 										borderWidth: 1,
+										color: "#9E9E9E",
 									}}
 								>
 									{imageToUpload ? imageToUpload : "Select item image"}

@@ -23,6 +23,7 @@ const Input = ({
 				style={[inputStyle, style]}
 				outlineColor={primaryColor}
 				activeOutlineColor={lightTheme.colors.onPrimaryContainer}
+				placeholderTextColor='#9E9E9E'
 			/>
 		</>
 	);
