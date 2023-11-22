@@ -32,6 +32,7 @@ import HomeTab from './HomeTabs/HomeTab';
 import MapTab from './HomeTabs/MapTab';
 import BookingRequestTab from './HomeTabs/BookingRequestTab';
 import ProfileTab from './HomeTabs/ProfileTab';
+import CreateNewListing from './CreateNewListing';
 import NotificationsScreen from './NotificationsScreen';
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -75,20 +76,33 @@ const HomeScreen = ({ navigation, route }) => {
 									name={iconName}
 									size={28}
 									color={color}
-									style={{ paddingTop: 8 }}
+									style={{ paddingTop: 5 }}
 								/>
 							);
 						},
-						tabBarLabelStyle: {
-							fontSize: 12,
+						tabBarLabel: ({ focused, color }) => {
+							if (focused) {
+								return (
+									<Text style={{ color: primaryColor, fontSize: 12 }}>{route.name}</Text>
+								);
+							}
+							return null; // Hide label when not focused
 						},
 						tabBarStyle: {
-							height: 85,
+							position: 'absolute',
+							bottom: 0,
+							right: 0,
+							left: 0,
+							elevation: 0,
+							height: Platform.OS === 'ios' ? 85 : 70,
+							paddingBottom: Platform.OS === 'ios' ? 30 : 10,
 						},
 						tabBarActiveTintColor: primaryColor,
 						tabBarInactiveTintColor: tertiaryColor,
+						tabBarHideOnKeyboard: true,
 					})}
 				>
+					{/* Home */}
 					<Tab.Screen
 						name="Home"
 						component={HomeTab}
@@ -101,7 +115,6 @@ const HomeScreen = ({ navigation, route }) => {
 							),
 							headerTitleAlign: 'center',
 							headerStyle: {
-								// backgroundColor: lightTheme.colors.primaryContainer,
 								shadowColor: lightTheme.colors.shadow,
 							},
 							headerRight: () => (
@@ -118,6 +131,8 @@ const HomeScreen = ({ navigation, route }) => {
 							),
 						}}
 					/>
+
+					{/* Explore */}
 					<Tab.Screen
 						name="Explore"
 						component={MapTab}
@@ -131,6 +146,48 @@ const HomeScreen = ({ navigation, route }) => {
 						}}
 					/>
 
+					{/* Create Listing */}
+					<Tab.Screen
+						name=" "
+						component={CreateNewListing}
+						options={{
+							tabBarIcon: ({ focused }) => {
+								return (
+									<View
+										style={{
+											alignItems: 'center',
+											justifyContent: 'center',
+											backgroundColor: focused
+												? lightTheme.colors.onPrimaryContainer
+												: primaryColor,
+											height: Platform.OS == 'ios' ? 70 : 65,
+											width: Platform.OS == 'ios' ? 70 : 65,
+											top: -20,
+											borderRadius: Platform.OS == 'ios' ? 40 : 35,
+											borderWidth: 2,
+											borderColor: focused
+												? lightTheme.colors.onPrimaryContainer
+												: primaryColor,
+										}}
+									>
+										<Icon
+											name="add"
+											size={24}
+											color={backgroundColor}
+										/>
+									</View>
+								);
+							},
+							headerTitle: () => <NavigationHeader title="Create Listing" />,
+							headerTitleAlign: 'center',
+							headerStyle: {
+								// backgroundColor: lightTheme.colors.primaryContainer,
+								shadowColor: lightTheme.colors.shadow,
+							},
+						}}
+					/>
+
+					{/* Requests */}
 					<Tab.Screen
 						name="Requests"
 						component={BookingRequestTab}
@@ -144,6 +201,7 @@ const HomeScreen = ({ navigation, route }) => {
 						}}
 					/>
 
+					{/* Profile */}
 					<Tab.Screen
 						name="Profile"
 						component={ProfileTab}
@@ -161,5 +219,5 @@ const HomeScreen = ({ navigation, route }) => {
 		</>
 	);
 };
-const styles = StyleSheet.create({});
+
 export default HomeScreen;

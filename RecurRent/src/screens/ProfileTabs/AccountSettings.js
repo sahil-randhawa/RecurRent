@@ -282,6 +282,120 @@ const AccountSettingsScreen = () => {
 				)}
 			</View>
 
+
+			{/* Edit info */}
+			<View style={{ flex: 1, paddingTop: 50 }}>
+				{/* Name */}
+				<View
+					style={{
+						flexDirection: 'column',
+						marginBottom: 10,
+					}}
+				>
+					<Text
+						style={[
+							typography.bodyHeading,
+							{ color: lightTheme.colors.secondary, marginBottom: 10 },
+						]}
+					>
+						Name
+					</Text>
+					<View style={styles.txtInput}>
+						<TextInput
+							mode="outlined"
+							value={name}
+							onChangeText={(value) => setName(value)}
+							editable={true}
+							style={[typography.body, { marginBottom: 10, lineHeight: 0 }]}
+							activeOutlineColor="#374D96"
+						/>
+					</View>
+				</View>
+
+				{/* Email */}
+				<View
+					style={{
+						flexDirection: 'column',
+						marginBottom: 10,
+					}}
+				>
+					<Text
+						style={[
+							typography.bodyHeading,
+							{
+								color: lightTheme.colors.secondary,
+								marginBottom: 10,
+								lineHeight: 0,
+							},
+						]}
+					>
+						Email
+					</Text>
+					<View style={styles.txtInput}>
+						<TextInput
+							mode="outlined"
+							value={email}
+							onChangeText={(value) => setEmail(value)}
+							editable={true}
+							style={[typography.body, { marginBottom: 10, lineHeight: 0 }]}
+							activeOutlineColor="#374D96"
+						/>
+					</View>
+				</View>
+
+				{/* Password */}
+				{/* <View
+					style={{
+						flexDirection: 'column',
+						marginBottom: 10,
+					}}
+				>
+					<Text
+						style={[
+							typography.bodyHeading,
+							{ color: lightTheme.colors.secondary, marginBottom: 10 },
+						]}
+					>
+						Password
+					</Text>
+					<View style={styles.txtInput}>
+						<TextInput
+							mode="outlined"
+							value={password}
+							onChangeText={(value) => setPassword(value)}
+							editable={true}
+							style={[typography.body, { marginBottom: 10, lineHeight: 0  }]}
+							activeOutlineColor="#374D96"
+						/>
+					</View>
+				</View> */}
+
+				{/* Mobile Number */}
+				<View
+					style={{
+						flexDirection: 'column',
+						marginBottom: 10,
+					}}
+				>
+					<Text
+						style={[
+							typography.bodyHeading,
+							{ color: lightTheme.colors.secondary, marginBottom: 10 },
+						]}
+					>
+						Mobile Number
+					</Text>
+					<View style={styles.txtInput}>
+						<TextInput
+							mode="outlined"
+							value={mobile}
+							onChangeText={(value) => setMobile(value)}
+							editable={true}
+							style={[typography.body, { marginBottom: 10, lineHeight: 0 }]}
+							activeOutlineColor="#374D96"
+						/>
+					</View>
+
 			{/* user details edit*/}
 			<View style={styles.container}>
 				<View style={formStyles.fieldContainer}>
@@ -310,6 +424,7 @@ const AccountSettingsScreen = () => {
 						value={mobile}
 						style={formStyles.input}
 					/>
+
 				</View>
 
 
@@ -317,7 +432,9 @@ const AccountSettingsScreen = () => {
 				style={{
 					flexDirection: 'row',
 					justifyContent: 'flex-end',
-					marginBottom: 20,
+
+					marginBottom: 25,
+
 				}}
 			>
 
@@ -378,6 +495,37 @@ const styles = StyleSheet.create({
 		marginTop: 5,
 		backgroundColor: 'rgba(31, 31, 31, 0.5)',
 	},
+
+	rowData: {
+		width: '100%',
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+	},
+
+	inputRow: {
+		width: '100%',
+		paddingTop: 10,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+	},
+
+	input: {
+		flex: 1,
+		marginRight: 2,
+	},
+
+	txtInput: {
+		height: 44,
+		width: '100%',
+		borderColor: lightTheme.colors.surface,
+		borderWidth: 1,
+		borderRadius: 4,
+		marginVertical: 6,
+		justifyContent: 'center',
+	},
+
 });
 
 export default AccountSettingsScreen;
