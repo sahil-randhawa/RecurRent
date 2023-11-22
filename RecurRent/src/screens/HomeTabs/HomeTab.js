@@ -168,43 +168,43 @@ const HomeTab = ({ navigation, route }) => {
 		setSearchQuery(searchText);
 
 		// 	const q = query(collection(db, "category"));
-			// 	let categoryId=""
-			// 	setIsLoading(true);
-			// 	getDocs(q)
-			//   .then((querySnapshot) => {
+		// 	let categoryId=""
+		// 	setIsLoading(true);
+		// 	getDocs(q)
+		//   .then((querySnapshot) => {
 
-			// 	querySnapshot.forEach((doc) => {
-			// 	  const category = doc.data();
-			// 	  if (
-			// 		category.name.toLowerCase().includes(searchText.toLowerCase())
-			// 	  ) {
-			// 		categoryId = doc.id
-			// 		return;
-			// 	  }
-			// 	});
-			// 	const productQuery = query(collection(db, "Products"),where("categoryID" ,"==", categoryId));
-			// 	getDocs(productQuery)
-			// 	.then((querySnapshot) => {
-			// 	  const filteredResults = [];
-			// 	  querySnapshot.forEach((doc) => {
-			// 		const product = doc.data();
+		// 	querySnapshot.forEach((doc) => {
+		// 	  const category = doc.data();
+		// 	  if (
+		// 		category.name.toLowerCase().includes(searchText.toLowerCase())
+		// 	  ) {
+		// 		categoryId = doc.id
+		// 		return;
+		// 	  }
+		// 	});
+		// 	const productQuery = query(collection(db, "Products"),where("categoryID" ,"==", categoryId));
+		// 	getDocs(productQuery)
+		// 	.then((querySnapshot) => {
+		// 	  const filteredResults = [];
+		// 	  querySnapshot.forEach((doc) => {
+		// 		const product = doc.data();
 
-			// 		  filteredResults.push({ id: doc.id, ...product });
+		// 		  filteredResults.push({ id: doc.id, ...product });
 
-			// 	  });
-			// 	  setProductsListings(filteredResults);
-			// 	  setIsLoading(false); // Hide loader after searching
-			// 	})
-			// 	.catch((error) => {
-			// 	  console.error("Error filtering products category wise:", error);
-			// 	  setIsLoading(false); // Hide loader on error
-			// 	});
+		// 	  });
+		// 	  setProductsListings(filteredResults);
+		// 	  setIsLoading(false); // Hide loader after searching
+		// 	})
+		// 	.catch((error) => {
+		// 	  console.error("Error filtering products category wise:", error);
+		// 	  setIsLoading(false); // Hide loader on error
+		// 	});
 
-			//   })
-			//   .catch((error) => {
-			// 	console.error("Error filtering category ID:", error);
-			// 	 // Hide loader on error
-			//   });
+		//   })
+		//   .catch((error) => {
+		// 	console.error("Error filtering category ID:", error);
+		// 	 // Hide loader on error
+		//   });
 
 		const q = query(collection(db, 'Products'));
 		setIsLoading(true);
@@ -268,8 +268,8 @@ const HomeTab = ({ navigation, route }) => {
 
 	return (
 		<>
-			<View style={styles.container}>
-				<View>
+			<View style={{ flex: 1 }}>
+				<View style={styles.container}>
 					{/* Search and Filter View */}
 					<View>
 						<Search
@@ -298,7 +298,10 @@ const HomeTab = ({ navigation, route }) => {
 									<ScrollView
 										horizontal
 										showsHorizontalScrollIndicator={false}
-										contentContainerStyle={{ paddingHorizontal: 0, paddingBottom: 8,}}
+										contentContainerStyle={{
+											paddingHorizontal: 0,
+											paddingBottom: 8,
+										}}
 									>
 										{categories.map((category) => (
 											<Category
@@ -309,15 +312,6 @@ const HomeTab = ({ navigation, route }) => {
 											/>
 										))}
 									</ScrollView>
-
-									{/* <Icon
-										name={
-											isCategoryActive ? 'checkbox-active' : 'checkbox-passive'
-										}
-										size={20}
-										style={{ color: tertiaryColor }}
-									/>
-									<Text style={{ marginLeft: 10 }}>Category</Text> */}
 								</TouchableOpacity>
 							</View>
 						)}
@@ -331,37 +325,46 @@ const HomeTab = ({ navigation, route }) => {
 							style={styles.productContainer}
 						/>
 					) : productsListings.length > 0 ? (
-						<View style={{marginBottom: Platform.OS === 'ios' ? 320 : 300,}}>
+						<View
+							style={{
+								flex: 1,
+								justifyContent: 'center',
+								alignItems: 'center',
+							}}
+						>
 							<FlatList
-							data={productsListings.filter((product) =>
-								isCategoryActive
-									? product.category.toLowerCase() ===
-									  selectedCategory.toLowerCase()
-									: true
-							)}
-							contentContainerStyle={{
-								padding: 5,
-							}}
-							vertical={true}
-							showsVerticalScrollIndicator={false}
-							renderItem={(rowData) => {
-								return (
-									<View style={{ flex: 1, paddingHorizontal: 5 }}>
-										<ProductCard
-											coverUri={rowData.item['productPhoto']}
-											title={rowData.item.name}
-											price={rowData.item.price}
-											duration={rowData.item.duration}
-											productId={rowData.item.id}
-											buttonLabel={'More Details'}
-											onPressAction={() => {
-												moreDetailsClicked(rowData);
-											}}
-										/>
-									</View>
-								);
-							}}
-						/>
+								data={productsListings.filter((product) =>
+									isCategoryActive
+										? product.category.toLowerCase() ===
+										  selectedCategory.toLowerCase()
+										: true
+								)}
+								contentContainerStyle={{
+									marginLeft: 5,
+									paddingBottom: Platform.OS === 'ios' ? 200 : 180,
+									paddingHorizontal: 0,
+									justifyContent: 'center',
+								}}
+								vertical={true}
+								showsVerticalScrollIndicator={false}
+								renderItem={(rowData) => {
+									return (
+										<View style={{ flex: 1, paddingHorizontal: 5 }}>
+											<ProductCard
+												coverUri={rowData.item['productPhoto']}
+												title={rowData.item.name}
+												price={rowData.item.price}
+												duration={rowData.item.duration}
+												productId={rowData.item.id}
+												buttonLabel={'More Details'}
+												onPressAction={() => {
+													moreDetailsClicked(rowData);
+												}}
+											/>
+										</View>
+									);
+								}}
+							/>
 						</View>
 					) : (
 						// Display a message when no results are found
@@ -383,23 +386,6 @@ const HomeTab = ({ navigation, route }) => {
 						mode="text"
 						style={[{ textAlign: 'center', color: primaryColor }]}
 					/>
-
-					{/* <Btn
-						title="Create New Listing"
-						onPress={() => {
-							navigation.navigate("CreateNewListing");
-						}}
-						mode="contained"
-						style={[
-							primaryBtnStyle,
-							{
-								width: "100%",
-								alignSelf: "center",
-								marginBottom: 15,
-								color: lightTheme.colors.onPrimary,
-							},
-						]}
-					/> */}
 				</View>
 			</View>
 		</>
