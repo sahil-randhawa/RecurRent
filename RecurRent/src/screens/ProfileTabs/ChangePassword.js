@@ -23,13 +23,14 @@ import {
 	border,
 	lightTheme,
 	darkTheme,
+    formStyles,
 } from "../../styles/GlobalStyles";
 import Btn, {
 	primaryBtnStyle,
 	secondaryBtnStyle,
 } from "../../components/Button";
 import { StatusBar } from "expo-status-bar";
-import styles from "../../styles/AuthStyles";
+// import styles from "../../styles/AuthStyles";
 import { auth, db,firebase } from "../../../firebaseConfig";
 
 import { signOut,sendPasswordResetEmail,EmailAuthProvider,reauthenticateWithCredential,updatePassword } from "firebase/auth";
@@ -45,7 +46,7 @@ import {
 
 
 const ChangePassword = ({ navigation }) => {
-	const [currentPassword, setCurrentPassword] = useState('');
+  const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
@@ -113,44 +114,52 @@ const ChangePassword = ({ navigation }) => {
 	}
 	return (
 		<>
-			<View style={[
-					spacing.container,
-					{ justifyContent:'flex-start' },
+			<ScrollView>
+            <View style={[
+					styles.container
+					
 				]}>
-                <View style={styles.formContainer}>					
-                    <View style={styles.inputContainer}>
-						<View>
-							<Text style={[typography.bodyHeading,{marginLeft:40}]}>You can change your password here!</Text>
-							<Input
+                {/* <View style={styles.formContainer}>					 */}
+                    {/* <View style={formStyles.fieldContainer}> */}
+                    {/* <Text style={[typography.bodyHeading,{marginLeft:40}]}>You can change your password here!</Text> */}
+						<View style={formStyles.fieldContainer}>
+							
+							<Text style={formStyles.label}>Old Password</Text>
+                            <Input
 							secureTextEntry={true}
 								label="Old Password"
 								placeholder="Please enter your old password"
 								value={currentPassword}
 								onChangeText={setCurrentPassword}
-							/>
-							<Text style={styles.error}>Error</Text>
+                                style={formStyles.input}
+                            />
+							
 						</View>
-						<View>
+						<View style={formStyles.fieldContainer}>
+                        <Text style={formStyles.label}>New Password</Text>
 							<Input
 								label="New Password"
 								placeholder="Please enter your New password"
 								value={newPassword}
 								onChangeText={setNewPassword}
 								secureTextEntry={true}
+                                style={formStyles.input}
 							/>
-							<Text style={styles.error}>Error</Text>
+							
 						</View>
-                        <View>
+                        <View style={formStyles.fieldContainer}>
+                        <Text style={formStyles.label}>Confirm Password</Text>
 							<Input
 								label="Confirm Password"
 								placeholder="Please enter your Confirm password"
 								value={confirmPassword}
 								onChangeText={setConfirmPassword}
 								secureTextEntry={true}
+                                style={formStyles.input}
 							/>
-							<Text style={styles.error}>Error</Text>
+							
 						</View>
-					</View>
+			
 			
 			<Btn
 						title="Change Password"
@@ -167,11 +176,19 @@ const ChangePassword = ({ navigation }) => {
 							},
 						]}
 					/>
-			</View>
+			{/* </View> */}
+            {/* </View> */}
             </View>
-
+            </ScrollView>
 		</>
 	);
 };
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		padding: 20,
+		backgroundColor: backgroundColor,
+	},
+});
 
 export default ChangePassword;
