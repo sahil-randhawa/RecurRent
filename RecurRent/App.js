@@ -23,7 +23,7 @@ import Toast from 'react-native-toast-message';
 import ChatScreen from './src/screens/ChatScreen';
 import EditListing from './src/screens/EditListing';
 import { StatusBar } from 'expo-status-bar';
-
+import ChangePassword from './src/screens/ProfileTabs/ChangePassword';
 const Stack = createStackNavigator();
 
 const App = () => {
