@@ -159,6 +159,16 @@ const App = () => {
 							}}
 						/>
 						<Stack.Screen
+							name="Change Password"
+							component={ChangePassword}
+							options={{
+								headerShown: true,
+								title: 'Change Password',
+								headerTitleStyle: typography.navHeading,
+								headerBackTitle: 'Profile',
+							}}
+						/>
+						<Stack.Screen
 							name="EditListing"
 							component={EditListing}
 							options={{

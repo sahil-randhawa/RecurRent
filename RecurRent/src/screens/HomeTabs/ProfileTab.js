@@ -124,6 +124,13 @@ const ProfileTab = ({ navigation, route }) => {
 			iconName: 'settings-outline',
 			navigateTo: 'Settings',
 		},
+		{
+			key: "change-password",
+			title: "Change Password",
+			description: "Change your Password",
+			iconName: "key-outline",
+			navigateTo: "Change Password",
+		},
 	];
 
 	return (
