@@ -59,6 +59,12 @@ const LogInScreen = ({ navigation, route }) => {
 						console.log("Error: Type of user does not match!");
 						alert("Invalid Credential!");
 					}
+					if (auth.currentUser) {
+						navigation.reset({
+							index: 0,
+							routes: [{ name: 'HomeScreen' }],
+						});
+					}
 				} else {
 					console.log("Error: DocSanp Does not exist!");
 					alert("Invalid Credential!");
