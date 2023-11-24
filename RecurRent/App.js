@@ -23,7 +23,7 @@ import Toast from 'react-native-toast-message';
 import ChatScreen from './src/screens/ChatScreen';
 import EditListing from './src/screens/EditListing';
 import { StatusBar } from 'expo-status-bar';
-
+import ChangePassword from './src/screens/ProfileTabs/ChangePassword';
 const Stack = createStackNavigator();
 
 const App = () => {
@@ -154,6 +154,16 @@ const App = () => {
 							options={{
 								headerShown: true,
 								title: 'Settings',
+								headerTitleStyle: typography.navHeading,
+								headerBackTitle: 'Profile',
+							}}
+						/>
+						<Stack.Screen
+							name="Change Password"
+							component={ChangePassword}
+							options={{
+								headerShown: true,
+								title: 'Change Password',
 								headerTitleStyle: typography.navHeading,
 								headerBackTitle: 'Profile',
 							}}

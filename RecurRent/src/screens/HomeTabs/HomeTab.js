@@ -164,52 +164,58 @@ const HomeTab = ({ navigation, route }) => {
 	};
 
 	// handleSearch: based on the entered searchText
-	const handleSearch = (searchText) => {
-		setSearchQuery(searchText);
-
+	const handleSearch = (searchText,searchType) => {
+		
+		if (searchType == "category"){
+			setSelectedCategory(searchText);
+		}
+		
 		// 	const q = query(collection(db, "category"));
-		// 	let categoryId=""
-		// 	setIsLoading(true);
-		// 	getDocs(q)
-		//   .then((querySnapshot) => {
+			// 	let categoryId=""
+			// 	setIsLoading(true);
+			// 	getDocs(q)
+			//   .then((querySnapshot) => {
 
-		// 	querySnapshot.forEach((doc) => {
-		// 	  const category = doc.data();
-		// 	  if (
-		// 		category.name.toLowerCase().includes(searchText.toLowerCase())
-		// 	  ) {
-		// 		categoryId = doc.id
-		// 		return;
-		// 	  }
-		// 	});
-		// 	const productQuery = query(collection(db, "Products"),where("categoryID" ,"==", categoryId));
-		// 	getDocs(productQuery)
-		// 	.then((querySnapshot) => {
-		// 	  const filteredResults = [];
-		// 	  querySnapshot.forEach((doc) => {
-		// 		const product = doc.data();
+			// 	querySnapshot.forEach((doc) => {
+			// 	  const category = doc.data();
+			// 	  if (
+			// 		category.name.toLowerCase().includes(searchText.toLowerCase())
+			// 	  ) {
+			// 		categoryId = doc.id
+			// 		return;
+			// 	  }
+			// 	});
+			// 	const productQuery = query(collection(db, "Products"),where("categoryID" ,"==", categoryId));
+			// 	getDocs(productQuery)
+			// 	.then((querySnapshot) => {
+			// 	  const filteredResults = [];
+			// 	  querySnapshot.forEach((doc) => {
+			// 		const product = doc.data();
 
-		// 		  filteredResults.push({ id: doc.id, ...product });
+			// 		  filteredResults.push({ id: doc.id, ...product });
 
-		// 	  });
-		// 	  setProductsListings(filteredResults);
-		// 	  setIsLoading(false); // Hide loader after searching
-		// 	})
-		// 	.catch((error) => {
-		// 	  console.error("Error filtering products category wise:", error);
-		// 	  setIsLoading(false); // Hide loader on error
-		// 	});
+			// 	  });
+			// 	  setProductsListings(filteredResults);
+			// 	  setIsLoading(false); // Hide loader after searching
+			// 	})
+			// 	.catch((error) => {
+			// 	  console.error("Error filtering products category wise:", error);
+			// 	  setIsLoading(false); // Hide loader on error
+			// 	});
 
-		//   })
-		//   .catch((error) => {
-		// 	console.error("Error filtering category ID:", error);
-		// 	 // Hide loader on error
-		//   });
+			//   })
+			//   .catch((error) => {
+			// 	console.error("Error filtering category ID:", error);
+			// 	 // Hide loader on error
+			//   });
 
 		const q = query(collection(db, 'Products'));
 		setIsLoading(true);
+		console.log("category selected", selectedCategory)
 
-		if (isCategoryActive == true) {
+		if (searchType == "name") {
+			setFilterActive(false)
+			setSearchQuery(searchText);
 			// Case 1: User typed in the search bar
 			getDocs(q)
 				.then((querySnapshot) => {
@@ -232,9 +238,11 @@ const HomeTab = ({ navigation, route }) => {
 					console.error('Error filtering products:', error);
 					setIsLoading(false); // Hide loader on error
 				});
-		} else if (selectedCategory) {
+		} else if (searchType == "category") {
 			// Case 2: User selected a category
-			getDocs(query(q, where('category', '==', selectedCategory)))
+			setSearchQuery("")
+			
+			getDocs(query(q, where('category', '==', searchText)))
 				.then((querySnapshot) => {
 					const filteredResults = [];
 					querySnapshot.forEach((doc) => {
@@ -248,7 +256,8 @@ const HomeTab = ({ navigation, route }) => {
 					console.error('Error filtering products by category:', error);
 					setIsLoading(false); // Hide loader on error
 				});
-		} else {
+		} 
+		else {
 			// No search text or category selected, reset the product listings
 			setProductsListings([]);
 			setIsLoading(false);
@@ -257,12 +266,22 @@ const HomeTab = ({ navigation, route }) => {
 
 	// Category Press
 	const handleCategoryPress = (category) => {
-		setSelectedCategory(category);
-		setCategoryActive(!isCategoryActive);
+		// selectedCategory(category)
+		// // setCategoryActive(!isCategoryActive);
+		// handleSearch("","category");
+
+		if (selectedCategory === category) {
+			setSelectedCategory(''); // Deselect the category if it's already selected
+			handleSearch('', 'category'); // Perform search with an empty category string
+		} else {
+			setSelectedCategory(category); // Select the category
+			handleSearch(category, 'category'); // Perform search with the selected category
+		}
 	};
 
 	const handleFilterPress = () => {
 		setFilterActive(!isFilterActive);
+		
 		// Add your logic here for handling the category press
 	};
 
@@ -275,7 +294,7 @@ const HomeTab = ({ navigation, route }) => {
 						<Search
 							placeholder={'Search here'}
 							value={searchQuery}
-							onChangeText={(text) => handleSearch(text)}
+							onChangeText={(text) => handleSearch(text, "name")}
 							onFilterPress={handleFilterPress}
 							style={{ flex: 1 }}
 						/>
@@ -293,7 +312,7 @@ const HomeTab = ({ navigation, route }) => {
 										padding: 10,
 										flexDirection: 'row',
 									}}
-									onPress={handleCategoryPress}
+									onPress={() => handleCategoryPress('')}
 								>
 									<ScrollView
 										horizontal
@@ -303,11 +322,12 @@ const HomeTab = ({ navigation, route }) => {
 											paddingBottom: 8,
 										}}
 									>
+										
 										{categories.map((category) => (
 											<Category
 												key={category}
 												name={category}
-												onPress={() => handleCategoryPress(category)}
+												onPress={() => handleSearch(category,"category")}
 												isActive={selectedCategory === category}
 											/>
 										))}
