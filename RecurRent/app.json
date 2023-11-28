@@ -1,6 +1,7 @@
 {
   "expo": {
     "name": "RecurRent",
+    "owner": "sahil-r",
     "slug": "RecurRent",
     "plugins": [
       [
@@ -30,6 +31,11 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#ffffff"
+      },
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyBP1mz2_zqKe3P_fRt01iqcMLItiKTYPPI"
+        }
       },
       "permissions": [
         "android.permission.RECORD_AUDIO"

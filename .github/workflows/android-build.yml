@@ -15,7 +15,7 @@ jobs:
             echo "You must provide an EXPO_TOKEN secret linked to your Expo account."
             exit 1
           fi
-
+          
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -60,7 +60,7 @@ jobs:
       - name: Get AAB file name
         run: |
           echo "AAB_FILE_NAME=$(ls public/)" >> $GITHUB_ENV
-          
+      
       - name: LIST DIR
         run: |
           ls -la
@@ -89,6 +89,16 @@ jobs:
           asset_path: ./RecurRent-app.zip
           asset_name: RecurRent-app-v${{ github.run_number }}.zip
           asset_content_type: application/zip
+      
+      - name: Install App Center CLI
+        working-directory: ./RecurRent
+        run: npm install -g appcenter-cli
+
+      - name: Login to App Center
+        run: appcenter login --token ${{ secrets.APP_CENTER_TOKEN }}
+
+      - name: Upload to App Center
+        run: appcenter distribute release --app ${{ secrets.APP_CENTER_APP_NAME }} --file ./public/${{ env.AAB_FILE_NAME }} --group "Collaborators" --release-notes "Release v${{ github.run_number }}" --build-version 1.0.${{ github.run_number }}
 
       - name: Install App Center CLI
         working-directory: ./RecurRent
