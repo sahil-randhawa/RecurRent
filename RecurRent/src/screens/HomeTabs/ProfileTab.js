@@ -83,7 +83,7 @@ const ProfileTab = ({ navigation, route }) => {
 	};
 
 	const data = [
-		
+
 
 		{
 			key: "messages",
@@ -145,88 +145,92 @@ const ProfileTab = ({ navigation, route }) => {
 					size="large"
 				/>
 			) : (
-				<View style={styles.viewContainer}>
-					<View style={styles.header}>
-						<View>
-							<Avatar.Image
-								size={60}
-								source={
-									profileUrl
-										? { uri: profileUrl }
-										: require('../../../assets/images/profile_placeholder.png')
-								}
+				<ScrollView style={{
+					marginBottom: 100,
+				}}>
+					<View style={styles.viewContainer}>
+						<View style={styles.header}>
+							<View>
+								<Avatar.Image
+									size={60}
+									source={
+										profileUrl
+											? { uri: profileUrl }
+											: require('../../../assets/images/profile_placeholder.png')
+									}
+								/>
+							</View>
+							<View style={styles.textContainer}>
+								<Text
+									style={[
+										typography.bodyHeading,
+										{ color: textColor, marginBottom: 0 },
+									]}
+								>
+									{user.name}
+								</Text>
+								{/* <Text style={typography.caption}>{user.email}</Text> */}
+							</View>
+						</View>
+
+						<View style={styles.listContainer}>
+							<FlatList
+								data={data}
+								renderItem={({ item, index }) => (
+									<List.Item
+										title={item.title}
+										description={item.description}
+										descriptionStyle={[
+											typography.caption,
+											{
+												color: lightTheme.colors.onPrimaryContainer,
+												marginTop: 5,
+											},
+										]}
+										left={() => (
+											<Icon
+												name={item.iconName}
+												size={24}
+												color={primaryColor}
+											/>
+										)}
+										right={() => (
+											<Icon
+												name="chevron-forward-outline"
+												size={24}
+												color={primaryColor}
+											/>
+										)}
+										onPress={() => {
+											navigation.navigate(item.navigateTo);
+											// Navigate to the respective page when an item is pressed
+										}}
+										style={styles.listItem}
+									/>
+								)}
+								keyExtractor={(item) => item.key}
+								contentContainerStyle={styles.flatListContainer}
 							/>
 						</View>
-						<View style={styles.textContainer}>
-							<Text
-								style={[
-									typography.bodyHeading,
-									{ color: textColor, marginBottom: 0 },
-								]}
-							>
-								{user.name}
-							</Text>
-							{/* <Text style={typography.caption}>{user.email}</Text> */}
+
+						<View
+							style={{
+								flexDirection: 'row',
+								justifyContent: 'flex-end',
+								marginBottom: 25,
+							}}
+						>
+							<Btn
+								title="Sign Out"
+								onPress={onLogoutClicked}
+								mode="contained"
+								style={[primaryBtnStyle, { flex: 1, textAlign: 'center' }]}
+							/>
 						</View>
-					</View>
 
-					<View style={styles.listContainer}>
-						<FlatList
-							data={data}
-							renderItem={({ item, index }) => (
-								<List.Item
-									title={item.title}
-									description={item.description}
-									descriptionStyle={[
-										typography.caption,
-										{
-											color: lightTheme.colors.onPrimaryContainer,
-											marginTop: 5,
-										},
-									]}
-									left={() => (
-										<Icon
-											name={item.iconName}
-											size={24}
-											color={primaryColor}
-										/>
-									)}
-									right={() => (
-										<Icon
-											name="chevron-forward-outline"
-											size={24}
-											color={primaryColor}
-										/>
-									)}
-									onPress={() => {
-										navigation.navigate(item.navigateTo);
-										// Navigate to the respective page when an item is pressed
-									}}
-									style={styles.listItem}
-								/>
-							)}
-							keyExtractor={(item) => item.key}
-							contentContainerStyle={styles.flatListContainer}
-						/>
-					</View>
 
-					<View
-						style={{
-							flexDirection: 'row',
-							justifyContent: 'flex-end',
-							marginBottom: 25,
-						}}
-					>
-						<Btn
-							title="Sign Out"
-							onPress={onLogoutClicked}
-							mode="contained"
-							style={[primaryBtnStyle, { flex: 1, textAlign: 'center' }]}
-						/>
 					</View>
-
-					
-				</View>
+				</ScrollView>
 			)}
 		</View>
 	);
