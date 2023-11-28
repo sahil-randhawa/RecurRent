@@ -100,16 +100,6 @@ jobs:
       - name: Upload to App Center
         run: appcenter distribute release --app ${{ secrets.APP_CENTER_APP_NAME }} --file ./public/${{ env.AAB_FILE_NAME }} --group "Collaborators" --release-notes "Release v${{ github.run_number }}" --build-version 1.0.${{ github.run_number }}
 
-      - name: Install App Center CLI
-        working-directory: ./RecurRent
-        run: npm install -g appcenter-cli
-
-      - name: Login to App Center
-        run: appcenter login --token ${{ secrets.APP_CENTER_TOKEN }}
-
-      - name: Upload to App Center
-        run: appcenter distribute release --app ${{ secrets.APP_CENTER_APP_NAME }} --file ./public/${{ env.AAB_FILE_NAME }} --group "Collaborators" --release-notes "Release v${{ github.run_number }}" --build-version 1.0.${{ github.run_number }}
-
   delete-release:
     runs-on: ubuntu-latest
     needs: update
