@@ -84,7 +84,13 @@ const ProfileTab = ({ navigation, route }) => {
 
 	const data = [
 
-
+		{
+			key: 'account-settings',
+			title: 'Account Settings',
+			description: 'Display picture, name and mobile',
+			iconName: 'person-circle-outline',
+			navigateTo: 'AccountSettings',
+		},
 		{
 			key: "messages",
 			title: "Messages",
@@ -104,19 +110,10 @@ const ProfileTab = ({ navigation, route }) => {
 
 			key: 'listings',
 			title: 'Your Listings',
-			description: 'View or create your listings',
+			description: 'View or edit your listings',
 			iconName: 'reader-outline',
 			navigateTo: 'Listings',
 		},
-
-		{
-			key: 'account-settings',
-			title: 'Account Settings',
-			description: 'Contact information, passwords',
-			iconName: 'person-circle-outline',
-			navigateTo: 'AccountSettings',
-		},
-
 		{
 			key: 'settings',
 			title: 'Settings',
@@ -127,7 +124,7 @@ const ProfileTab = ({ navigation, route }) => {
 		{
 			key: "change-password",
 			title: "Change Password",
-			description: "Change your Password",
+			description: "Set a new password",
 			iconName: "key-outline",
 			navigateTo: "Change Password",
 		},
