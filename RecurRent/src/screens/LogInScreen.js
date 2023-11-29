@@ -165,7 +165,7 @@ const LogInScreen = ({ navigation, route }) => {
 				</View>
 
 				{/* TODO: Change onPress */}
-				<View style={{ width: "100%" }}>
+				{/* <View style={{ width: "100%" }}>
 					<View style={styles.dividerContainer}>
 						<View style={[styles.line, { marginRight: 10 }]} />
 						<Text style={[typography.body, styles.onOr]}>or</Text>
@@ -187,9 +187,11 @@ const LogInScreen = ({ navigation, route }) => {
 							style={[secondaryBtnStyle, { flex: 1, textAlign: "center" }]}
 						/>
 					</View>
-				</View>
+				</View> */}
 
-				<View style={{ flexDirection: "row", marginTop: 20, }}>
+				<View style={{ flexDirection: 'row',
+					justifyContent: 'flex-end',
+			 }}>
 					<Text style={[typography.body, { marginRight: 10 }]}>
 						Don't have an account?
 					</Text>
