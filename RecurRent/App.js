@@ -63,7 +63,7 @@ const App = () => {
 							options={{ headerShown: false }}
 						/>
 						<Stack.Screen
-							name="SignUp"r
+							name="SignUp"
 							component={SignUpScreen}
 							options={{ headerShown: false }}
 						/>
