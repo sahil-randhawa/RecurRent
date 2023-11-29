@@ -65,7 +65,7 @@ const ChangePassword = ({ navigation }) => {
     }
 
     if(newPassword != confirmPassword){
-        alert("New password & Confirm PAssword Does not match!")
+        alert("New Password & Confirm Password Does not match!")
         setConfirmPassword('')
         setCurrentPassword('')
         setNewPassword('')
@@ -88,7 +88,7 @@ const ChangePassword = ({ navigation }) => {
             Toast.show({
                 type: 'success',
                 position: 'bottom',
-                text1: 'Password updated successfully',
+                text1: 'Password updated successfully!',
                 visibilityTime: 3000,
                 autoHide: true,
             });
@@ -105,7 +105,7 @@ const ChangePassword = ({ navigation }) => {
             Toast.show({
                 type: 'info',
                 position: 'bottom',
-                text1: `Error: Old password might be worng. Please check it.`,
+                text1: `Error: Old Password might be wrong. Check it.`,
                 visibilityTime: 3000,
                 autoHide: true,
             });
