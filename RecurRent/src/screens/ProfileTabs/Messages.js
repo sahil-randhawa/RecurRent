@@ -225,7 +225,7 @@ const Messages = ({ navigation, route }) => {
 const styles = StyleSheet.create({
 	image: {
 		width: '20%',
-		height: 'auto',
+		height: 'auto'
 	},
 
 	container: {
@@ -263,7 +263,7 @@ const styles = StyleSheet.create({
 	profileImage: {
 		width: 120,
 		borderRadius: 5,
-		height: 120,
+		height: 150,
 	},
 
 	textContainer: {
@@ -283,7 +283,7 @@ const styles = StyleSheet.create({
 	buttonContainer: {
 		flexDirection: 'row',
 		flex: 1,
-		justifyContent: 'space-between',
+		justifyContent: 'flex-end',
 	},
 });
 

@@ -29,10 +29,9 @@ import { signOut } from 'firebase/auth';
 import { auth, db } from '../../../firebaseConfig';
 import { collection, doc, getDoc, updateDoc } from 'firebase/firestore';
 
-import { useState, useEffect } from "react";
-import Icon from "react-native-vector-icons/Ionicons";
-import { useFocusEffect } from "@react-navigation/native";
-
+import { useState, useEffect } from 'react';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { useFocusEffect } from '@react-navigation/native';
 
 const ProfileTab = ({ navigation, route }) => {
 	const [isLoading, setIsLoading] = useState(true);
@@ -92,12 +91,11 @@ const ProfileTab = ({ navigation, route }) => {
 			navigateTo: 'AccountSettings',
 		},
 		{
-			key: "messages",
-			title: "Messages",
-			description: "View and manage your messages",
-			iconName: "chatbox-ellipses-outline",
-			navigateTo: "Messages",
-
+			key: 'messages',
+			title: 'Messages',
+			description: 'View and manage your messages',
+			iconName: 'chatbox-ellipses-outline',
+			navigateTo: 'Messages',
 		},
 		{
 			key: 'wishlist',
@@ -107,7 +105,6 @@ const ProfileTab = ({ navigation, route }) => {
 			navigateTo: 'Wishlist',
 		},
 		{
-
 			key: 'listings',
 			title: 'Your Listings',
 			description: 'View or edit your listings',
@@ -124,11 +121,11 @@ const ProfileTab = ({ navigation, route }) => {
 		// },
 
 		{
-			key: "change-password",
-			title: "Change Password",
-			description: "Set a new password",
-			iconName: "key-outline",
-			navigateTo: "Change Password",
+			key: 'change-password',
+			title: 'Change Password',
+			description: 'Change your Password',
+			iconName: 'key-outline',
+			navigateTo: 'Change Password',
 		},
 	];
 
@@ -144,9 +141,11 @@ const ProfileTab = ({ navigation, route }) => {
 					size="large"
 				/>
 			) : (
-				<ScrollView style={{
-					marginBottom: 100,
-				}}>
+				<ScrollView
+					style={{
+						marginBottom: 100,
+					}}
+				>
 					<View style={styles.viewContainer}>
 						<View style={styles.header}>
 							<View>
@@ -226,8 +225,6 @@ const ProfileTab = ({ navigation, route }) => {
 								style={[primaryBtnStyle, { flex: 1, textAlign: 'center' }]}
 							/>
 						</View>
-
-
 					</View>
 				</ScrollView>
 			)}
