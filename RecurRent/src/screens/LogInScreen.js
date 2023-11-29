@@ -29,8 +29,8 @@ import { signInWithEmailAndPassword, signOut, sendPasswordResetEmail } from "fir
 import { getDoc, doc } from "firebase/firestore";
 
 const LogInScreen = ({ navigation, route }) => {
-	const [email, setEmail] = useState("james@gmail.com");
-	const [password, setPassword] = useState("james123");
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
 	const [toggleCheckBox, setToggleCheckBox] = useState(false);
 
 	const onSignUpClicked = () => {
@@ -76,23 +76,23 @@ const LogInScreen = ({ navigation, route }) => {
 		}
 	};
 
-	const forgetPassword = () =>{
-		if(email == ""){
+	const forgetPassword = () => {
+		if (email == "") {
 			alert("Please enter email first and then click on Forgot password!")
 		}
-		else{
+		else {
 			sendPasswordResetEmail(auth, email)
-			.then(() => {
-				// Password forget email sent!
-				console.log("Password Link sent successfully!")
-				alert("Password Link sent successfully! Please check your email.")
-			})
-			.catch((error) => {
-				const errorCode = error.code;
-				const errorMessage = error.message;
-				console.log(`Error in Change Password: ${errorCode} - ${errorMessage}`)
-				alert("Please enter correct Email that you used while creating account!")
-			});
+				.then(() => {
+					// Password forget email sent!
+					console.log("Password Link sent successfully!")
+					alert("Password Link sent successfully! Please check your email.")
+				})
+				.catch((error) => {
+					const errorCode = error.code;
+					const errorMessage = error.message;
+					console.log(`Error in Change Password: ${errorCode} - ${errorMessage}`)
+					alert("Please enter correct Email that you used while creating account!")
+				});
 		}
 	}
 
@@ -155,13 +155,13 @@ const LogInScreen = ({ navigation, route }) => {
 						/>
 					</View>
 					<View style={{ flexDirection: "row", marginTop: 5, }}>
-					
-					<TouchableOpacity onPress={forgetPassword}>
-						<Text style={[typography.bodyHeading, { color: primaryColor }]}>
-							Forgot Password?
-						</Text>
-					</TouchableOpacity>
-				</View>
+
+						<TouchableOpacity onPress={forgetPassword}>
+							<Text style={[typography.bodyHeading, { color: primaryColor }]}>
+								Forgot Password?
+							</Text>
+						</TouchableOpacity>
+					</View>
 				</View>
 
 				{/* TODO: Change onPress */}
@@ -189,9 +189,10 @@ const LogInScreen = ({ navigation, route }) => {
 					</View>
 				</View> */}
 
-				<View style={{ flexDirection: 'row',
+				<View style={{
+					flexDirection: 'row',
 					justifyContent: 'flex-end',
-			 }}>
+				}}>
 					<Text style={[typography.body, { marginRight: 10 }]}>
 						Don't have an account?
 					</Text>
