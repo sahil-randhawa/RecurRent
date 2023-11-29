@@ -44,25 +44,26 @@ const App = () => {
 
 	return (
 		<>
+		{/*  */}
 			<NavigationContainer>
 				<StatusBar style="auto" />
 				{hideSplashScreen ? (
 					<Stack.Navigator
 						screenOptions={{ headerShown: false }}
-						initialRouteName="Splash"
+						initialRouteName="OnBoardingScreen"
 					>
-						<Stack.Screen
+						{/* <Stack.Screen
 							name="Splash"
 							component={Splash}
 							options={{ headerShown: false }}
-						/>
+						/> */}
 						<Stack.Screen
 							name="OnBoardingScreen"
 							component={OnBoardingScreen}
 							options={{ headerShown: false }}
 						/>
 						<Stack.Screen
-							name="SignUp"
+							name="SignUp"r
 							component={SignUpScreen}
 							options={{ headerShown: false }}
 						/>

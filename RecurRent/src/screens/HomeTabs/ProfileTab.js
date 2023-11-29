@@ -117,13 +117,13 @@ const ProfileTab = ({ navigation, route }) => {
 			navigateTo: 'AccountSettings',
 		},
 
-		{
-			key: 'settings',
-			title: 'Settings',
-			description: 'View app settings',
-			iconName: 'settings-outline',
-			navigateTo: 'Settings',
-		},
+		// {
+		// 	key: 'settings',
+		// 	title: 'Settings',
+		// 	description: 'View app settings',
+		// 	iconName: 'settings-outline',
+		// 	navigateTo: 'Settings',
+		// },
 		{
 			key: "change-password",
 			title: "Change Password",
