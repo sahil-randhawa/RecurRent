@@ -9,6 +9,7 @@ import {
 	Image,
 	ActivityIndicator,
 	Platform,
+	KeyboardAvoidingView,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { db, auth, firebase } from '../../../firebaseConfig';
@@ -206,13 +207,9 @@ const AccountSettingsScreen = () => {
 	};
 
 	return (
-		<View
-			style={{
-				flex: 1,
-				justifyContent: 'flex-start',
-				paddingHorizontal: 20,
-				backgroundColor: backgroundColor,
-			}}
+		<KeyboardAvoidingView
+			style={{ flex: 1, justifyContent: 'flex-start', paddingHorizontal: 20, backgroundColor: backgroundColor }}
+			behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
 		>
 			{/* profile image edit */}
 			<View
@@ -373,7 +370,7 @@ const AccountSettingsScreen = () => {
 					style={[primaryBtnStyle, { flex: 1, textAlign: 'center' }]}
 				/>
 			</View>
-		</View>
+		</KeyboardAvoidingView>
 	);
 };
 

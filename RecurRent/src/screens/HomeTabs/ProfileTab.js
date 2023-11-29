@@ -114,13 +114,15 @@ const ProfileTab = ({ navigation, route }) => {
 			iconName: 'reader-outline',
 			navigateTo: 'Listings',
 		},
-		{
-			key: 'settings',
-			title: 'Settings',
-			description: 'View app settings',
-			iconName: 'settings-outline',
-			navigateTo: 'Settings',
-		},
+
+		// {
+		// 	key: 'settings',
+		// 	title: 'Settings',
+		// 	description: 'View app settings',
+		// 	iconName: 'settings-outline',
+		// 	navigateTo: 'Settings',
+		// },
+
 		{
 			key: "change-password",
 			title: "Change Password",
