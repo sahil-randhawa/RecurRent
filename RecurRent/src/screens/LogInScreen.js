@@ -78,20 +78,20 @@ const LogInScreen = ({ navigation, route }) => {
 
 	const forgetPassword = () =>{
 		if(email == ""){
-			alert("Please enter email first and then click on Forget password!")
+			alert("Please enter email first and then click on Forgot password!")
 		}
 		else{
 			sendPasswordResetEmail(auth, email)
 			.then(() => {
 				// Password forget email sent!
 				console.log("Password Link sent successfully!")
-				alert("Password Link sent successfully. Please check your emial!")
+				alert("Password Link sent successfully! Please check your email.")
 			})
 			.catch((error) => {
 				const errorCode = error.code;
 				const errorMessage = error.message;
 				console.log(`Error in Change Password: ${errorCode} - ${errorMessage}`)
-				alert("Please enter corret Email that you use while register!")
+				alert("Please enter correct Email that you used while creating account!")
 			});
 		}
 	}
@@ -158,7 +158,7 @@ const LogInScreen = ({ navigation, route }) => {
 					
 					<TouchableOpacity onPress={forgetPassword}>
 						<Text style={[typography.bodyHeading, { color: primaryColor }]}>
-							Forget Password ?
+							Forgot Password?
 						</Text>
 					</TouchableOpacity>
 				</View>
