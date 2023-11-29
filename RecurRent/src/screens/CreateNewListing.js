@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
 	View,
 	Text,
@@ -10,10 +10,10 @@ import {
 	TouchableOpacity,
 	Image,
 	ActivityIndicator,
-} from "react-native";
+} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
-import RNPickerSelect from "react-native-picker-select";
+import RNPickerSelect from 'react-native-picker-select';
 import {
 	primaryColor,
 	secondaryColor,
@@ -25,26 +25,32 @@ import {
 	lightTheme,
 	darkTheme,
 	formStyles,
-} from "../styles/GlobalStyles";
-import Input from "../components/Input";
-import Btn, { primaryBtnStyle } from "../components/Button";
-import { auth, db, firebase } from "../../firebaseConfig";
-import { collection, addDoc, doc, getDocs, query, where, updateDoc } from "firebase/firestore";
-import * as Location from "expo-location";
+} from '../styles/GlobalStyles';
+import Input from '../components/Input';
+import Btn, { primaryBtnStyle } from '../components/Button';
+import { auth, db, firebase } from '../../firebaseConfig';
+import {
+	collection,
+	addDoc,
+	doc,
+	getDocs,
+	query,
+	where,
+	updateDoc,
+} from 'firebase/firestore';
+import * as Location from 'expo-location';
 import Toast from 'react-native-toast-message';
 
 const CreateNewListing = ({ navigation, route }) => {
-	const [name, setName] = useState("");
-	const [description, setDescription] = useState(
-		""
+	const [name, setName] = useState('');
+	const [description, setDescription] = useState('');
+	const [price, setPrice] = useState('');
+	const [pickUpAddress, setpickUpAddress] = useState('');
+	const [duration, setDuration] = useState('');
+	const [category, setCategory] = useState('');
+	const [prodImage, setProdImage] = useState(
+		'https://ui-avatars.com/api/?name=NA&length=2&size=512'
 	);
-	const [price, setPrice] = useState("");
-	const [pickUpAddress, setpickUpAddress] = useState(
-		""
-	);
-	const [duration, setDuration] = useState("");
-	const [category, setCategory] = useState("");
-	const [prodImage, setProdImage] = useState("https://ui-avatars.com/api/?name=NA&length=2&size=512");
 
 	const [coordinates, setCoordinates] = useState({ lat: 0, lng: 0 });
 
@@ -53,7 +59,7 @@ const CreateNewListing = ({ navigation, route }) => {
 
 	useEffect(() => {
 		// get location
-		console.log("Getting location...");
+		console.log('Getting location...');
 		getLocationPermissions();
 	}, []);
 
@@ -114,7 +120,7 @@ const CreateNewListing = ({ navigation, route }) => {
 			console.log('Successfully uploaded! Image url : ', url);
 
 			// update the image url for the new document
-			const productDocRef = doc(db, "Products", productDocId);
+			const productDocRef = doc(db, 'Products', productDocId);
 			await updateDoc(productDocRef, { productPhoto: url });
 			console.log('Successfully updated product image url!\n url: ', url);
 			setProdImage(url);
@@ -125,11 +131,11 @@ const CreateNewListing = ({ navigation, route }) => {
 
 	const getLocationPermissions = async () => {
 		let { status } = await Location.requestForegroundPermissionsAsync();
-		if (status !== "granted") {
-			console.log("Permission to access location was denied");
+		if (status !== 'granted') {
+			console.log('Permission to access location was denied');
 			return;
-		} else if (status === "granted") {
-			console.log("Permission to access location granted");
+		} else if (status === 'granted') {
+			console.log('Permission to access location granted');
 		}
 
 		let location = await Location.getCurrentPositionAsync({});
@@ -140,23 +146,23 @@ const CreateNewListing = ({ navigation, route }) => {
 	};
 
 	const createButtonHandler = async () => {
-		if (pickUpAddress == "") {
-			alert("Please enter a pickup location");
+		if (pickUpAddress == '') {
+			alert('Please enter a pickup location');
 			return;
-		} else if (duration == "") {
-			alert("Please select a duration to rent");
+		} else if (duration == '') {
+			alert('Please select a duration to rent');
 			return;
 		}
 		const geoCodedLocation = await Location.geocodeAsync(pickUpAddress);
 		const location = geoCodedLocation[0];
 		if (location === undefined) {
-			alert("Location not found, Please provide a valid address!");
+			alert('Location not found, Please provide a valid address!');
 			return;
 		}
 		setCoordinates({ lat: location.latitude, lng: location.longitude });
 
-		console.log("Coordinates: ", coordinates);
-		console.log("Creating new listing...");
+		console.log('Coordinates: ', coordinates);
+		console.log('Creating new listing...');
 
 		if (coordinates.lat !== 0 && coordinates.lng !== 0) {
 			const listingToBeSaved = {
@@ -169,15 +175,15 @@ const CreateNewListing = ({ navigation, route }) => {
 				productPhoto: prodImage,
 				coordinates: coordinates,
 				owner: auth.currentUser.email,
-				status: "Available",
+				status: 'Available',
 				userID: auth.currentUser.uid,
 			};
 
-			console.log("Listing to be saved: ", listingToBeSaved);
+			console.log('Listing to be saved: ', listingToBeSaved);
 
 			try {
 				setUploading(true);
-				const collectionRef = collection(db, "Products");
+				const collectionRef = collection(db, 'Products');
 				const docRef = await addDoc(collectionRef, listingToBeSaved);
 
 				// Retrieve the document ID from the reference
@@ -190,7 +196,7 @@ const CreateNewListing = ({ navigation, route }) => {
 				if (imageToUpload) uploadImage(productId);
 				setUploading(false);
 
-				console.log("New Listing Document written with ID: ", docRef.id);
+				console.log('New Listing Document written with ID: ', docRef.id);
 				// alert("Listing created successfully!");
 				// show toast
 				Toast.show({
@@ -200,43 +206,30 @@ const CreateNewListing = ({ navigation, route }) => {
 					visibilityTime: 3000,
 					autoHide: true,
 				});
-				navigation.navigate("HomeScreen");
+				navigation.navigate('HomeScreen');
 			} catch (e) {
-				console.error("Error adding listing document: ", e);
+				console.error('Error adding listing document: ', e);
 			}
 		} else {
-			alert("Invalid Location, Please provide a valid address!");
+			alert('Invalid Location, Please provide a valid address!');
 			return;
 		}
 	};
 
-
 	return (
 		<>
 			{uploading && (
-				<View
-					style={{
-						position: "absolute",
-						top: 0,
-						left: 0,
-						right: 0,
-						bottom: 0,
-						width: "100%",
-						height: "100%",
-						zIndex: 10,
-						justifyContent: "center",
-						alignItems: "center",
-						backgroundColor: "rgba(0,0,0,0.2)",
-					}}
-				>
-					<ActivityIndicator size="large" color={primaryColor} />
+				<View style={spacing.container}>
+					<ActivityIndicator
+						size="large"
+						color={primaryColor}
+					/>
 				</View>
 			)}
-			<ScrollView style={{
-				marginBottom: 100,
-			}}>
-				<View style={styles.container}>
-					<View style={formStyles.fieldContainer}>
+
+			<View style={spacing.container}>
+				<ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{paddingBottom: 100}}>
+					<View style={[formStyles.fieldContainer, { paddingTop: 20 }]}>
 						<Text style={formStyles.label}>Product Name</Text>
 						<Input
 							placeholder="eg. Fan"
@@ -269,9 +262,9 @@ const CreateNewListing = ({ navigation, route }) => {
 					</View>
 
 					<View style={formStyles.fieldContainer}>
-						<Text style={formStyles.label}>Price ($)</Text>
+						<Text style={formStyles.label}>Price (C$)</Text>
 						<Input
-							placeholder="Rent price in CAD$"
+							placeholder="Rent price in C$"
 							onChangeText={(text) => setPrice(text)}
 							value={price}
 							style={formStyles.input}
@@ -305,21 +298,21 @@ const CreateNewListing = ({ navigation, route }) => {
 						<RNPickerSelect
 							onValueChange={(itemValue) => setDuration(itemValue)}
 							items={[
-								{ label: "1 week", value: "1 week" },
-								{ label: "2 weeks", value: "2 weeks" },
-								{ label: "1 month", value: "1 month" },
-								{ label: "2 months", value: "2 months" },
+								{ label: '1 week', value: '1 week' },
+								{ label: '2 weeks', value: '2 weeks' },
+								{ label: '1 month', value: '1 month' },
+								{ label: '2 months', value: '2 months' },
 							]}
 							value={duration}
-							placeholder={{ label: "Select rent interval", value: null }}
+							placeholder={{ label: 'Select rent interval', value: null }}
 							style={{
 								placeholder: {
-									color: "#9E9E9E",
+									color: '#9E9E9E',
 									fontSize: 16,
 								},
 								inputIOS: {
 									marginTop: 8,
-									backgroundColor: "#fff",
+									backgroundColor: '#fff',
 									padding: 10,
 									fontSize: 16,
 									borderRadius: 5,
@@ -329,7 +322,7 @@ const CreateNewListing = ({ navigation, route }) => {
 								},
 								inputAndroid: {
 									marginTop: 8,
-									backgroundColor: "#fff",
+									backgroundColor: '#fff',
 									padding: 10,
 									fontSize: 16,
 									borderRadius: 5,
@@ -346,19 +339,19 @@ const CreateNewListing = ({ navigation, route }) => {
 						<RNPickerSelect
 							onValueChange={(itemValue) => setCategory(itemValue)}
 							items={[
-								{ label: "Furniture", value: "Furniture" },
-								{ label: "Electronics", value: "Electronics" },
+								{ label: 'Furniture', value: 'Furniture' },
+								{ label: 'Electronics', value: 'Electronics' },
 							]}
 							value={category}
-							placeholder={{ label: "Select a category", value: null }}
+							placeholder={{ label: 'Select a category', value: null }}
 							style={{
 								placeholder: {
-									color: "#9E9E9E",
+									color: '#9E9E9E',
 									fontSize: 16,
 								},
 								inputIOS: {
 									marginTop: 8,
-									backgroundColor: "#fff",
+									backgroundColor: '#fff',
 									padding: 10,
 									fontSize: 16,
 									borderRadius: 5,
@@ -368,7 +361,7 @@ const CreateNewListing = ({ navigation, route }) => {
 								},
 								inputAndroid: {
 									marginTop: 8,
-									backgroundColor: "#fff",
+									backgroundColor: '#fff',
 									padding: 10,
 									fontSize: 16,
 									borderRadius: 5,
@@ -411,20 +404,8 @@ const CreateNewListing = ({ navigation, route }) => {
 							onPress={pickImage}
 						>
 							{!imageToUpload && (
-								<Text
-									style={{
-										marginVertical: 8,
-										backgroundColor: "#fff",
-										padding: 10,
-										fontSize: 16,
-										borderRadius: 5,
-										height: 40,
-										borderColor: primaryColor,
-										borderWidth: 1,
-										color: "#9E9E9E",
-									}}
-								>
-									{imageToUpload ? imageToUpload : "Select item image"}
+								<Text style={styles.imgInput}>
+									{imageToUpload ? imageToUpload : 'Select item image'}
 								</Text>
 							)}
 							{imageToUpload && (
@@ -450,17 +431,19 @@ const CreateNewListing = ({ navigation, route }) => {
 											paddingVertical: 5,
 										}}
 									>
-										<Text style={{
-											color: 'white',
-											fontSize: 16,
-											fontWeight: 'bold'
-										}}>X</Text>
+										<Text
+											style={{
+												color: 'white',
+												fontSize: 16,
+												fontWeight: 'bold',
+											}}
+										>
+											X
+										</Text>
 									</TouchableOpacity>
 								</View>
 							)}
 						</TouchableOpacity>
-
-
 
 						{/* <TextInput
 							style={formStyles.input}
@@ -476,21 +459,28 @@ const CreateNewListing = ({ navigation, route }) => {
 						style={[
 							primaryBtnStyle,
 							{
-								textAlign: "center",
+								textAlign: 'center',
 							},
 						]}
 					/>
-				</View>
-			</ScrollView>
+				</ScrollView>
+			</View>
 		</>
 	);
 };
 
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		padding: 20,
-		backgroundColor: backgroundColor,
+
+	imgInput: {
+		marginVertical: 8,
+		backgroundColor: '#fff',
+		padding: 10,
+		fontSize: 16,
+		borderRadius: 5,
+		height: 40,
+		borderColor: primaryColor,
+		borderWidth: 1,
+		color: '#9E9E9E',
 	},
 });
 
