@@ -9,6 +9,7 @@ import {
 	StyleSheet,
 	TouchableOpacity,
 	Dimensions,
+	Alert,
 } from 'react-native';
 import { Avatar, List, Divider } from 'react-native-paper';
 import {
@@ -35,6 +36,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { useFocusEffect } from '@react-navigation/native';
 
 const { width: screenWidth } = Dimensions.get('window');
+const { height: screenHeight } = Dimensions.get('window');
 
 const ProfileTab = ({ navigation, route }) => {
 	const [isLoading, setIsLoading] = useState(true);
@@ -56,7 +58,7 @@ const ProfileTab = ({ navigation, route }) => {
 		  headerRight: () => (
 			<TouchableOpacity
 			  style={{ marginRight: 15 }}
-			  onPress={onLogoutClicked}
+			  onPress={confirmLogout}
 			>
 			  <Icon
 					name="log-out-outline"
@@ -68,6 +70,26 @@ const ProfileTab = ({ navigation, route }) => {
 		});
 	  }, [navigation, onLogoutClicked]);
 
+	  const confirmLogout = () => {
+		Alert.alert(
+		  'Sign Out',
+		  'Are you sure you want to sign out?',
+		  [
+			{
+			  text: 'Cancel',
+			  style: 'cancel',
+			},
+			{
+			  text: 'OK',
+			  onPress: () => {
+				// Call the logout function here
+				onLogoutClicked();
+			  },
+			},
+		  ],
+		  { cancelable: true }
+		);
+	  };
 	const fetchFromDB = async () => {
 		console.log('Fetching from db: ' + auth.currentUser.email);
 		try {
@@ -162,84 +184,86 @@ const ProfileTab = ({ navigation, route }) => {
 				/>
 			) : (
 				<View style={styles.viewContainer}>
-					<View style={styles.header}>
-						<View style={{ borderWidth: 2, borderColor: primaryColor, borderRadius: 50 }}>
-							<Avatar.Image
-								size={75}
-								source={
-									profileUrl
-										? { uri: profileUrl }
-										: require('../../../assets/images/profile_placeholder.png')
-								}
+					
+						<View style={styles.header}>
+							<View style={{ borderWidth: 2, borderColor: primaryColor, borderRadius: 50 }}>
+								<Avatar.Image
+									size={75}
+									source={
+										profileUrl
+											? { uri: profileUrl }
+											: require('../../../assets/images/profile_placeholder.png')
+									}
+								/>
+							</View>
+							<View style={styles.textContainer}>
+								<Text
+									style={[
+										typography.bodyHeading,
+										{ color: textColor, marginBottom: 0 },
+									]}
+								>
+									{user.name}
+								</Text>
+								{/* <Text style={typography.caption}>{user.email}</Text> */}
+							</View>
+						</View>
+								
+						<View style={styles.listContainer}>
+							<FlatList
+								data={data}
+								renderItem={({ item, index }) => (
+									<List.Item
+										title={item.title}
+										description={item.description}
+										descriptionStyle={[
+											typography.caption,
+											{
+												color: lightTheme.colors.onPrimaryContainer,
+												marginTop: 5,
+											},
+										]}
+										left={() => (
+											<Icon
+												name={item.iconName}
+												size={24}
+												color={primaryColor}
+											/>
+										)}
+										right={() => (
+											<Icon
+												name="chevron-forward-outline"
+												size={24}
+												color={primaryColor}
+											/>
+										)}
+										onPress={() => {
+											navigation.navigate(item.navigateTo);
+											// Navigate to the respective page when an item is pressed
+										}}
+										style={styles.listItem}
+									/>
+								)}
+								keyExtractor={(item) => item.key}
+								contentContainerStyle={styles.flatListContainer}
 							/>
 						</View>
-						<View style={styles.textContainer}>
-							<Text
-								style={[
-									typography.bodyHeading,
-									{ color: textColor, marginBottom: 0 },
-								]}
-							>
-								{user.name}
-							</Text>
-							{/* <Text style={typography.caption}>{user.email}</Text> */}
+							
+						<View
+							style={{
+								flexDirection: 'row',
+								justifyContent: 'flex-end',
+								marginBottom: 25,
+							}}
+						>
+							{/* <Btn
+								title="Sign Out"
+								onPress={onLogoutClicked}
+								mode="contained"
+								style={[primaryBtnStyle, { flex: 1, textAlign: 'center' }]}
+							/> */}
 						</View>
-					</View>
-
-					<View style={styles.listContainer}>
-						<FlatList
-							data={data}
-							renderItem={({ item, index }) => (
-								<List.Item
-									title={item.title}
-									description={item.description}
-									descriptionStyle={[
-										typography.caption,
-										{
-											color: lightTheme.colors.onPrimaryContainer,
-											marginTop: 5,
-										},
-									]}
-									left={() => (
-										<Icon
-											name={item.iconName}
-											size={24}
-											color={primaryColor}
-										/>
-									)}
-									right={() => (
-										<Icon
-											name="chevron-forward-outline"
-											size={24}
-											color={primaryColor}
-										/>
-									)}
-									onPress={() => {
-										navigation.navigate(item.navigateTo);
-										// Navigate to the respective page when an item is pressed
-									}}
-									style={styles.listItem}
-								/>
-							)}
-							keyExtractor={(item) => item.key}
-							contentContainerStyle={styles.flatListContainer}
-						/>
-					</View>
-
-					<View
-						style={{
-							flexDirection: 'row',
-							justifyContent: 'flex-end',
-							marginBottom: 25,
-						}}
-					>
-						{/* <Btn
-							title="Sign Out"
-							onPress={onLogoutClicked}
-							mode="contained"
-							style={[primaryBtnStyle, { flex: 1, textAlign: 'center' }]}
-						/> */}
-					</View>
+					
 				</View>
 			)}
 		</View>
@@ -254,6 +278,7 @@ const styles = StyleSheet.create({
 
 		width: screenWidth,
 		paddingHorizontal: 20,
+		height:screenHeight*0.8
 	},
 	header: {
 		flexDirection: 'row',
