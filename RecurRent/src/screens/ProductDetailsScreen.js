@@ -399,10 +399,14 @@ const ProductDetailsScreen = ({ navigation, route }) => {
 
 							<View style={styles.ownerTab}>
 								<View>
-									<Avatar.Image
-										size={50}
-										source={{ uri: "https://i.pravatar.cc/300" }}
-									/>
+								<Avatar.Image
+									size={50}
+									source={
+										ownerDetails.imageUrl
+											? { uri: ownerDetails.imageUrl }
+											: require('../../assets/images/profile_placeholder.png')
+									}
+								/>
 								</View>
 								<View style={styles.ownerTxtContainer}>
 									<Text style={[typography.bodyHeading, { marginBottom: 0 }]}>
