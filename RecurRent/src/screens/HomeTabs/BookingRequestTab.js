@@ -401,7 +401,7 @@ const BookingRequestTab = ({ navigation, route }) => {
 					size="large"
 					color={primaryColor}
 				/>
-			) : (
+			) : ownerRequestsListings.length > 0 ?  (
 				<View style={styles.listContainer}>
 					<FlatList
 						data={ownerRequestsListings}
@@ -415,6 +415,17 @@ const BookingRequestTab = ({ navigation, route }) => {
 						showsVerticalScrollIndicator={false}
 					/>
 				</View>
+			): (
+				// Display a message when no results are found
+				<View style={styles.imgContainer}>
+					<Image
+						source={require('../../../assets/images/no-wishlist.png')}
+						style={styles.image}
+					/>
+					<Text style={[typography.bodyHeading, { textAlign: 'center' }]}>
+						Oops! You do not have.{'\n'}Requests yet.
+					</Text>
+				</View>
 			)}
 		</View>
 	);
@@ -427,6 +438,14 @@ const styles = StyleSheet.create({
 		flexDirection: 'column',
 		justifyContent: 'flex-start',
 		paddingBottom: 30,
+	},
+	image: {
+		width: 200,
+		height: 200,
+	},
+	imgContainer: {
+		justifyContent: 'center',
+		alignItems: 'center',
 	},
 });
 export default BookingRequestTab;
