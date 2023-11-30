@@ -51,6 +51,19 @@ const ProfileTab = ({ navigation, route }) => {
 		}, [])
 	);
 
+	React.useLayoutEffect(() => {
+		navigation.setOptions({
+		  headerRight: () => (
+			<TouchableOpacity
+			  style={{ marginRight: 15 }}
+			  onPress={onLogoutClicked}
+			>
+			  <Text style={{ color: 'red' }}>Sign Out</Text>
+			</TouchableOpacity>
+		  ),
+		});
+	  }, [navigation, onLogoutClicked]);
+
 	const fetchFromDB = async () => {
 		console.log('Fetching from db: ' + auth.currentUser.email);
 		try {
@@ -133,6 +146,7 @@ const ProfileTab = ({ navigation, route }) => {
 
 	return (
 		// Profile Screen
+		
 		<View style={spacing.container}>
 			{isLoading ? (
 				<ActivityIndicator
