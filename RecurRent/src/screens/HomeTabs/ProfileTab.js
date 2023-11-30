@@ -58,7 +58,11 @@ const ProfileTab = ({ navigation, route }) => {
 			  style={{ marginRight: 15 }}
 			  onPress={onLogoutClicked}
 			>
-			  <Text style={{ color: 'red' }}>Sign Out</Text>
+			  <Icon
+					name="log-out-outline"
+					size={26}
+					color={primaryColor}
+				/>
 			</TouchableOpacity>
 		  ),
 		});
@@ -229,12 +233,12 @@ const ProfileTab = ({ navigation, route }) => {
 							marginBottom: 25,
 						}}
 					>
-						<Btn
+						{/* <Btn
 							title="Sign Out"
 							onPress={onLogoutClicked}
 							mode="contained"
 							style={[primaryBtnStyle, { flex: 1, textAlign: 'center' }]}
-						/>
+						/> */}
 					</View>
 				</View>
 			)}
