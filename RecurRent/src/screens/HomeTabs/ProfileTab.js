@@ -8,6 +8,8 @@ import {
 	FlatList,
 	StyleSheet,
 	TouchableOpacity,
+	Dimensions,
+	Alert,
 } from 'react-native';
 import { Avatar, List, Divider } from 'react-native-paper';
 import {
@@ -33,6 +35,9 @@ import { useState, useEffect } from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useFocusEffect } from '@react-navigation/native';
 
+const { width: screenWidth } = Dimensions.get('window');
+const { height: screenHeight } = Dimensions.get('window');
+
 const ProfileTab = ({ navigation, route }) => {
 	const [isLoading, setIsLoading] = useState(true);
 	const [user, setUser] = useState({});
@@ -48,6 +53,43 @@ const ProfileTab = ({ navigation, route }) => {
 		}, [])
 	);
 
+	React.useLayoutEffect(() => {
+		navigation.setOptions({
+		  headerRight: () => (
+			<TouchableOpacity
+			  style={{ marginRight: 15 }}
+			  onPress={confirmLogout}
+			>
+			  <Icon
+					name="log-out-outline"
+					size={26}
+					color={primaryColor}
+				/>
+			</TouchableOpacity>
+		  ),
+		});
+	  }, [navigation, onLogoutClicked]);
+
+	  const confirmLogout = () => {
+		Alert.alert(
+		  'Sign Out',
+		  'Are you sure you want to sign out?',
+		  [
+			{
+			  text: 'Cancel',
+			  style: 'cancel',
+			},
+			{
+			  text: 'OK',
+			  onPress: () => {
+				// Call the logout function here
+				onLogoutClicked();
+			  },
+			},
+		  ],
+		  { cancelable: true }
+		);
+	  };
 	const fetchFromDB = async () => {
 		console.log('Fetching from db: ' + auth.currentUser.email);
 		try {
@@ -82,7 +124,6 @@ const ProfileTab = ({ navigation, route }) => {
 	};
 
 	const data = [
-
 		{
 			key: 'account-settings',
 			title: 'Account Settings',
@@ -131,6 +172,7 @@ const ProfileTab = ({ navigation, route }) => {
 
 	return (
 		// Profile Screen
+		
 		<View style={spacing.container}>
 			{isLoading ? (
 				<ActivityIndicator
@@ -141,16 +183,12 @@ const ProfileTab = ({ navigation, route }) => {
 					size="large"
 				/>
 			) : (
-				<ScrollView
-					style={{
-						marginBottom: 100,
-					}}
-				>
-					<View style={styles.viewContainer}>
+				<View style={styles.viewContainer}>
+					
 						<View style={styles.header}>
-							<View>
+							<View style={{ borderWidth: 2, borderColor: primaryColor, borderRadius: 50 }}>
 								<Avatar.Image
-									size={60}
+									size={75}
 									source={
 										profileUrl
 											? { uri: profileUrl }
@@ -170,7 +208,7 @@ const ProfileTab = ({ navigation, route }) => {
 								{/* <Text style={typography.caption}>{user.email}</Text> */}
 							</View>
 						</View>
-
+								
 						<View style={styles.listContainer}>
 							<FlatList
 								data={data}
@@ -210,7 +248,7 @@ const ProfileTab = ({ navigation, route }) => {
 								contentContainerStyle={styles.flatListContainer}
 							/>
 						</View>
-
+							
 						<View
 							style={{
 								flexDirection: 'row',
@@ -218,15 +256,15 @@ const ProfileTab = ({ navigation, route }) => {
 								marginBottom: 25,
 							}}
 						>
-							<Btn
+							{/* <Btn
 								title="Sign Out"
 								onPress={onLogoutClicked}
 								mode="contained"
 								style={[primaryBtnStyle, { flex: 1, textAlign: 'center' }]}
-							/>
+							/> */}
 						</View>
-					</View>
-				</ScrollView>
+					
+				</View>
 			)}
 		</View>
 	);
@@ -237,6 +275,10 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: 'flex-start',
 		alignItems: 'flex-start',
+
+		width: screenWidth,
+		paddingHorizontal: 20,
+		height:screenHeight*0.8
 	},
 	header: {
 		flexDirection: 'row',

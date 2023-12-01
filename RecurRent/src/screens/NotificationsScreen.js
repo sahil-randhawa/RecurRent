@@ -258,7 +258,9 @@ const NotificationsScreen = () => {
 							<Card style={styles.card}>
 								<Card.Content>
 									<View style={styles.cardContent}>
-										<View style={styles.cardText}>
+										<View style={[styles.cardText,
+										{ width: '85%' }
+										]}>
 											{/* heading */}
 											<Text
 												style={[
@@ -274,7 +276,7 @@ const NotificationsScreen = () => {
 											<Text
 												style={[
 													typography.bodyText,
-													{ width: '95%', marginBottom: 5 },
+													{ marginBottom: 5 },
 													Platform.OS === 'android' && styles.androidSubHeading,
 												]}
 												numberOfLines={2}
