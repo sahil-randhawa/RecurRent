@@ -371,7 +371,7 @@ const ProductDetailsScreen = ({ navigation, route }) => {
 										)
 										:(
 											<Text style={[typography.body, { color: textColor }]}>
-												Immidatily
+												Immediately
 											</Text>
 										)
 										
