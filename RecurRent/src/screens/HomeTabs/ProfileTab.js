@@ -116,6 +116,10 @@ const ProfileTab = ({ navigation, route }) => {
 	const onLogoutClicked = () => {
 		signOut(auth)
 			.then(() => {
+				navigation.reset({
+					index: 0,
+					routes: [{ name: 'OnBoardingScreen' }],
+				});
 				navigation.navigate('OnBoardingScreen');
 			})
 			.catch((error) => {

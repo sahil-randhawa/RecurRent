@@ -9,6 +9,7 @@ import {
 	Platform,
 	FlatList,
 	ScrollView,
+	Dimensions
 	
 } from "react-native";
 import Input from "../../components/Input";
@@ -44,7 +45,7 @@ import {
 	documentId,
 } from "firebase/firestore";
 
-
+const { height: screenHeight } = Dimensions.get('window');
 const ChangePassword = ({ navigation }) => {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -116,12 +117,9 @@ const ChangePassword = ({ navigation }) => {
 		<>
 			<ScrollView>
             <View style={[
-					styles.container
-					
+					styles.container,
+					{height:screenHeight}
 				]}>
-                {/* <View style={styles.formContainer}>					 */}
-                    {/* <View style={formStyles.fieldContainer}> */}
-                    {/* <Text style={[typography.bodyHeading,{marginLeft:40}]}>You can change your password here!</Text> */}
 						<View style={formStyles.fieldContainer}>
 							
 							<Text style={formStyles.label}>Old Password</Text>
@@ -176,8 +174,7 @@ const ChangePassword = ({ navigation }) => {
 							},
 						]}
 					/>
-			{/* </View> */}
-            {/* </View> */}
+			
             </View>
             </ScrollView>
 		</>
@@ -185,9 +182,14 @@ const ChangePassword = ({ navigation }) => {
 };
 const styles = StyleSheet.create({
 	container: {
-		flex: 1,
+		// flex: 1,
 		padding: 20,
 		backgroundColor: backgroundColor,
+		width: '100%',
+		flex: 1,
+		flexDirection: 'column',
+		justifyContent: 'flex-start',
+		paddingBottom: 30,
 	},
 });
 
