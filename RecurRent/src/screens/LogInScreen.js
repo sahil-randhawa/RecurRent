@@ -65,6 +65,12 @@ const LogInScreen = ({ navigation, route }) => {
 							routes: [{ name: 'HomeScreen' }],
 						});
 					}
+					else{
+						navigation.reset({
+							index: 0,
+							routes: [{ name: 'OnBoardingScreen' }],
+						});
+					}
 				} else {
 					console.log("Error: DocSanp Does not exist!");
 					alert("Invalid Credential!");
