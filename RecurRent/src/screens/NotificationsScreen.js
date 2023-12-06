@@ -235,7 +235,7 @@ const NotificationsScreen = () => {
 						<Text
 							style={[
 								typography.bodyHeading,
-								{ textAlign: 'center', marginTop: 20 },
+								{ textAlign: 'center', marginTop: 30 },
 							]}
 						>
 							We'll notify you when {'\n'}
@@ -346,6 +346,10 @@ const styles = StyleSheet.create({
 	androidSubHeading: {
 		fontSize: 12,
 	},
+	image: {
+		width: 100,
+		height: 100,
+	}
 });
 
 export default NotificationsScreen;

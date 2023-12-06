@@ -94,12 +94,21 @@ const Listings = ({ navigation }) => {
 						source={require('../../../assets/images/space.png')}
 						style={styles.image}
 					/>
-					<Text style={typography.heading}>
-						Let's Turn Your Space into Cash!
+					<Text
+							style={[
+								typography.heading,
+								{ textAlign: 'center', marginTop: 20, fontSize: 20},
+							]}
+						>
+						Let's Turn Your Space {'\n'} into Cash!
 					</Text>
-					<Text style={typography.bodyHeading}>
-						Once you get started, use Your Listings
-						to manage all your activities.
+					<Text
+							style={[
+								typography.bodyHeading,
+								{ textAlign: 'center', marginTop: 10, fontSize: 16, paddingHorizontal: 45, },
+							]}
+						>
+						Once you get started, manage all your activities here.
 					</Text>
 					</View>
 				) : (
@@ -153,8 +162,8 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 	},
 	image: {
-		width: 250,
-		height: 250,
+		width: 150,
+		height: 150,
 		marginBottom: 20
 	}
 });

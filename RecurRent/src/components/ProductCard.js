@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, Dimensions, Platform } from 'react-native';
 import { Card, IconButton, Button } from 'react-native-paper';
 import {
 	primaryColor,
@@ -33,6 +33,8 @@ const ProductCard = ({
 }) => {
 	const [isHeartFilled, setIsHeartFilled] = useState(false);
 	const [user, setUser] = useState({});
+	const windowWidth = Dimensions.get('window').width;
+	const [cardHeight, setCardHeight] = useState(0);
 
 	useEffect(() => {
 		fetchFromDB();
@@ -134,7 +136,11 @@ const ProductCard = ({
 	return (
 		<>
 			<Card
-				style={[styles.card, Platform.OS === 'android' && styles.androidCard]}
+				style={[
+					styles.card,
+					Platform.OS === 'android' && styles.androidCard,
+					{ width: (windowWidth * 90) / 100 },
+				]}
 			>
 				<Card.Cover
 					source={{ uri: coverUri }}
@@ -210,17 +216,14 @@ const ProductCard = ({
 
 const styles = {
 	card: {
-		width: 350,
-		height: 350,
+		height: 380,
 		marginTop: 20,
-		marginRight: 10,
 		borderRadius: 10,
 		backgroundColor: lightTheme.colors.onPrimary,
 		padding: 10,
 	},
 
 	androidCard: {
-		width: 370,
 		height: 370,
 	},
 
