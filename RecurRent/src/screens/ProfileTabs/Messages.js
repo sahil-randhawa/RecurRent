@@ -118,7 +118,12 @@ const Messages = ({ navigation, route }) => {
 							source={require('../../../assets/images/noMessage.png')}
 							style={styles.image}
 						/>
-						<Text style={[typography.bodyHeading, { textAlign: 'center' }]}>
+						<Text
+							style={[
+								typography.bodyHeading,
+								{ textAlign: 'center', marginTop: 30 },
+							]}
+						>
 							View all your requests here{'\n'} by requesting Products!
 						</Text>
 					</View>
@@ -224,8 +229,8 @@ const Messages = ({ navigation, route }) => {
 
 const styles = StyleSheet.create({
 	image: {
-		width: '20%',
-		height: 'auto'
+		width: 100,
+		height: 100,
 	},
 
 	container: {
