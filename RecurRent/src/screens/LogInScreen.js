@@ -117,7 +117,7 @@ const LogInScreen = ({ navigation, route }) => {
 					/>
 				</View>
 
-				<View style={styles.formContainer}>
+				<View style={[styles.formContainer, {paddingTop: 100}]}>
 					<Text
 						style={[typography.title, { marginBottom: 30, color: textColor }]}
 					>
