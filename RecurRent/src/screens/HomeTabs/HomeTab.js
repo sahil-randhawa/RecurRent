@@ -91,8 +91,7 @@ const HomeTab = ({ navigation, route }) => {
 		setIsLoading(true); // Show loader while fetching data
 		try {
 			const q = query(
-				collection(db, 'Products')
-				// where("status", "==", "Available")
+				collection(db, 'Products'), where("enableListing", "==", true)
 			);
 			const querySnapshot = await getDocs(q);
 			const resultsFromFirestore = [];
