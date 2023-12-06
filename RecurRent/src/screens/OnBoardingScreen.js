@@ -7,8 +7,6 @@ import {
 	textColor,
 	typography,
 	spacing,
-	lightTheme,
-	secondaryColor,
 } from '../styles/GlobalStyles';
 
 const OnBoardingScreen = ({ navigation, route }) => {
@@ -20,16 +18,13 @@ const OnBoardingScreen = ({ navigation, route }) => {
 		navigation.navigate('LogIn');
 	};
 
-	const handleButtonPress = () => {
-		console.log('primary button');
-	};
 	return (
 		<>
 			<View style={spacing.container}>
 				<View style={styles.imageContainer}>
 					<Image
 						style={styles.logo}
-						contentFit="cover"
+						contentFit="contain"
 						source={require('../../assets/images/onboarding.svg')}
 					/>
 				</View>
@@ -68,14 +63,17 @@ const OnBoardingScreen = ({ navigation, route }) => {
 
 const styles = StyleSheet.create({
 	imageContainer: {
+		...Platform.select({
+			android: {
+				overflow: 'hidden',
+			},
+		}),
 		marginBottom: 80,
 	},
 
 	logo: {
-		width: 200,
-		height: 200,
-		resizeMode: 'contain',
-		overflow: 'visible',
+		width: 250,
+		height: 250,
 	},
 
 	textContainer: {

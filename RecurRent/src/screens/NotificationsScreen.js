@@ -235,7 +235,7 @@ const NotificationsScreen = () => {
 						<Text
 							style={[
 								typography.bodyHeading,
-								{ textAlign: 'center', marginTop: 20 },
+								{ textAlign: 'center', marginTop: 30 },
 							]}
 						>
 							We'll notify you when {'\n'}
@@ -253,11 +253,14 @@ const NotificationsScreen = () => {
 						data={notificationsList}
 						keyExtractor={(item) => item.notificationID}
 						contentContainerStyle={styles.flatListContainer}
+						showsVerticalScrollIndicator={false}
 						renderItem={({ item }) => (
 							<Card style={styles.card}>
 								<Card.Content>
 									<View style={styles.cardContent}>
-										<View style={styles.cardText}>
+										<View style={[styles.cardText,
+										{ width: '85%' }
+										]}>
 											{/* heading */}
 											<Text
 												style={[
@@ -273,7 +276,7 @@ const NotificationsScreen = () => {
 											<Text
 												style={[
 													typography.bodyText,
-													{ width: '95%', marginBottom: 5 },
+													{ marginBottom: 5 },
 													Platform.OS === 'android' && styles.androidSubHeading,
 												]}
 												numberOfLines={2}
@@ -343,6 +346,10 @@ const styles = StyleSheet.create({
 	androidSubHeading: {
 		fontSize: 12,
 	},
+	image: {
+		width: 100,
+		height: 100,
+	}
 });
 
 export default NotificationsScreen;

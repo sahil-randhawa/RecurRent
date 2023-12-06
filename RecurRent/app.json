@@ -1,6 +1,7 @@
 {
   "expo": {
     "name": "RecurRent",
+    "owner": "sahil-r",
     "slug": "RecurRent",
     "plugins": [
       [
@@ -16,19 +17,30 @@
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/images/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "resizeMode": "cover",
+      "backgroundColor": "#5B81FA"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.sahilr.RecurRent"
     },
     "android": {
       "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#ffffff"
       },
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyBP1mz2_zqKe3P_fRt01iqcMLItiKTYPPI"
+        }
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
       "package": "com.sahilr.RecurRent"
     },
     "web": {

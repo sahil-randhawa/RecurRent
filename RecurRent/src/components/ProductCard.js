@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, Dimensions, Platform } from 'react-native';
 import { Card, IconButton, Button } from 'react-native-paper';
 import {
 	primaryColor,
@@ -25,6 +25,7 @@ import Toast from 'react-native-toast-message';
 const ProductCard = ({
 	coverUri,
 	title,
+	price,
 	duration,
 	productId,
 	buttonLabel,
@@ -32,6 +33,8 @@ const ProductCard = ({
 }) => {
 	const [isHeartFilled, setIsHeartFilled] = useState(false);
 	const [user, setUser] = useState({});
+	const windowWidth = Dimensions.get('window').width;
+	const [cardHeight, setCardHeight] = useState(0);
 
 	useEffect(() => {
 		fetchFromDB();
@@ -132,12 +135,29 @@ const ProductCard = ({
 
 	return (
 		<>
-			<Card style={[styles.card, Platform.OS === 'android' && styles.androidCard]}>
-				<Card.Cover source={{ uri: coverUri }} style={[styles.cover, Platform.OS === 'android' && styles.androidCover ]} />
+			<Card
+				style={[
+					styles.card,
+					Platform.OS === 'android' && styles.androidCard,
+					{ width: (windowWidth * 90) / 100 },
+				]}
+			>
+				<Card.Cover
+					source={{ uri: coverUri }}
+					style={[
+						styles.cover,
+						Platform.OS === 'android' && styles.androidCover,
+					]}
+				/>
 
 				<Card.Title
 					title={title}
-					titleStyle={[typography.heading, styles.title, Platform.OS === 'android' && styles.androidTitle]}
+					titleStyle={[
+						typography.heading,
+						styles.title,
+						Platform.OS === 'android' && styles.androidTitle,
+						{},
+					]}
 					titleNumberOfLines={3}
 					right={(props) => (
 						<IconButton
@@ -157,18 +177,36 @@ const ProductCard = ({
 					)}
 				/>
 
-				<Card.Content>
-					<Text style={{ fontSize: 14, marginBottom: 15 }}>
-						Duration: {duration}
-					</Text>
-				</Card.Content>
+				<View
+					style={{
+						flexDirection: 'row',
+						justifyContent: 'space-between',
+						marginBottom: 10,
+					}}
+				>
+					<Card.Content>
+						<Text style={[typography.bodyHeading, { fontSize: 14 }]}>
+							Price: C${price}
+						</Text>
+					</Card.Content>
+
+					<Card.Content>
+						<Text style={[typography.bodyHeading, { fontSize: 14 }]}>
+							Duration: {duration}
+						</Text>
+					</Card.Content>
+				</View>
 
 				<Card.Actions>
 					<Btn
 						title={buttonLabel}
 						onPress={onPressAction}
 						mode="outlined"
-						style={[secondaryBtnStyle, styles.button, Platform.OS === 'android' && styles.androidButton]}
+						style={[
+							secondaryBtnStyle,
+							styles.button,
+							Platform.OS === 'android' && styles.androidButton,
+						]}
 					/>
 				</Card.Actions>
 			</Card>
@@ -178,18 +216,15 @@ const ProductCard = ({
 
 const styles = {
 	card: {
-		width: 300,
-		height: 400,
+		height: 380,
 		marginTop: 20,
-		marginRight: 10,
 		borderRadius: 10,
 		backgroundColor: lightTheme.colors.onPrimary,
 		padding: 10,
 	},
 
 	androidCard: {
-		width: 280,
-		height: 400,
+		height: 370,
 	},
 
 	cover: {
@@ -197,7 +232,7 @@ const styles = {
 	},
 
 	androidCover: {
-		height: '45%',
+		height: '50%',
 	},
 
 	heartIcon: {
@@ -207,8 +242,10 @@ const styles = {
 	},
 
 	title: {
+		margin: 0,
 		fontSize: 18,
-		paddingTop: 20,
+		paddingTop: 15,
+		marginBottom: 0,
 	},
 
 	androidTitle: {
@@ -225,9 +262,7 @@ const styles = {
 		textAlign: 'center',
 		paddingVertical: 2,
 		marginBottom: 10,
-
 	},
-
 };
 
 export default ProductCard;
