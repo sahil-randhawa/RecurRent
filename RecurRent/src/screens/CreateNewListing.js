@@ -177,6 +177,7 @@ const CreateNewListing = ({ navigation, route }) => {
 				owner: auth.currentUser.email,
 				status: 'Available',
 				userID: auth.currentUser.uid,
+				enableListing: true
 			};
 
 			console.log('Listing to be saved: ', listingToBeSaved);

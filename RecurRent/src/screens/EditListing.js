@@ -6,6 +6,7 @@ import {
 	StyleSheet,
 	TouchableOpacity,
 	Image,
+	Alert,
 } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
 import {
@@ -25,6 +26,7 @@ import Btn, { primaryBtnStyle } from "../components/Button";
 import { auth, db, firebase } from "../../firebaseConfig";
 import { collection, addDoc, setDoc, doc, updateDoc } from "firebase/firestore";
 import * as ImagePicker from 'expo-image-picker';
+import Icon from 'react-native-vector-icons/Ionicons';
 import * as FileSystem from 'expo-file-system';
 import Toast from 'react-native-toast-message';
 import * as Location from "expo-location";
@@ -42,6 +44,8 @@ const EditListing = ({ navigation, route }) => {
 	const [category, setCategory] = useState("");
 	const [imageToUpload, setImageToUpload] = useState("table");
 
+	// const[enableStatus, setEnableStatus] = useState(false)
+
 	useEffect(() => {
 		// Update state variables with values from route.params when the screen loads
 		const selectedProduct = route.params.combinedData.selectedProduct;
@@ -53,7 +57,80 @@ const EditListing = ({ navigation, route }) => {
 		setDuration(selectedProduct.item.duration);
 		setCategory(selectedProduct.item.category);
 		setImageToUpload(selectedProduct.item.productPhoto); //Need to change
+		// setEnableStatus(selectedProduct.item.enableListing);
 	}, []);
+
+	React.useLayoutEffect(() => {
+		navigation.setOptions({
+			headerRight: () => (
+				<TouchableOpacity
+					style={{ marginRight: 15 }}
+					onPress={confirmDisable}
+				>
+					{/* <Icon
+					name="log-out-outline"
+					size={26}
+					color={primaryColor}
+				/> */}
+					<Text style={{ color: selectedProduct.item.enableListing ? 'red' : primaryColor }}>
+						{selectedProduct.item.enableListing ? "Disable Listing" : "Enable Listing"}
+					</Text>
+				</TouchableOpacity>
+			),
+		});
+	}, [navigation, onDisabledClicked]);
+
+	const onDisabledClicked = async () => {
+
+
+		const docRef = doc(db, "Products", selectedProduct.item.productId);
+
+		const updatedData = {
+			enableListing: !selectedProduct.item.enableListing
+		};
+
+		try {
+			await setDoc(docRef, updatedData, { merge: true });
+			console.log("Document updated successfully");
+
+			Toast.show({
+				type: 'success',
+				position: 'bottom',
+				text1: `${selectedProduct.item.enableListing ? "Listing is now Disabled!" : "Listing is now Enabled!"}`,
+				visibilityTime: 3000,
+				autoHide: true,
+			});
+
+			navigation.navigate("Listings");
+		} catch (error) {
+			console.error("Error updating document: ", error);
+		}
+	}
+
+	const confirmDisable = () => {
+		// setEnableStatus(!selectedProduct.item.enableListing)
+		// console.log(enableStatus)
+
+		Alert.alert(
+			'Confirm',
+			`Are you sure?`,
+			[
+				{
+					text: 'Cancel',
+					style: 'cancel',
+				},
+				{
+					text: 'OK',
+					onPress: () => {
+						// Call the disable function here
+						// console.log(enableStatus)
+						onDisabledClicked();
+					},
+				},
+			],
+			{ cancelable: true }
+		);
+	};
 
 	const pickImage = async () => {
 		console.log('Picking image...');
@@ -360,9 +437,22 @@ const EditListing = ({ navigation, route }) => {
 							primaryBtnStyle,
 							{
 								textAlign: "center",
+								marginBottom: 10
 							},
 						]}
 					/>
+
+					{/* <Btn
+						title = {enableStatus ? "Disable Listing" : "Enable Listing"}
+						onPress={updateButtonHandler}
+						mode="contained"
+						style={[
+							primaryBtnStyle,
+							{
+								textAlign: "center",
+							},
+						]}
+					/> */}
 				</View>
 			</ScrollView>
 		</>

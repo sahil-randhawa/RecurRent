@@ -71,7 +71,7 @@ const Listings = ({ navigation }) => {
 			const combinedData = {
 				selectedProduct: selectedProductData,
 			};
-			
+			console.log(combinedData)
 			navigation.navigate('EditListing', { combinedData: combinedData });
 		} catch (error) {
 			console.log(error);
