@@ -61,6 +61,7 @@ const SignUpScreen = ({ navigation, route }) => {
 							name: userName,
 							mobileNumber: mobileNumber,
 							favlist: [],
+							notifications: [],
 						};
 
 						console.log('user to insert', userToInsert);
@@ -110,7 +111,7 @@ const SignUpScreen = ({ navigation, route }) => {
 
 				<Text style={[typography.title, { marginTop: 80 }]}>Hola! Welcome</Text>
 
-				<View style={[styles.formContainer, {paddingTop: 20}]}>
+				<View style={[styles.formContainer, { paddingTop: 20 }]}>
 					<View style={styles.inputContainer}>
 						<View>
 							<Input

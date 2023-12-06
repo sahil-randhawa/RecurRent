@@ -158,7 +158,7 @@ const ProductDetailsScreen = ({ navigation, route }) => {
 											notifications: [
 												...ownerDoc.data().notifications ? ownerDoc.data().notifications : [],
 												{
-													notificationID: `${renterDoc.data().notifications ? renterDoc.data().notifications.length + 1 : 1}`,
+													notificationID: `${ownerDoc.data().notifications ? ownerDoc.data().notifications.length + 1 : 1}`,
 													notificationType: "Booking Request",
 													notificationUnreadStatus: true,
 													notificationMessage: "New Booking Request for your product : " + selectedProduct.item.name,
@@ -364,19 +364,19 @@ const ProductDetailsScreen = ({ navigation, route }) => {
 										style={[typography.bodyHeading, { color: primaryColor }]}
 									>
 										Next Available Date :{" "}
-										{selectedProduct.item.nextAvailableDate ?(
+										{selectedProduct.item.nextAvailableDate ? (
 											<Text style={[typography.body, { color: textColor }]}>
 												{selectedProduct.item.nextAvailableDate}
 											</Text>
 										)
-										:(
-											<Text style={[typography.body, { color: textColor }]}>
-												Immediately
-											</Text>
-										)
-										
-									    }
-										
+											: (
+												<Text style={[typography.body, { color: textColor }]}>
+													Immediately
+												</Text>
+											)
+
+										}
+
 									</Text>
 								</View>
 							</View>
@@ -399,14 +399,14 @@ const ProductDetailsScreen = ({ navigation, route }) => {
 
 							<View style={styles.ownerTab}>
 								<View>
-								<Avatar.Image
-									size={50}
-									source={
-										ownerDetails.imageUrl
-											? { uri: ownerDetails.imageUrl }
-											: require('../../assets/images/profile_placeholder.png')
-									}
-								/>
+									<Avatar.Image
+										size={50}
+										source={
+											ownerDetails.imageUrl
+												? { uri: ownerDetails.imageUrl }
+												: require('../../assets/images/profile_placeholder.png')
+										}
+									/>
 								</View>
 								<View style={styles.ownerTxtContainer}>
 									<Text style={[typography.bodyHeading, { marginBottom: 0 }]}>
