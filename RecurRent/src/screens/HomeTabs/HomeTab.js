@@ -208,7 +208,7 @@ const HomeTab = ({ navigation, route }) => {
 			// 	 // Hide loader on error
 			//   });
 
-		const q = query(collection(db, 'Products'));
+		const q = query(collection(db, 'Products'), where("enableListing", "==", true));
 		setIsLoading(true);
 		console.log("category selected", selectedCategory)
 

@@ -33,8 +33,8 @@ import {
 import { getDoc, doc } from 'firebase/firestore';
 
 const LogInScreen = ({ navigation, route }) => {
-	const [email, setEmail] = useState('chitra.h.raval@gmail.com');
-	const [password, setPassword] = useState('Chitra1234');
+	const [email, setEmail] = useState('');
+	const [password, setPassword] = useState('');
 	const [toggleCheckBox, setToggleCheckBox] = useState(false);
 
 	const onSignUpClicked = () => {
