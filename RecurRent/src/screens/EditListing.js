@@ -62,26 +62,26 @@ const EditListing = ({ navigation, route }) => {
 
 	React.useLayoutEffect(() => {
 		navigation.setOptions({
-		  headerRight: () => (
-			<TouchableOpacity
-			  style={{ marginRight: 15 }}
-			  onPress={confirmDisable}
-			>
-			  {/* <Icon
+			headerRight: () => (
+				<TouchableOpacity
+					style={{ marginRight: 15 }}
+					onPress={confirmDisable}
+				>
+					{/* <Icon
 					name="log-out-outline"
 					size={26}
 					color={primaryColor}
 				/> */}
-				<Text style={{color:primaryColor}}>
-					{selectedProduct.item.enableListing ? "Disable Listing" : "Enable Listing"}
-				</Text>
-			</TouchableOpacity>
-		  ),
+					<Text style={{ color: selectedProduct.item.enableListing ? 'red' : primaryColor }}>
+						{selectedProduct.item.enableListing ? "Disable Listing" : "Enable Listing"}
+					</Text>
+				</TouchableOpacity>
+			),
 		});
-	  }, [navigation, onDisabledClicked]);
+	}, [navigation, onDisabledClicked]);
 
 	const onDisabledClicked = async () => {
-		
+
 
 		const docRef = doc(db, "Products", selectedProduct.item.productId);
 
@@ -92,7 +92,7 @@ const EditListing = ({ navigation, route }) => {
 		try {
 			await setDoc(docRef, updatedData, { merge: true });
 			console.log("Document updated successfully");
-			
+
 			Toast.show({
 				type: 'success',
 				position: 'bottom',
@@ -112,25 +112,25 @@ const EditListing = ({ navigation, route }) => {
 		// console.log(enableStatus)
 
 		Alert.alert(
-		  'Confirm',
-		  `Are you sure?`,
-		  [
-			{
-			  text: 'Cancel',
-			  style: 'cancel',
-			},
-			{
-			  text: 'OK',
-			  onPress: () => {
-				// Call the disable function here
-				// console.log(enableStatus)
-				onDisabledClicked();
-			  },
-			},
-		  ],
-		  { cancelable: true }
+			'Confirm',
+			`Are you sure?`,
+			[
+				{
+					text: 'Cancel',
+					style: 'cancel',
+				},
+				{
+					text: 'OK',
+					onPress: () => {
+						// Call the disable function here
+						// console.log(enableStatus)
+						onDisabledClicked();
+					},
+				},
+			],
+			{ cancelable: true }
 		);
-	  };
+	};
 
 	const pickImage = async () => {
 		console.log('Picking image...');
