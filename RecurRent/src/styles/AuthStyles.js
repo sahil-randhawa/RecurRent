@@ -26,7 +26,6 @@ const styles = {
 
 	formContainer: {
 		width: "100%",
-		paddingTop: 100,
 	},
 
 	dividerContainer: {

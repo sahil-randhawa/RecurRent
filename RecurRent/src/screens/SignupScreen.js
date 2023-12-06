@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { Image } from "expo-image";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import Input from "../components/Input";
-import Btn, { primaryBtnStyle, secondaryBtnStyle } from "../components/Button";
-import styles from "../styles/AuthStyles";
+import React, { useState } from 'react';
+import { Image } from 'expo-image';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import Input from '../components/Input';
+import Btn, { primaryBtnStyle, secondaryBtnStyle } from '../components/Button';
+import styles from '../styles/AuthStyles';
 import {
 	primaryColor,
 	textColor,
@@ -11,10 +11,11 @@ import {
 	spacing,
 	lightTheme,
 	cd,
-} from "../styles/GlobalStyles";
-import Icon from "react-native-vector-icons/FontAwesome";
-import { auth, db } from "../../firebaseConfig";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+	backgroundColor,
+} from '../styles/GlobalStyles';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { auth, db } from '../../firebaseConfig';
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import {
 	doc,
 	setDoc,
@@ -22,28 +23,28 @@ import {
 	query,
 	where,
 	collection,
-} from "firebase/firestore";
+} from 'firebase/firestore';
 
 const SignUpScreen = ({ navigation, route }) => {
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
-	const [userName, setUserName] = useState("");
-	const [mobileNumber, setMobileNumber] = useState("");
-	const [confirmPassword, setConfirmPassword] = useState("");
+	const [email, setEmail] = useState('');
+	const [password, setPassword] = useState('');
+	const [userName, setUserName] = useState('');
+	const [mobileNumber, setMobileNumber] = useState('');
+	const [confirmPassword, setConfirmPassword] = useState('');
 
 	const onLogInClicked = () => {
-		navigation.navigate("LogIn");
+		navigation.navigate('LogIn');
 	};
 
 	const onCreateAccountClicked = async () => {
 		try {
 			const q = query(
-				collection(db, "userProfiles"),
-				where("email", "==", email)
+				collection(db, 'userProfiles'),
+				where('email', '==', email)
 			);
 			const querySnapshot = await getDocs(q);
 			if (!querySnapshot.empty) {
-				alert("This email address is alredy exsits!");
+				alert('This email address is alredy exsits!');
 			} else {
 				if (password === confirmPassword) {
 					try {
@@ -55,31 +56,31 @@ const SignUpScreen = ({ navigation, route }) => {
 						);
 						const user = userCredential.user;
 						const userToInsert = {
-							typeUser: "user",
+							typeUser: 'user',
 							email: email,
 							name: userName,
 							mobileNumber: mobileNumber,
 							favlist: [],
 						};
 
-						console.log("user to insert", userToInsert);
+						console.log('user to insert', userToInsert);
 
-						await setDoc(doc(db, "userProfiles", user.uid), userToInsert);
+						await setDoc(doc(db, 'userProfiles', user.uid), userToInsert);
 
 						console.log(`user uid ${user.uid}`);
-						console.log("User account created & signed in!");
-						navigation.navigate("HomeScreen");
+						console.log('User account created & signed in!');
+						navigation.navigate('HomeScreen');
 					} catch (error) {
-						if (error.code === "auth/email-already-in-use") {
-							console.log("That email address is already in use!");
-						} else if (error.code === "auth/invalid-email") {
-							console.log("That email address is invalid!");
+						if (error.code === 'auth/email-already-in-use') {
+							console.log('That email address is already in use!');
+						} else if (error.code === 'auth/invalid-email') {
+							console.log('That email address is invalid!');
 						} else {
 							console.error(error);
 						}
 					}
 				} else {
-					alert("Password and Confirm Password should match!");
+					alert('Password and Confirm Password should match!');
 				}
 			}
 		} catch (error) {
@@ -91,19 +92,25 @@ const SignUpScreen = ({ navigation, route }) => {
 		<>
 			<View
 				style={[
-					spacing.container,
-					{ position: "relative", justifyContent: "space-evenly" },
+					{
+						flex: 1,
+						paddingHorizontal: 20,
+						backgroundColor: backgroundColor,
+						position: 'relative',
+						justifyContent: 'space-around',
+					},
 				]}
 			>
 				<View style={styles.imageContainer}>
 					<Image
 						style={styles.starIcon}
-						source={require("../../assets/images/star.svg")}
+						source={require('../../assets/images/star.svg')}
 					/>
 				</View>
 
-				<View style={[styles.formContainer, { paddingTop: 50 }]}>
-					<Text style={typography.title}>Hola! Welcome</Text>
+				<Text style={[typography.title, { marginTop: 80 }]}>Hola! Welcome</Text>
+
+				<View style={[styles.formContainer, {paddingTop: 20}]}>
 					<View style={styles.inputContainer}>
 						<View>
 							<Input
@@ -153,14 +160,14 @@ const SignUpScreen = ({ navigation, route }) => {
 							<Text style={styles.error}>Error</Text>
 						</View>
 					</View>
-					<View style={{ marginBottom: 10, flexDirection: "row" }}>
+					<View style={{ marginBottom: 10, flexDirection: 'row' }}>
 						<Btn
 							title="Create Account"
 							onPress={onCreateAccountClicked}
 							mode="contained"
 							style={[
 								primaryBtnStyle,
-								{ flex: 1, textAlign: "center", marginTop: 30 },
+								{ flex: 1, textAlign: 'center', marginTop: 30 },
 							]}
 						/>
 					</View>
@@ -191,7 +198,7 @@ const SignUpScreen = ({ navigation, route }) => {
 					</View>
 				</View> */}
 
-				<View style={{ flexDirection: "row" }}>
+				<View style={{ flexDirection: 'row', justifyContent: 'center' }}>
 					<Text style={[typography.body, { marginRight: 10 }]}>
 						Already have an account?
 					</Text>
