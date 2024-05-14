@@ -34,10 +34,10 @@ coming soon
 
 ## 🤝 Contributors
 
-Sahildeep Singh Randhawa
-<br>Chitra Raval
-<br>Shagun Thukral
-<br>Diya Patel
+- Sahildeep Singh Randhawa  `Dev / DevOps`
+- Chitra Raval  `Dev / DB Admin`
+- Shagun Thukral  `Product Analyst`
+- Diya Patel  `Designer`
 
 ## 📝 License
 
