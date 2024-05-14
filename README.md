@@ -19,16 +19,16 @@ The Recurrent app is easy to use. Simply list the items you want to rent out, se
 
 ## 📷 Screenshots
 
-to be updated <br>
-<img src="./img/Openning screen.png" alt="Openning Screen" width="240" />  <img src="./img/Log In.png" alt="Login Screen" width="240" />  <img src="./img/Sign Up.png" alt="Sign Up Screen" width="240" />
+
+<img src="./img/home-android.png" alt="Home Screen" width="210" />  <img src="./img/map-android.png" alt="Map Screen" width="220" />  <img src="./img/product-details-android.png" alt="Product details Screen" width="220" />  <img src="./img/booking-req-android.png" alt="Booking request Screen" width="210" />  <img src="./img/messages-android.png" alt="Messages Screen" width="220" />  <img src="./img/chat-ios.png" alt="Chat Screen" width="214" />  <img src="./img/profile-page-android.png" alt="Profile Screen" width="220" />  <img src="./img/notifications-android.png" alt="Notifications Screen" width="220" />  <img src="./img/new-listing-android.png" alt="New Lisitng Screen" width="210" />  <img src="./img/login.png" alt="Opening Screen" width="216" />  <img src="./img/login-form.png" alt="Login Screen" width="210" />
 <!-- ![Screenshot 1](/screenshots/screenshot1.png)
 ![Screenshot 2](/screenshots/screenshot2.png) -->
 
-## 📚 Installation
+
+<!-- ## 📚 Installation
 
 coming soon
-
-<!-- 1. Clone the repository
+1. Clone the repository
 2. Install dependencies using `npm install`
 3. Run the app using `npm start` -->
 
