@@ -3,6 +3,9 @@ name: Test Workflow
 on:
   workflow_dispatch:
     branches: [main]
+  pull_request:
+    branches:
+      - main
 
 jobs:
   setup:
@@ -26,7 +29,6 @@ jobs:
     - name: LIST DIR
       run: |
         ls -la
-        ls -la public/
 
     - name: check events
       id: check_event
