@@ -1,0 +1,36 @@
+name: Test Workflow
+
+on:
+  workflow_dispatch:
+    branches: [main]
+
+jobs:
+  setup:
+    name: Setup
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check env
+      id: env
+      shell: bash
+      run: env
+    - name: Install git
+      id: install_git
+      shell: bash
+      run: |
+          sudo apt update && sudo apt install git -y
+    - uses: actions/checkout@main
+      name: Checkout current branch
+      with:
+       fetch-depth: 0
+
+    - name: LIST DIR
+      run: |
+        ls -la
+        ls -la public/
+
+    - name: check events
+      id: check_event
+      shell: bash
+      run: |
+        #Checking for event type
+        echo "github event is ${{ github.event_name }}"
