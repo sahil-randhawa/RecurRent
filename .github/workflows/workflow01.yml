@@ -12,8 +12,19 @@ jobs:
     name: Setup
     runs-on: ubuntu-latest
     steps:
-    - name: Set up Buildah                                                                          
-      uses: buildah/setup-buildah-action@v1
+    - name: Install Buildah                                                                          
+      run: |
+        if [ -x "$(command -v apt-get)" ]; then                                                     
+            sudo apt-get update                                                                       
+            sudo apt-get install -y buildah                                                           
+          elif [ -x "$(command -v dnf)" ]; then                                                       
+            sudo dnf install -y buildah                                                               
+          elif [ -x "$(command -v yum)" ]; then                                                       
+            sudo yum install -y buildah                                                               
+          else                                                                                        
+            echo "Unsupported package manager. Cannot install buildah."                               
+            exit 1                                                                                    
+          fi 
     - name: Check env
       id: env
       shell: bash
