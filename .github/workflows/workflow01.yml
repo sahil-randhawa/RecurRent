@@ -12,19 +12,19 @@ jobs:
     name: Setup
     runs-on: ubuntu-latest
     steps:
-    - name: Install Buildah                                                                          
-      run: |
-        if [ -x "$(command -v apt-get)" ]; then                                                     
-            sudo apt-get update                                                                       
-            sudo apt-get install -y buildah                                                           
-          elif [ -x "$(command -v dnf)" ]; then                                                       
-            sudo dnf install -y buildah                                                               
-          elif [ -x "$(command -v yum)" ]; then                                                       
-            sudo yum install -y buildah                                                               
-          else                                                                                        
-            echo "Unsupported package manager. Cannot install buildah."                               
-            exit 1                                                                                    
-          fi 
+    # - name: Install Buildah                                                                          
+    #   run: |
+    #     if [ -x "$(command -v apt-get)" ]; then                                                     
+    #         sudo apt-get update                                                                       
+    #         sudo apt-get install -y buildah                                                           
+    #       elif [ -x "$(command -v dnf)" ]; then                                                       
+    #         sudo dnf install -y buildah                                                               
+    #       elif [ -x "$(command -v yum)" ]; then                                                       
+    #         sudo yum install -y buildah                                                               
+    #       else                                                                                        
+    #         echo "Unsupported package manager. Cannot install buildah."                               
+    #         exit 1                                                                                    
+    #       fi 
     - name: Check env
       id: env
       shell: bash
@@ -49,3 +49,17 @@ jobs:
       run: |
         #Checking for event type
         echo "github event is ${{ github.event_name }}"
+    - name: Create werf secret file
+      run: |
+        echo "configVersion: 1" > werf.yaml
+        echo "project: jenkins-images" >> werf.yaml
+        echo "---" >> werf.yaml
+        echo "image: docker-all-in-one" >> werf.yaml
+        echo "dockerfile: Dockerfile" >> werf.yaml
+        echo "context: ." >> werf.yaml
+        echo "args:" >> werf.yaml
+        echo "  TEST_TOKEN_SS: ${{secrets.TEST_TOKEN_SS}}" >> werf.yaml
+        echo "  EVENT_NAME: ${{ github.event_name }}" >> werf.yaml
+
+    - name: Whats in the werf file
+      run: cat werf.yaml
